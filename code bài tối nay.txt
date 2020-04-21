@@ -1,0 +1,135 @@
+//header
+#ifndef _ASG_1
+#define _ASG_1
+
+// khai báo ten ham, thu vien, struct pla pla 
+#include <iostream>
+#include <fstream> // thu vien dung de doc file va xuat file
+#include <limits.h>
+using namespace std;
+
+struct fraction
+{
+	int TuSo;
+	int MauSo;
+};
+
+
+void loadfraction (ifstream &file, fraction &p);
+void loadarrayfraction (ifstream &file, fraction arr[], int &n);
+
+int findmax (fraction phanso1, fraction phanso2);
+
+
+void sapxepfraction (fraction arr[], int n);
+
+
+//luu du lieu vao file
+void savefraction(ofstream &file, fraction &p);
+
+void savefractionarray(ofstream &file, fraction arr[], int n);
+
+
+
+#endif
+//luu du lieu vao file
+void savefraction (ofstream &file, fraction p);
+
+
+#endif
+
+//source 
+#include "header.h"
+
+//nhap du lieu tu file
+void loadfraction (ifstream &file, fraction &p)
+{
+	file >> p.TuSo; // truyen du lieu vao bien
+	file >> p.MauSo; // tuong tu cin :>>
+};
+
+void loadarrayfraction (ifstream &file, fraction arr[], int &n)
+{
+	file >> n; //truyen du lieu vao bien n
+	for (int i = 0; i < n; i++)
+		loadfraction (file, arr[i]);
+		//truyen thanh cong du lieu vao tung phan tu trong mang duoi dang phan so :>>>	
+}
+
+//tim max
+int findmax (fraction phanso1, fraction phanso2)
+{
+	if ((phanso1.TuSo * phanso2.MauSo) >= (phanso2.TuSo * phanso1.MauSo) )
+		return -1;
+	return 0;
+}
+
+void Swap(fraction phanso1, fraction phanso2)
+{
+     fraction temp;
+     temp = phanso1;
+     phanso1  = phanso2;
+     phanso2 = temp;
+}
+
+void sapxepfraction (fraction arr[], int n) //fractionmax duoc dinh nghia duoi dang fraction
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if(findmax(arr[i], arr[j]) == -1)
+				swap(arr[i], arr[j]);
+		}
+	}
+		
+}
+
+//luu du lieu vao file
+
+
+void savefraction(ofstream &file, fraction &p)
+{	
+	file << p.TuSo << "/" << p.MauSo << endl;
+}
+
+void savefractionarray(ofstream &file, fraction arr[], int n)
+{
+	for(int i = 0; i < n; i++)
+		savefraction(file, arr[i]);
+}
+
+
+//maincpp
+// the físrt file main
+#include "header.h"
+
+int main()
+{
+	fraction arr[100]; // tao mang duoi dinh nghia phan so co 100 phan tu
+	int n;
+	
+	ifstream filecu;
+	ofstream filemoi; // dat ten bien
+	
+	filecu.open("inputbai2.txt");
+	if (filecu.fail())
+		cout<<"file unavailabe";
+	else
+	{
+		loadarrayfraction(filecu, arr, n);
+		filecu.close(); // lam xong nho dong file
+	}
+	
+	filemoi.open("resultbai2.txt");
+	if (filemoi.fail())
+		cout<<"file unavailable";
+	else
+	{
+		sapxepfraction (arr, n);
+		savefractionarray (filemoi, arr, n);
+		filemoi.close() ;
+	}
+	
+	return 0;
+}
