@@ -1,5 +1,8 @@
-#include<iostream>
-using namespace std;
-int main(){
+#include "Header.h"
 
+int main()
+{
+	cout << "Welcome to my Student Management System" << endl;
+	firstUI();
+	return 0;
 }
