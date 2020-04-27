@@ -8,49 +8,88 @@ void Login()
 	cout << "0. No              1. Yes" << endl;
 	int numberChoice = choiceScreen(1);
 	clearScreen();
+//	switch(numberChoice)
+//	{
+//		case 0:
+//		{
+//			firstUI();
+//			break;	
+//		}
+//		case 1:
+//		{
+//			string Username, Password;
+//			int kt = 0;
+//			while (0 == kt)
+//			{
+//				cout << "ACCOUNT" << endl;
+//				cout << "Username : "; cin >> Username;
+//				cout << "Password : "; cin >> Password;
+//				kt = 1;
+//				clearScreen();
+//				switch (kt)
+//				{
+//					case 1:
+//					{
+//						staffUI();
+//						break;
+//					}
+//					case 2:
+//					{
+//						break;
+//					}
+//					case 3:
+//					{
+//						break;
+//					}
+//				}
+//			}
+//			break;
+//		}	
+//		default:
+//		{
+//				warnScreen();
+//				Login();
+//		}
+//	}	
 	switch(numberChoice)
 	{
 		case 0:
 		{
 			firstUI();
-			break;	
+			break;
 		}
 		case 1:
 		{
 			string Username, Password;
+			cout << "ACCOUNT" << endl;
+			cout << "Username : "; cin >> Username;
+			cout << "Password : "; cin >> Password;
+			clearScreen();
 			int kt = 0;
-			while (0 == kt)
+			switch(kt)
 			{
-				cout << "ACCOUNT" << endl;
-				cout << "Username : "; cin >> Username;
-				cout << "Password : "; cin >> Password;
-				kt = 1;
-				clearScreen();
-				switch (kt)
+				case 1:
 				{
-					case 1:
-					{
-						staffUI();
-						break;
-					}
-					case 2:
-					{
-						break;
-					}
-					case 3:
-					{
-						break;
-					}
+					staffUI();
+				}
+				case 2:
+				{
+					break;
+				}
+				case 3:
+				{
+					break;
+				}
+				default:
+				{
+					cout << "Your username or password isn't correct , Please try again!!" << endl;
+					Login();
+					break;
 				}
 			}
-			break;
-		}	
-		default:
-		{
-				warnScreen();
-				Login();
+			break;	
 		}
-	}	
+	}
 }
 
 void firstUI()
