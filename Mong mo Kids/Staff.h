@@ -5,7 +5,5 @@
 struct staffData{
 	string ID;
 	string Password;
-	const int type ; // la giam vu
-	staffData() : type(1){};
 };
 #endif

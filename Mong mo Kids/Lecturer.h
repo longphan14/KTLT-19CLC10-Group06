@@ -9,7 +9,5 @@ struct lecturerData{
 	string DoB;
 	string Password;
 	string ID;
-	const int type;
-	lecturerData() : type(2){};
 };
 #endif					
