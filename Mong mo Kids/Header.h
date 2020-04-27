@@ -6,6 +6,13 @@
 
 using namespace std;
 
+struct Account{
+	string ID;
+	string Password;
+	string Name;
+	int Gender;
+};
+
 //****SYSTEM*****//
 int checkChoice(string Choice, int Number);
 void clearScreen();
