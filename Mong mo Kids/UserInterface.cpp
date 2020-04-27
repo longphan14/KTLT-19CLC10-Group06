@@ -2,55 +2,12 @@
 
 
 // First User Interface and Login //
-void Login()
+void Login() // Hao. Chuc nang: Dang nhap
 {
 	cout << "Do you want to sign in :" << endl;
 	cout << "0. No              1. Yes" << endl;
 	int numberChoice = choiceScreen(1);
 	clearScreen();
-//	switch(numberChoice)
-//	{
-//		case 0:
-//		{
-//			firstUI();
-//			break;	
-//		}
-//		case 1:
-//		{
-//			string Username, Password;
-//			int kt = 0;
-//			while (0 == kt)
-//			{
-//				cout << "ACCOUNT" << endl;
-//				cout << "Username : "; cin >> Username;
-//				cout << "Password : "; cin >> Password;
-//				kt = 1;
-//				clearScreen();
-//				switch (kt)
-//				{
-//					case 1:
-//					{
-//						staffUI();
-//						break;
-//					}
-//					case 2:
-//					{
-//						break;
-//					}
-//					case 3:
-//					{
-//						break;
-//					}
-//				}
-//			}
-//			break;
-//		}	
-//		default:
-//		{
-//				warnScreen();
-//				Login();
-//		}
-//	}	
 	switch(numberChoice)
 	{
 		case 0:
@@ -61,11 +18,12 @@ void Login()
 		case 1:
 		{
 			string Username, Password;
+			accountData Data;
 			cout << "ACCOUNT" << endl;
 			cout << "Username : "; cin >> Username;
 			cout << "Password : "; cin >> Password;
 			clearScreen();
-			int kt = 0;
+			int kt = checkPassword(Username, Password, Data);
 			switch(kt)
 			{
 				case 1:
@@ -88,6 +46,12 @@ void Login()
 				}
 			}
 			break;	
+		}
+		default:
+		{
+			warnScreen();
+			Login();
+			break;
 		}
 	}
 }
