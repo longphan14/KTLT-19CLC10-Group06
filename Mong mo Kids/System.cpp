@@ -95,7 +95,7 @@ int checkPassword(string Username, string Password, accountData &Data) // Hao .C
 	
 	nameFile = nameFolder + "Student.txt";
 	fi.open(nameFile.c_str());
-	kt = check(fi, Username, Password, Data, 4);
+	kt = check(fi, Username, Password, Data, 5);
 	if (kt)
 		return 3;
 	fi.close();

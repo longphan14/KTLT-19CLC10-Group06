@@ -2,9 +2,9 @@
 19126001
 20010401    // Password
 Trinh Van Minh
+0      //Gender     
 2001 04 01
 19APCS1
-0      //Gender     
 9.5          // midterm
 9.5          // final
 9.5          // bonus
@@ -24,9 +24,9 @@ Trinh Van Minh
 19127001
 20200401
 Nguyen Van 1
+1
 2020 04 01
 19APCS1
-1
 9.5          // midterm
 9.5          // final
 9.5          // bonus
@@ -46,9 +46,9 @@ Nguyen Van 1
 19127002
 20200402
 Nguyen Van 2
+1
 2020 04 02
 19APCS1
-1
 9.5          // midterm
 9.5          // final
 9.5          // bonus
@@ -68,9 +68,9 @@ Nguyen Van 2
 18127100
 20200402
 Thang Nguyen
+1
 2020 04 02
 19APCS1
-1
 9.5          // midterm
 9.5          // final
 9.5          // bonus

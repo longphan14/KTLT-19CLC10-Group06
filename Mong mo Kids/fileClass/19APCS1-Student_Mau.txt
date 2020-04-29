@@ -2,6 +2,7 @@
 19126001
 20010401    // Password
 Trinh Van Minh
+0
 2001 04 01
 19APCS1
 0          // status => 0: inactive; 1: active
@@ -9,6 +10,7 @@ Trinh Van Minh
 19127001
 20200401
 Nguyen Van 1
+0
 2020 04 01
 19APCS1
 1
@@ -16,6 +18,7 @@ Nguyen Van 1
 19127002
 20200402
 Nguyen Van 2
+0
 2020 04 02
 19APCS1
 1

@@ -1,5 +1,7 @@
 #include "Header.h"
 
+accountData dataAccess;
+
 
 // First User Interface and Login //
 void Login() // Hao. Chuc nang: Dang nhap
@@ -24,6 +26,7 @@ void Login() // Hao. Chuc nang: Dang nhap
 			cout << "Password : "; cin >> Password;
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
+			dataAccess = Data;
 			switch(kt)
 			{
 				case 1:
@@ -439,7 +442,12 @@ void showMenu()
 
 void staffUI()
 {
-	cout << "Hello ABCXYZ " << endl;
+	cout << "Hello ";
+	if (dataAccess.Gender == 0)
+		cout << "Mr ";
+	else
+		cout << "Mrs ";
+	cout << dataAccess.Name << endl;
 	cout << "0. Logout" << endl;
 	cout << "1. Show Menu" << endl;
 	cout << "2. Change Password" << endl;
