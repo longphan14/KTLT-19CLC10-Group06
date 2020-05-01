@@ -48,8 +48,6 @@ struct courstData{
 	string Room;
 };
 
-string semesterCurrent;
-
 //****SYSTEM*****//
 int checkChoice(string Choice, int Number);
 void clearScreen();

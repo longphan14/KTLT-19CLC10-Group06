@@ -1,4 +1,5 @@
 #include "Staff.h"
+
 //Nhung Ham ho tro cho viec code Tinh nang STAFF//
 void copyData(ifstream &fi, ofstream &fo) // copy data from fi to fo
 {
@@ -21,7 +22,7 @@ void copyData(ifstream &fi, ofstream &fo) // copy data from fi to fo
 	}
 }
 
-void takeCurrentSemester()
+void takeCurrentSemester(string &semesterCurrent)
 {
 	ifstream fi;
 	semesterCurrent = "";
@@ -60,6 +61,9 @@ void updateSemester()
 	copyData(fi, fo);
 	fi.close();						
 	fo.close();			
+	
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
 			
 	//Phan xu li nam hoc
 	int numberScholatics = 0;	// Nam hoc
