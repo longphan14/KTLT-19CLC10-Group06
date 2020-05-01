@@ -19,6 +19,8 @@ int choiceScreen(int Number)
 }
 //*******************************//
 
+//Nhung ham ho tro cho viec code ^^//
+
 int checkChoice(string Choice, int Number)
 {
 	int length = Choice.length();
@@ -102,4 +104,59 @@ int checkPassword(string Username, string Password, accountData &Data) // Hao .C
 	
 	return -1;
 }
+
+void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : LAy du lieu trong file fi dua vao Data 
+{
+	fi >> size;
+	fi.ignore();
+	Data = new userData[size * 2];
+	for (int i = 0 ; i < size * 2; i++)
+		Data[i].Type = type;
+	for (int i = 0; i < size; i++)
+	{
+		getline(fi, Data[i].ID);
+		getline(fi, Data[i].Password);
+		getline(fi, Data[i].Name);
+		fi >> Data[i].Gender;
+		fi.ignore();		
+		if (3 == Data[i].Type)
+		{								
+			getline(fi, Data[i].Degree);
+			fi.ignore();
+		}
+		else if (2 == Data[i].Type)
+		{
+			getline(fi,Data[i].DoB);			
+			getline(fi, Data[i].className);			
+			fi >> Data[i].Status;
+			fi.ignore();
+			fi.ignore();
+		}
+		else
+			fi.ignore();
+	}
+}
+
+void insertDataUser(ofstream &fo, userData * &Data, int size) // HAo : Dua du lieu cua mang Data vao file fo
+{
+	fo << size << endl;
+	for (int i = 0; i < size; i++)
+	{
+		fo << Data[i].ID << endl;			
+		fo << Data[i].Password << endl;
+		fo << Data[i].Name << endl;
+		fo << Data[i].Gender << endl;
+		if (Data[i].Type == 2)
+		{
+			fo << Data[i].DoB << endl;
+			fo << Data[i].className << endl;
+			fo << Data[i].Status << endl;
+		}
+		else if (3 == Data[i].Type)
+			fo << Data[i].Degree << endl;
+		fo << endl;
+	}
+}
+
+//*********************************************************//
 
