@@ -1,0 +1,29 @@
+2
+CS162
+Introduction to Programming
+19APCS1
+dbtien	//Username
+Dinh Ba Tien
+TS	// Học vị
+0	   // 0 : Nam, 1 : Nữ 
+2020 04 01 // Ngày bắt đầu
+2020 06 01 // Ngày kết thúc
+2	   // Môn học bắt đầu vào thứ mấy trong tuần
+7 30	   // Thời gian bắt đầu
+11 30	   thời gian kết thúc
+I42	    // Phòng học
+
+CM101
+Communications
+19APCS1
+dnvu
+Duong Nguyen Vu
+GS
+0
+2020 04 01
+2020 06 01
+7
+13 30
+17 30
+I23
+

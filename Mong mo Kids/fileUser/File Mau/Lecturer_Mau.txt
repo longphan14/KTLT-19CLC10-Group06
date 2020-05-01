@@ -1,0 +1,24 @@
+3
+dbtien
+abcdef
+Dinh Ba Tien
+0 // Male
+TD
+
+nmhuy
+abcdef
+Nguyen Minh Huy
+0 // Male
+ThS
+
+nhminh
+abcdef
+Nguyen Hai Minh
+1 // Female
+Ths
+
+dnvu
+dnvu
+Duong Nguyen Vu
+0
+GS
