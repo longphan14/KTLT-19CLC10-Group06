@@ -35,7 +35,7 @@ struct userData{
 	string Degree;
 };
 
-struct courstData{
+struct courseData{
 	string courseID;
 	string courseName;
 	string className;
@@ -56,6 +56,8 @@ int choiceScreen(int Number);
 int checkPassword(string, string, accountData &);
 void insertDataUser(ofstream &fo, userData * &Data, int size);
 void takeDataUser(ifstream &fi, userData * &Data, int &size, int type);
+void takeDataCourse(ifstream &fi, userData * &Lecturer, courseData * &Course, int &size);
+void insertDataCourse(ofstream &fo, userData * &Lecturer, courseData * &Course, int &size)
 
 //***************//
 

@@ -158,5 +158,54 @@ void insertDataUser(ofstream &fo, userData * &Data, int size) // HAo : Dua du li
 	}
 }
 
+void takeDataCourse(ifstream &fi, userData * &Lecturer, courseData * &Course, int &size)
+{
+	fi >> size;
+	fi.ignore();
+	Lecturer = new userData[size * 2];
+	Course = new courseData[size * 2];
+	for (int i = 0; i < size; i++)
+	{
+		getline(fi, Course[i].courseID);
+		getline(fi, Course[i].courseName);
+		getline(fi, Course[i].className);
+		getline(fi, Lecturer[i].ID);
+		getline(fi, Lecturer[i].Name);
+		getline(fi, Lecturer[i].Degree);
+		fi >> Lecturer[i].Gender;
+		fi.ignore();
+		getline(fi, Course[i].startDate);
+		getline(fi, Course[i].endDate);
+		fi >> Course[i].DoW;
+		fi.ignore();
+		getline(fi, Course[i].startTime);
+		getline(fi, Course[i].endTime);
+		getline(fi, Course[i].Room);
+		fi.ignore();
+	}
+}
+
+void insertDataCourse(ofstream &fo, userData * &Lecturer, courseData * &Course, int &size)
+{
+	fo << size << endl;
+	for (int i = 0; i < size; i++)
+	{
+		fo << Course[i].courseID << endl;
+		fo << Course[i].courseName << endl;
+		fo << Course[i].className << endl;
+		fo << Lecturer[i].ID << endl;
+		fo << Lecturer[i].Name << endl;
+		fo << Lecturer[i].Degree << endl;
+		fo << Lecturer[i].Gender << endl;
+		fo << Course[i].startDate << endl;
+		fo << Course[i].endDate << endl;
+		fo << Course[i].DoW << endl;
+		fo << Course[i].startTime << endl;
+		fo << Course[i].endTime << endl;
+		fo << Course[i].Room << endl;
+		fo << endl;
+	}
+}
+
 //*********************************************************//
 
