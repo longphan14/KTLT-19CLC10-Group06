@@ -107,10 +107,14 @@ int checkPassword(string Username, string Password, accountData &Data) // Hao .C
 
 void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : LAy du lieu trong file fi dua vao Data 
 {
+	size = 0;			
 	fi >> size;
 	fi.ignore();
-	Data = new userData[size * 2];
-	for (int i = 0 ; i < size * 2; i++)
+	if (size <= 50)
+		Data = new userData[100];
+	else
+		Data = new userData[size * 2];
+	for (int i = 0 ; i < max(size * 2, 100); i++)
 		Data[i].Type = type;
 	for (int i = 0; i < size; i++)
 	{
@@ -162,8 +166,16 @@ void takeDataCourse(ifstream &fi, userData * &Lecturer, courseData * &Course, in
 {
 	fi >> size;
 	fi.ignore();
-	Lecturer = new userData[size * 2];
-	Course = new courseData[size * 2];
+	if (size > 50)
+	{
+		Lecturer = new userData[size * 2];
+		Course = new courseData[size * 2];
+	}
+	else
+	{
+		Lecturer = new userData[100];
+		Course = new courseData[100];
+	}
 	for (int i = 0; i < size; i++)
 	{
 		getline(fi, Course[i].courseID);
