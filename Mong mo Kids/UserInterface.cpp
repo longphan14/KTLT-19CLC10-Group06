@@ -467,6 +467,7 @@ void staffUI()
 		}
 		case 2:
 		{
+			changePassword(dataAccess.ID, dataAccess.Password, 1);
 			break;
 		}
 		default:
@@ -479,3 +480,17 @@ void staffUI()
 	
 }
 //******************************** //	
+
+//******STUDENT USER INTERFACE*****//
+void studentUI()
+{
+	
+}
+//********************************//
+
+//******LECTURER USER INTERFACE***//
+void lecturerUI()
+{
+	
+}
+//********************************//
