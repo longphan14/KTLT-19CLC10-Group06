@@ -11,11 +11,11 @@ void warnScreen()
 	cout << "Your choice isn't correct !! Please choose again" << endl;
 }
 
-int choiceScreen(int Number)
+int choiceScreen(int Number) // Hao : Giup viec nhap so de dang hon
 {
 	string Choice;					
 	cout << "Enter your choice (0 -> " << Number << ") :" ; cin >> Choice;
-	return checkChoice(Choice, Number);
+	return checkChoice(Choice, Number); // Return -1 : Choice > Number or Format of chocie != Number , Return Value which is less than Number.
 }
 //*******************************//
 
@@ -107,10 +107,14 @@ int checkPassword(string Username, string Password, accountData &Data) // Hao .C
 
 void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : LAy du lieu trong file fi dua vao Data 
 {
+	size = 0;			
 	fi >> size;
 	fi.ignore();
-	Data = new userData[size * 2];
-	for (int i = 0 ; i < size * 2; i++)
+	if (size <= 50)
+		Data = new userData[100];
+	else
+		Data = new userData[size * 2];
+	for (int i = 0 ; i < max(size * 2, 100); i++)
 		Data[i].Type = type;
 	for (int i = 0; i < size; i++)
 	{
@@ -162,8 +166,16 @@ void takeDataCourse(ifstream &fi, userData * &Lecturer, courseData * &Course, in
 {
 	fi >> size;
 	fi.ignore();
-	Lecturer = new userData[size * 2];
-	Course = new courseData[size * 2];
+	if (size > 50)
+	{
+		Lecturer = new userData[size * 2];
+		Course = new courseData[size * 2];
+	}
+	else
+	{
+		Lecturer = new userData[100];
+		Course = new courseData[100];
+	}
 	for (int i = 0; i < size; i++)
 	{
 		getline(fi, Course[i].courseID);
@@ -208,4 +220,111 @@ void insertDataCourse(ofstream &fo, userData * &Lecturer, courseData * &Course, 
 }
 
 //*********************************************************//
+
+//*********************Cac ham dung chung ****************//
+
+void changePassword(string Username, string Password, int type) // Hao : Ham thay doi password
+{
+	
+	ifstream fi;
+	if (1 == type)
+		fi.open("fileUser/Staff.txt");
+	else if (2 == type)
+		fi.open("fileUser/Student.txt");
+	else if (3 == type)
+		fi.open("fileUser/Lecturer.txt");
+	if (!fi.is_open())
+		cout << "Khong mo duoc file" << endl;
+	else
+	{
+		userData * Data;
+		int size, i = 0;				
+		takeDataUser(fi, Data, size, type);
+		for (i = 0; i < size; i++)
+			if (Data[i].ID == Username)
+				break;
+		string currentPassword = "";
+		while (currentPassword != Password)
+		{				
+			cout << "Enter your current Password : " ; 
+			cin >> currentPassword;
+			if (currentPassword != Password)
+			{
+				system("CLS");
+				cout << "Your enter password isn't correct !!" << endl;
+				cout << "0. Return       1. Continue" << endl;
+				int numberChoice = -1;
+				while (numberChoice == -1)
+					numberChoice = choiceScreen(1);
+				system("CLS"); 
+				if (numberChoice == 0)
+				{
+					switch(type)
+					{
+						case 1:
+						{
+							staffUI();
+							break;		
+						}
+						case 2:
+						{
+							studentUI();
+							break;
+						}
+						case 3:
+						{
+							lecturerUI();
+						}
+					}
+				}
+			}
+		}
+		
+		string newPassword1 = "a", newPassword2 = "b";
+		while (newPassword1 != newPassword2)
+		{
+			cout << "Enter new password       : " ; cin >> newPassword1;
+			cout << "Enter new password again : " ; cin >> newPassword2;
+			if (newPassword1 != newPassword2)
+			{
+				system("CLS");
+				cout << "Two new password you've entered isn't the same !! Try again" << endl;		
+			}
+		}
+		Data[i].Password = newPassword1;
+		ofstream fo;
+		if (1 == type)
+			fo.open("fileUser/Staff.txt");
+		else if (2 == type)
+			fo.open("fileUser/Student.txt");
+		else if (3 == type)
+			fo.open("fileUser/Lecturer.txt");
+		insertDataUser(fo, Data, size);
+		
+		cout << "Your password is changed successfully !!!" << endl;
+		cout << "Wait 5 second to return main UI" << endl;
+		sleep(5);
+		system("CLS");
+		switch(type)
+		{
+			case 1:
+				{
+					staffUI();
+					break;		
+				}
+			case 2:
+				{
+					studentUI();
+					break;
+				}
+			case 3:
+				{
+					lecturerUI();
+					break;
+				}
+		}
+		fi.close();	
+	}	
+}
+//*******************************************************//	
 
