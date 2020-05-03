@@ -47,6 +47,24 @@ void takeCurrentSemester(string &semesterCurrent)
 //**********************************************//
 
 //Tinh Nang cua User STAFF//
+
+Void importCourse() {
+	ifstream fi;
+	ofstream fo;
+	fi.open("fileCourse/Semester.txt");
+	fo.open("fileCourse/SemesterTmp.txt");
+	int n;
+	fi >> n;
+	fi.ignore();
+	fo << n + 1 << endl;
+	copyData(fi, fo);
+	fi.close();
+	fo.close();
+
+}
+Void addCourse();
+Void viewListCourse();
+
 void updateSemester()
 {
 	ifstream fi;
