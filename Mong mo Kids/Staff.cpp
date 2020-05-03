@@ -48,22 +48,31 @@ void takeCurrentSemester(string &semesterCurrent)
 
 //Tinh Nang cua User STAFF//
 
-Void importCourse() {
-	ifstream fi;
-	ofstream fo;
-	fi.open("fileCourse/Semester.txt");
-	fo.open("fileCourse/SemesterTmp.txt");
-	int n;
-	fi >> n;
-	fi.ignore();
-	fo << n + 1 << endl;
-	copyData(fi, fo);
-	fi.close();
-	fo.close();
-
+void importCourse() {
+	fstream fi;
+	string file;
+	int size;
+	cout << "Nhap duong truyen file: ";
+	cin >> file;
+	fi.open(file);
+	if(fi.fail()){
+		cout << "Fail to open this file!";
+	}
+	else {
+		cout << "Open success!" << endl;
+		size = strlen(file);
+		for (int i = size; i > size - 5; i--){
+			if(file[i] = "v" && file[i-1] = "s" && file[i-2] = "c"){
+				cout << "This is csv file!" << endl;
+			}
+			else 
+				cout << "This is not csv file!" << endl;
+		}
+	}
+	
 }
-Void addCourse();
-Void viewListCourse();
+void addCourse();
+void viewListCourse();
 
 void updateSemester()
 {

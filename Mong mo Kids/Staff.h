@@ -3,11 +3,12 @@
 #include "Header.h"
 
 void takeCurrentSemester(string &semesterCurrent);
-void updateSemester()
+void updateSemester();
 
 // task tuan 1
-Void importCourse();
-Void addCourse();
-Void viewListCourse();
+//hello moi nguoi
+void importCourse();
+void addCourse();
+void viewListCourse();
 
 #endif
