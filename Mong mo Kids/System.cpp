@@ -219,6 +219,22 @@ void insertDataCourse(ofstream &fo, userData * &Lecturer, courseData * &Course, 
 	}
 }
 
+void takeDataClass(ifstream &fi, string nameClass[], int &size)
+{
+	fi >> size;
+	fi.ignore();
+	for (int i = 0; i < size; i++)
+		fi >> nameClass[i];	
+}
+
+void insertDataClass(ofstream &fo, string nameClass[], int size)
+{
+	fo << size << endl;
+	for (int i = 0; i < size; i++)
+		fo << nameClass[i] << endl;
+}
+
+
 //*********************************************************//
 
 //*********************Cac ham dung chung ****************//
