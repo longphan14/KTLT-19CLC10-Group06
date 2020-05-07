@@ -1,4 +1,5 @@
 #include "Header.h"
+#include "Staff.h"
 
 accountData dataAccess;
 
@@ -90,6 +91,12 @@ void firstUI()
 	}
 }
 
+void pauseScreen()
+{
+	cout << "Please wait 5 second to return !!" << endl;
+	sleep(5);
+	system("CLS");
+}
 // ******************************** //
 
 
@@ -294,7 +301,8 @@ void editFeatureCourse()
 	cout << "4. Remove course" << endl;
 	cout << "5. Create semester" << endl;
 	cout << "6. Delete semester" << endl;
-	int numberChoice = choiceScreen(6);	
+	cout << "7. Update semester" << endl;
+	int numberChoice = choiceScreen(7);	
 	clearScreen();
 	switch (numberChoice)
 	{
@@ -327,6 +335,11 @@ void editFeatureCourse()
 		{
 			break;
 		}
+		case 7:
+		{
+			updateSemester();
+			break;
+		}	
 		default:
 		{
 			warnScreen();

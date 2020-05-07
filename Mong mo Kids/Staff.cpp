@@ -22,28 +22,6 @@ void copyData(ifstream &fi, ofstream &fo) // copy data from fi to fo
 	}
 }
 
-void takeCurrentSemester(string &semesterCurrent)
-{
-	ifstream fi;
-	semesterCurrent = "";
-	fi.open("fileCourse/Semester.txt");
-	if (!fi.is_open())
-		cout << "Khong mo duoc file" << endl;
-	else
-	{
-		int n;
-		fi >> n;
-		string Semester;
-		string Scholatics;
-		for (int i = 0; i < n; i++)
-		{
-			fi >> Semester >> Scholatics;
-			fi.ignore();
-		}
-		semesterCurrent = Semester + "-" + Scholatics;
-		fi.close();	
-	}					 		
-}
 //**********************************************//
 
 //Tinh Nang cua User STAFF//
@@ -86,6 +64,9 @@ void updateSemester()
 	fo << endl;
 	fi.close();					
 	fo.close();		
-	int result = remove("fileCourse/SemesterTmp.txt");								
+	int result = remove("fileCourse/SemesterTmp.txt");		
+	cout << "Update Successfully" << endl;
+	pauseScreen();
+	editFeatureStu();	
 }
 //************************//

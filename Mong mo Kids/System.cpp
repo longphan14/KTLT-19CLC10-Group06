@@ -115,13 +115,16 @@ void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : 
 	else
 		Data = new userData[size * 2];
 	for (int i = 0 ; i < max(size * 2, 100); i++)
+	if (4 != type)
 		Data[i].Type = type;
+	else
+		Data[i].Type = 2;
 	for (int i = 0; i < size; i++)
 	{
-		getline(fi, Data[i].ID);
+		getline(fi, Data[i].ID);	
 		getline(fi, Data[i].Password);
 		getline(fi, Data[i].Name);
-		fi >> Data[i].Gender;
+		fi >> Data[i].Gender;		
 		fi.ignore();		
 		if (3 == Data[i].Type)
 		{								
@@ -131,10 +134,34 @@ void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : 
 		else if (2 == Data[i].Type)
 		{
 			getline(fi,Data[i].DoB);			
-			getline(fi, Data[i].className);			
-			fi >> Data[i].Status;
-			fi.ignore();
-			fi.ignore();
+			getline(fi, Data[i].className);	
+			if (4 != type)		
+			{
+				fi >> Data[i].Status;
+				fi.ignore();
+				fi.ignore();
+			}
+			else
+			{
+				fi >> Data[i].Score.Midterm;
+				fi >> Data[i].Score.Final;
+				fi >> Data[i].Score.Bonus;
+				fi >> Data[i].Score.Total;
+				fi.ignore();					
+				for (int j = 0; j < 10; j++)
+				{
+					string s;
+					getline(fi, s);
+					int n = s.length();
+					if (s[n - 2] == '-')
+						Data[i].Attendance[j] = -1;
+					else
+						Data[i].Attendance[j] = 1;
+				}
+				fi >> Data[i].Status;	
+				fi.ignore();
+				fi.ignore();
+			}
 		}
 		else
 			fi.ignore();
@@ -234,6 +261,193 @@ void insertDataClass(ofstream &fo, string nameClass[], int size)
 		fo << nameClass[i] << endl;
 }
 
+void takeCurrentSemester(string &semesterCurrent) // Lay Hoc ki va nam hoc hien tai vao semesterCurrent VD: semesterCurrent = "2019-2020-HK2"
+{
+	ifstream fi;
+	semesterCurrent = "";
+	fi.open("fileCourse/Semester.txt");
+	if (!fi.is_open())
+		cout << "Khong mo duoc file" << endl;
+	else
+	{
+		int n;
+		fi >> n;
+		string Semester;
+		string Scholatics;
+		for (int i = 0; i < n; i++)
+		{
+			fi >> Semester >> Scholatics;
+			fi.ignore();
+		}
+		semesterCurrent = Semester + "-" + Scholatics;
+		fi.close();	
+	}					 		
+}
+
+bool isLeapYear(int year)
+{
+	if (0 == year % 100)	
+	{
+		if (year % 400 == 0)
+			return true;
+		return false;
+	}
+	else
+	{
+		if (0 == year % 4)
+			return true;
+		return false;
+	}
+}
+
+void writeAttendanceToFile(ofstream &fo, int Attendance[], string startDate, string startTime, string endTime) // viet Bang diem danh vao tung sinh vien
+{
+	int dateOfMonth[20];
+	int Day = 0, Month = 0, Year = 0;
+	int i = 0;
+	while (startDate[i] != ' ')									
+		Year = Year * 10 + int(startDate[i++]) - 48;
+	i++;
+	
+	while (startDate[i] != ' ')
+		Month = Month * 10 + int(startDate[i++]) - 48;
+
+	i++;	
+	int n = startDate.length();
+	
+	while (i != n)
+		Day = Day * 10 + int(startDate[i++]) - 48; 
+													
+	
+	for (int i = 1; i <= 12; i++)
+	{
+		switch(i)
+		{
+			case 1: case 3: case 5: case 7: case 8 : case 10: case 12:
+			{
+				dateOfMonth[i] = 31;
+				break;
+			}
+			case 4: case 6: case 9: case 11:
+			{
+				dateOfMonth[i] = 30;
+				break;
+			}
+			default:
+			{
+				if (isLeapYear(Year))
+					dateOfMonth[i] = 29;
+				else
+					dateOfMonth[i] = 28;
+				break;
+			}
+		}
+	}
+	
+	for (int i = 0 ; i < 10; i++)
+	{
+		fo << Year << " ";
+		if (Month < 10)
+			fo << "0";
+		fo << Month << " ";
+		if (Day < 10)
+			fo << "0";
+		fo << Day << " " << startTime << " " << endTime << " " << Attendance[i] << endl;
+		Day = Day + 7;										
+		if (Day > dateOfMonth[Month])
+		{
+			Day = Day % dateOfMonth[Month];
+			Month++;
+			if (Month > 12)
+			{
+				Year++;
+				Month = 1;
+			}
+		}	
+	}
+}
+
+
+void insertDataStudentInCourse(string fileName, userData *Data, int size) //Dua du lieu Data vao fileName . fileName o day la file chua du lieu sinh vien trong mot khoa hoc
+{
+	string fileNameCourse = "fileCourse/";
+	int i = 0, dem = 0;
+	while (fileName[i++] != '/');
+	while (dem != 3)
+	{
+		fileNameCourse += fileName[i];
+		if (fileName[i++] == '-')
+			dem++;
+	}			
+	fileNameCourse += "Schedule-";
+	while (dem != 4)
+	{
+		if (fileName[i] == '-')
+		{
+			dem++;
+			i++;
+			break;
+		}
+		fileNameCourse += fileName[i++];	
+	}		
+	
+	string courseID = "";
+	while (dem != 5)
+	{
+		if (fileName[i] == '-')
+			break;
+		courseID += fileName[i++];		
+	}
+	
+	fileNameCourse += ".txt";
+	
+	int sizeCourse;
+	userData * Lecturer;
+	courseData * Course;
+	
+	ifstream fi;
+	fi.open(fileNameCourse.c_str());
+	if (!fi.is_open())
+		cout << "don't open" << endl;
+	else
+		takeDataCourse(fi, Lecturer, Course, sizeCourse);
+	fi.close();
+	
+						
+	string startDate = "", startTime = "", endTime = "" ;
+
+	for (int i = 0; i < sizeCourse; i++)
+	if (courseID == Course[i].courseID)
+	{
+			startDate = Course[i].startDate;
+			startTime = Course[i].startTime;
+		 	endTime = Course[i].endTime;
+			break;
+	}
+	
+	cout << startDate;
+		
+	ofstream fo;
+	fo.open(fileName.c_str());
+	fo << size << endl;
+	for (int i = 0; i < size; i++)
+	{
+		fo << Data[i].ID << endl;
+		fo << Data[i].Password << endl;
+		fo << Data[i].Name << endl;
+		fo << Data[i].Gender << endl;
+		fo << Data[i].DoB << endl;
+		fo << Data[i].className << endl;
+		fo << Data[i].Score.Midterm << endl;
+		fo << Data[i].Score.Final << endl;
+		fo << Data[i].Score.Bonus << endl;
+		fo << Data[i].Score.Total << endl;			
+		writeAttendanceToFile(fo, Data[i].Attendance, startDate, startTime, endTime);	
+		fo << Data[i].Status << endl;	
+		fo << endl;
+	}
+	fo.close();
+}
 
 //*********************************************************//
 

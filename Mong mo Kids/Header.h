@@ -64,7 +64,8 @@ void insertDataCourse(ofstream &fo, userData * &Lecturer, courseData * &Course, 
 void changePassword(string Username, string Password, int type);
 void takeDataClass(ifstream &fi, string nameClass[], int &size);
 void insertDataClass(ofstream &fo, string nameClass[], int size);
-
+void takeCurrentSemester(string &semesterCurrent);
+void insertDataStudentInCourse(string fileName, userData *Data, int size);
 //***************//
 
 //User Interface STAFF//
@@ -77,6 +78,7 @@ void viewFeatureStu();
 void courseFeatureUI();
 void editFeatureCourse();	
 void staffUI();
+void pauseScreen();
 //**************//	
 
 //User Interface STUDENT//
