@@ -27,27 +27,25 @@ void copyData(ifstream &fi, ofstream &fo) // copy data from fi to fo
 //Tinh Nang cua User STAFF//
 
 void importCourse() {
-	fstream fi;
+	ifstream fi;
 	string file;
 	int size;
-	cout << "Nhap duong truyen file: ";
-	cin >> file;
-	fi.open(file);
-	if(fi.fail()){
-		cout << "Fail to open this file!";
+	std::cout << "Nhap duong truyen file: ";
+	std::cin >> file;
+	size = file.length();
+	int i = size;
+	if(file[i - 1] == 'v' && file[i - 2] == 's' && file[i - 3] == 'c')
+		cout << "This is csv file!" << endl;
+	else
+		cout << "This is not csv file!" << endl;
+	fi.open(file.c_str());
+	if (fi.is_open()) {
+		cout << "Open success!";
 	}
 	else {
-		cout << "Open success!" << endl;
-		size = strlen(file);
-		for (int i = size; i > size - 5; i--){
-			if(file[i] = "v" && file[i-1] = "s" && file[i-2] = "c"){
-				cout << "This is csv file!" << endl;
-			}
-			else 
-				cout << "This is not csv file!" << endl;
-		}
+		cout << "Fail to open File!" << endl;
 	}
-	
+	fi.close();
 }
 void addCourse();
 void viewListCourse();
