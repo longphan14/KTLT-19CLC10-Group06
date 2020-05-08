@@ -92,11 +92,31 @@ void firstUI()
 	}
 }
 
-void pauseScreen()
-{
-	cout << "Please wait 5 second to return !!" << endl;
-	sleep(5);
-	system("CLS");
+void returnScreen(void (*functionCurrent)(), void (*functionPrevious)())
+{													
+	cout << "Do you want to continue ?" << endl;
+	cout << "0. No              1.Yes" << endl;
+	int numberChoice = choiceScreen(1);
+	clearScreen();
+	switch(numberChoice)
+	{
+		case 0 :
+		{
+			(*functionPrevious)();
+			break;
+		}
+		case 1:
+		{
+			(*functionCurrent)();
+			break;
+		}
+		default:
+		{
+			cout << "Your choose isn't Wrong !! please try again" << endl;
+			returnScreen(functionCurrent, functionPrevious);
+			break;
+		}
+	}
 }
 // ******************************** //
 
@@ -116,7 +136,7 @@ void editFeatureStu()
 	cout << "4. Remove student" << endl;
 	cout << "5. Change class of student" << endl;
 	cout << "6. Remove student from a course" << endl;
-	cout << "7. Add student to a course";
+	cout << "7. Add student to a course" << endl;
 	int numberChoice = choiceScreen(7);
 	clearScreen();
 	switch (numberChoice)
