@@ -8,5 +8,5 @@ void updateSemester();
 void importCourse();
 void addCourse();
 void viewListCourse();
-
+void insertCourse(ifstream &filein, ofstream &fileout);
 #endif
