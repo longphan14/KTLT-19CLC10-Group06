@@ -46,6 +46,8 @@ void importCourse() {
 		cout << "Fail to open File!" << endl;
 	}
 	fi.close();
+	cout << endl;
+	editFeatureCourse();
 }
 void addCourse();
 void viewListCourse();
