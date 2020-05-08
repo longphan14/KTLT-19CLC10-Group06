@@ -21,6 +21,14 @@ int choiceScreen(int Number) // Hao : Giup viec nhap so de dang hon
 
 //Nhung ham ho tro cho viec code ^^//
 
+int max(int a, int b)
+{
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+
 int checkChoice(string Choice, int Number)
 {
 	int length = Choice.length();
@@ -532,8 +540,6 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 		insertDataUser(fo, Data, size);
 		
 		cout << "Your password is changed successfully !!!" << endl;
-		cout << "Wait 5 second to return main UI" << endl;
-		sleep(5);
 		system("CLS");
 		switch(type)
 		{

@@ -4,7 +4,6 @@
 #include <fstream>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <cmath>
 
 
@@ -78,7 +77,7 @@ void viewFeatureStu();
 void courseFeatureUI();
 void editFeatureCourse();	
 void staffUI();
-void pauseScreen();
+void returnScreen(void (*functionCurrent)(), void (*functionPrevious)());
 //**************//	
 
 //User Interface STUDENT//

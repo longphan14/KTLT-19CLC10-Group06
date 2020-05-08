@@ -46,7 +46,7 @@ void importCourse() {
 		cout << "Fail to open File!" << endl;
 	}
 	fi.close();
-	cout << endl;
+	returnScreen(importCourse, editFeatureStu);
 	editFeatureCourse();
 }
 void addCourse();
@@ -93,7 +93,7 @@ void updateSemester()
 	fo.close();		
 	int result = remove("fileCourse/SemesterTmp.txt");		
 	cout << "Update Successfully" << endl;
-	pauseScreen();
-	editFeatureStu();	
+	returnScreen(updateSemester, editFeatureCourse);	
+	
 }
 //************************//
