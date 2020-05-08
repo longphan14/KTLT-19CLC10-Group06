@@ -25,6 +25,33 @@ void copyData(ifstream &fi, ofstream &fo) // copy data from fi to fo
 //**********************************************//
 
 //Tinh Nang cua User STAFF//
+
+void importCourse() {
+	ifstream fi;
+	string file;
+	int size;
+	std::cout << "Nhap duong truyen file: ";
+	std::cin >> file;
+	size = file.length();
+	int i = size;
+	if(file[i - 1] == 'v' && file[i - 2] == 's' && file[i - 3] == 'c')
+		cout << "This is csv file!" << endl;
+	else
+		cout << "This is not csv file!" << endl;
+	fi.open(file.c_str());
+	if (fi.is_open()) {
+		cout << "Open success!";
+	}
+	else {
+		cout << "Fail to open File!" << endl;
+	}
+	fi.close();
+	cout << endl;
+	editFeatureCourse();
+}
+void addCourse();
+void viewListCourse();
+
 void updateSemester()
 {
 	ifstream fi;
