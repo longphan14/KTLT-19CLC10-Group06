@@ -1,17 +1,17 @@
-4
+5
 19126001
 20010401
-Trinh Van Minh
-1
-2001 04 01
+Trinh Van Minh 123
+0
+2001 05 01
 19APCS1
 1
 
-19127002
+19127123
 20020101
-Do Vuong Phuc Hoi Nhieu
-1
-20020101
+Do Vuong Phuc
+0
+2001 05 04
 19CLC5
 1
 
@@ -31,10 +31,11 @@ Nguyen Van 1
 19APCS1
 1
 
-19127002
-20200402
-Nguyen Van 2
-1
-2020 04 02
+19127388
+20010527
+Bui Nguyen Nhat Hao
+0
+2001 05 27
 19APCS1
 1
+

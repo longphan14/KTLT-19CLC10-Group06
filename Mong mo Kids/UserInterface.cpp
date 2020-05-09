@@ -157,6 +157,7 @@ void editFeatureStu()
 		}
 		case 3:
 		{
+			editStudent();
 			break;
 		}
 		case 4:

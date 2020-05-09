@@ -122,11 +122,12 @@ void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : 
 		Data = new userData[100];
 	else
 		Data = new userData[size * 2];
-	for (int i = 0 ; i < max(size * 2, 100); i++)
+	for (int i = 0 ; i < max(size * 2, 100); i++) 
 	if (4 != type)
 		Data[i].Type = type;
 	else
 		Data[i].Type = 2;
+
 	for (int i = 0; i < size; i++)
 	{
 		getline(fi, Data[i].ID);	
