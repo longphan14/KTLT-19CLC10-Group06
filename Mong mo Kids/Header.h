@@ -26,6 +26,7 @@ struct scoreData{
 struct userData{
 	string ID;	// MSSV
 	string Name;
+	string NO;
 	int Gender; // gioi tinh , 0: Nam, 1: Nu
 	string DoB;	// Ngay thang nam sinh
 	string Password;

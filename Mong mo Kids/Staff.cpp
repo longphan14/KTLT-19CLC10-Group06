@@ -28,8 +28,10 @@ void copyData(ifstream &fi, ofstream &fo) // copy data from fi to fo
 
 void importCourse() {
 	ifstream fi;
-	string file;
+	ofstream fo;
+	string file, fileout;
 	int size;
+	
 	std::cout << "Nhap duong truyen file: ";
 	std::cin >> file;
 	size = file.length();
@@ -38,16 +40,58 @@ void importCourse() {
 		cout << "This is csv file!" << endl;
 	else
 		cout << "This is not csv file!" << endl;
+		
+		
 	fi.open(file.c_str());
-	if (fi.is_open()) {
-		cout << "Open success!";
+	fileout = "fileCourse/2019-2020-HK2-CS162-19CLC10-Students.txt";
+	fo.open(fileout.c_str());
+	if(fi.is_open()){
+		cout << "Filein is Open!" << endl;
 	}
-	else {
-		cout << "Fail to open File!" << endl;
+	else{
+		cout << "Filein is not Open" << endl;
 	}
+	if(fo.is_open()){
+		cout << "Fileout is Open!" << endl;
+		insertCourse(fi, fo);
+	}
+	else{
+		cout << "Fileout is not Open" << endl;
+	}
+	
 	fi.close();
-	returnScreen(importCourse, editFeatureStu);
+	fo.close();
+	cout << endl;
 	editFeatureCourse();
+}
+
+void insertCourse(ifstream &filein, ofstream &fileout){
+	userData info[100];
+	string firstline;
+	if(filein.is_open() && fileout.is_open()){
+		getline(filein, firstline);
+		int i = 0;
+		while(!filein.eof()){
+			getline(filein, info[i].NO , ',');
+			getline(filein, info[i].ID, ',');
+			getline(filein, info[i].Name, ',');
+			getline(filein, info[i].DoB, ',');
+			getline(filein, info[i].className,',');
+			i++;
+		}
+		for(int k = 0; k <= i;k++){
+			fileout << info[k].NO << " ";
+			fileout << info[k].ID << " ";
+			fileout << info[k].Name << " ";
+			fileout << info[k].DoB <<" ";
+			fileout << info[k].className <<" ";
+		}
+		cout << endl;
+		cout << "Transfer Sussces" << endl;
+	}
+	else{
+		cout << "Cannot processing file!" << endl;
+	}
 }
 void addCourse();
 void viewListCourse();
