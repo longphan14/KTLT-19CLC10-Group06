@@ -74,7 +74,7 @@ void firstUI()
 		{
 			case 0:
 			{
-				exit;
+				exit(0);
 				break;		
 			}
 			case 1:
@@ -394,6 +394,7 @@ void viewFeatureCourse()
 		}
 		case 2:
 		{
+			viewAllLecturer();
 			break;
 		}
 		case 3:

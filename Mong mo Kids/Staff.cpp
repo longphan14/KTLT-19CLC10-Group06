@@ -22,7 +22,7 @@ void copyData(ifstream &fi, ofstream &fo) // copy data from fi to fo
 	}
 }
 
-void editStudentInFile(string className, string courseName, string ID, userData Data) // Duyet tung phan tu cuar file student in course
+void editStudentInFile(string className, string courseName, string ID, userData Data) //Hao: Duyet tung phan tu cuar file student in course
 {
 	string semesterCurrent;
 	takeCurrentSemester(semesterCurrent);
@@ -169,7 +169,7 @@ void updateSemester()
 	
 }
 
-void editStudent()
+void editStudent() // Hao : Chinh sua thong tin sinh vien
 {
 	string IDFound;											
 	cout << "Do you want to edit student ?" << endl;
@@ -216,26 +216,51 @@ void editStudent()
 		editStudent();
 	}
 	
-	cout << ">>" << Student[NOofStudent].Name << endl;
-	cout << ">>" << Student[NOofStudent].DoB << endl;
-	cout << "Are you sure to edit this student ?" << endl;
-	cout << "0.No                1.Yes" << endl;
-	numberChoice = choiceScreen(1);
-	switch(numberChoice)
+//	cout << "Are you sure to edit this student ?" << endl;
+//	cout << "0.No                1.Yes" << endl;
+//	numberChoice = choiceScreen(1);
+//	switch(numberChoice)
+//	{
+//		case 0:
+//		{
+//			system("CLS");
+//			editFeatureStu();
+//			break;	
+//		}	
+//		case -1:
+//		{
+//			system("CLS");
+//			cout << "Your choice is wrong !! Choice again" << endl;
+//			break;
+//		}
+//	}
+	numberChoice = -1;
+	while (numberChoice == -1)
 	{
-		case 0:
+		cout << ">>" << Student[NOofStudent].Name << endl;
+		cout << ">>" << Student[NOofStudent].DoB << endl;
+		cout << "Are you sure to edit this student ?" << endl;
+		cout << "0.No                1.Yes" << endl;
+		numberChoice = choiceScreen(1);
+		switch(numberChoice)
 		{
-			editFeatureStu();
-			break;	
-		}	
-		case -1:
-		{
-			cout << "Your choice is wrong !! Choice again" << endl;
-			editStudent();
-			break;
+			case 0:
+			{
+				system("CLS");
+				editFeatureStu();
+				break;	
+			}	
+			case -1:
+			{
+				system("CLS");
+				cout << "Your choice is wrong !! Choice again" << endl;
+				break;
+			}
 		}
-	}	
+	}								
 	//Edit thong tin sinh vien
+	system("CLS");
+	cout << "Now you can change this student !!" << endl;
 	string Name, DoB, ID;
 	int Gender;											
 	cin.ignore();
@@ -295,4 +320,40 @@ void editStudent()
 	cout << "DoB  :" << Student[NOofStudent].DoB << endl;
 	returnScreen(editStudent, editFeatureStu);
 }
+
+void viewAllLecturer()
+{
+	cout << "List of all lecturers in school" << endl;
+	userData * Lecturer;
+	int size = 0;
+	ifstream fi;
+	fi.open("fileUser/Lecturer.txt");							
+	takeDataUser(fi, Lecturer, size, 3);
+	fi.close();					
+	
+	for (int i = 0; i < size; i++)
+	{
+		cout << "ID: " << Lecturer[i].ID << endl;
+		cout << "Name : " << Lecturer[i].Name << endl;
+		cout << "Degree : " << Lecturer[i].Degree << endl;
+		cout << endl;	
+	}				
+	int numberChoice = -1;
+	while (-1 == numberChoice)
+	{
+		cout << "Enter 0 to return" << endl;
+		numberChoice = choiceScreen(0);
+		if (0 == numberChoice)
+		{
+			system("CLS");			
+			viewFeatureCourse();	
+		}
+		else
+		{
+			system("CLS");
+			cout << "Your choose isn't wrong !! Choice again" << endl;
+		}
+	}
+}
+
 //************************//
