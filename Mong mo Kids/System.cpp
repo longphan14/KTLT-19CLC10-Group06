@@ -14,7 +14,16 @@ void warnScreen()
 int choiceScreen(int Number) // Hao : Giup viec nhap so de dang hon
 {
 	string Choice;					
-	cout << "Enter your choice (0 -> " << Number << ") :" ; cin >> Choice;
+	if (Number == 0)
+	{												
+		cout << "Enter your choice : ";
+		cin >> Choice;	
+	}
+	else
+	{
+		cout << "Enter your choice (0 -> " << Number << ") :" ; 
+		cin >> Choice;
+	}
 	return checkChoice(Choice, Number); // Return -1 : Choice > Number or Format of chocie != Number , Return Value which is less than Number.
 }
 //*******************************//
@@ -122,14 +131,12 @@ void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : 
 		Data = new userData[100];
 	else
 		Data = new userData[size * 2];
-	for (int i = 0 ; i < max(size * 2, 100); i++) 
-	if (4 != type)
-		Data[i].Type = type;
-	else
-		Data[i].Type = 2;
-
+		
+	int k = (type == 4) ? 2 : type;
+	
 	for (int i = 0; i < size; i++)
 	{
+		Data[i].Type = k;
 		getline(fi, Data[i].ID);	
 		getline(fi, Data[i].Password);
 		getline(fi, Data[i].Name);
@@ -212,8 +219,10 @@ void takeDataCourse(ifstream &fi, userData * &Lecturer, courseData * &Course, in
 		Lecturer = new userData[100];
 		Course = new courseData[100];
 	}
+	
 	for (int i = 0; i < size; i++)
 	{
+		Lecturer[i].Type = 3;
 		getline(fi, Course[i].courseID);
 		getline(fi, Course[i].courseName);
 		getline(fi, Course[i].className);

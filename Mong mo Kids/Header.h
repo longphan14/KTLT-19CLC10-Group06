@@ -77,6 +77,7 @@ void editFeatureStu();
 void viewFeatureStu();
 void courseFeatureUI();
 void editFeatureCourse();	
+void viewFeatureCourse();
 void staffUI();
 void returnScreen(void (*functionCurrent)(), void (*functionPrevious)());
 //**************//	
