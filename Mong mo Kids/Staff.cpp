@@ -209,6 +209,7 @@ void editStudent() // Hao : Chinh sua thong tin sinh vien
 		NOofStudent = i;
 		break;
 	}	
+	
 	if (NOofStudent == -1)
 	{
 		system("CLS");
@@ -338,22 +339,245 @@ void viewAllLecturer()
 		cout << "Degree : " << Lecturer[i].Degree << endl;
 		cout << endl;	
 	}				
-	int numberChoice = -1;
-	while (-1 == numberChoice)
-	{
-		cout << "Enter 0 to return" << endl;
-		numberChoice = choiceScreen(0);
-		if (0 == numberChoice)
-		{
-			system("CLS");			
-			viewFeatureCourse();	
-		}
-		else
-		{
-			system("CLS");
-			cout << "Your choose isn't wrong !! Choice again" << endl;
-		}
-	}
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");	
+	viewFeatureCourse();		
 }
 
+void deleteSemester() //Hao: xoa mot hoc ki
+{
+	//Phan giao dien luc dau
+	cout << "Do you want to remove semester ?" << endl;
+	cout << "0.No                 1.Yes" << endl;
+	int numberChoice = choiceScreen(1);
+	system("CLS");
+	switch(numberChoice)
+	{
+		case 0:
+		{
+			editFeatureCourse();
+			break;	
+		}	
+		case -1:
+		{
+			warnScreen();
+			deleteSemester();
+			break;
+		}
+	}		
+	//Phan nhap nam hoc va hoc ki
+	ifstream fi;
+	fi.open("fileCourse/Semester.txt");
+	string semesterRemove, academicRemove;
+	cout << "You have to enter data which is like in braces" << endl;
+	cout << "Enter academic year you want to remove (Year - Year) :";
+	cin >> academicRemove;
+	cout << "Enter semester you want to remove (HK1, HK2, HK3):";
+	cin >> semesterRemove;
+	//Kiem tra xem co hoc ki nguoi dung vua nhap khong 
+	
+	string Semester, Academic;
+	int size, NOofSemester = -1;
+	fi >> size;
+	for (int i = 0; i < size; i++)
+	{
+		fi >> Academic;
+		fi >> Semester;
+		fi.ignore();
+		if ((Semester == semesterRemove) && (Academic == academicRemove))
+		{
+			NOofSemester = i;
+			break;
+		}
+	}
+	
+	if (NOofSemester == -1)
+	{
+		system("CLS");
+		cout << "Your semester isn't exit or Format in academic year is wrong !! Please try again." << endl;
+		deleteSemester();
+	}
+	fi.close();
+	//Xoa hoc ki
+	fi.open("fileCourse/Semester.txt");
+	ofstream fo;
+	fo.open("fileCourse/Semester_tam.txt");
+	fi >> size; 
+	fo << size - 1 << endl;
+	for (int i = 0; i < size; i++)
+	{
+		fi >> Academic;
+		fi >> Semester;
+		fi.ignore();
+		if (i != NOofSemester)
+		{
+			fo << Academic << endl;
+			fo << Semester << endl;
+			fo << endl;
+		}
+	}
+	fo.close();
+	fi.close();
+	remove("fileCourse/Semester.txt");
+	rename("fileCourse/Semester_tam.txt","fileCourse/Semester.txt");
+	cout << "Delte semester is succesfully" << endl;
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");
+	editFeatureCourse();
+}
+
+void viewSemester()
+{
+	ifstream fi;
+	fi.open("fileCourse/Semester.txt");
+	string Semester, Academic;
+	cout << "All semester school go through " << endl;
+	cout << "********************************" << endl;
+	int size;
+	fi >> size;
+	for (int i = 0; i < size; i++)
+	{
+		fi >> Academic;
+		fi >> Semester;
+		fi.ignore();
+		cout << "Academic :" << Academic << endl;
+		cout << "Semester :" << Semester << endl;
+		cout << endl;
+	}
+	cout << "********************************" << endl;
+	fi.close();		
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");	
+	viewFeatureCourse();						
+}
+
+void removeFileCourse(string fileName, string IDRemove) //HAo : Ham dung de xoa du lieu trong fileName voi ID la remove
+{
+	userData * Lecturer;
+	courseData * Course;
+	int NOofCourse = -1, size;
+	ifstream fi;
+	fi.open(fileName.c_str());
+	if (!fi.is_open())
+		cout << "Khong tim duoc file " << endl;
+	takeDataCourse(fi, Lecturer, Course, size);
+	fi.close();						
+	for (int i = 0; i < size; i++)
+	{
+		if (Course[i].courseID == IDRemove)
+		{
+			NOofCourse = i;
+			break;
+		}
+	}		
+		
+	ofstream fo;
+	fo.open(fileName.c_str());
+	string fileNameCourse = fileName + '-' + Course[NOofCourse].className;
+	size = size - 1;
+	for (int i = 0; i < size; i++)
+	if (i >= NOofCourse)
+	{
+		Course[i] = Course[i + 1];
+		Lecturer[i] = Lecturer[i + 1];
+	}
+	insertDataCourse(fo, Lecturer, Course, size);
+	fo.close();
+	delete [] Lecturer;
+	delete [] Course;		
+}
+
+void removeCourse()//Hao : Xoa mot mon hoc
+{
+	//Phan bat dau
+	cout << "Do you want to remove course ?" << endl;
+	cout << "0.NO              1. Yes" << endl;
+	int numberChoice = choiceScreen(1);
+	system("CLS");
+	switch (numberChoice)
+	{
+		case 0:
+		{
+			editFeatureCourse();
+			break;
+		}
+		case -1:
+		{
+			removeCourse();
+			break;
+		}
+	}
+	//Nguoi dung nhap
+	string IDRemove;
+	cout << "Enter your course ID :";
+	cin >> IDRemove;
+	//Kiem tra xem course ID co ton tai khong?
+	userData * Lecturer;
+	courseData * Course;
+	int size, NOofCourse = - 1;
+	string currentSemester;
+	takeCurrentSemester(currentSemester);
+	string fileName = "fileCourse/" + currentSemester + "-Schedule.txt";
+	ifstream fi;
+	fi.open(fileName.c_str());
+	if (!fi.is_open())
+		cout << "Khong tim duoc file " << endl;
+	takeDataCourse(fi, Lecturer, Course, size);
+	fi.close();						
+	for (int i = 0; i < size; i++)
+	{
+		if (Course[i].courseID == IDRemove)
+		{
+			NOofCourse = i;
+			break;
+		}
+	}						
+	if (NOofCourse == -1)
+	{
+		system("CLS");												
+		cout << "Your coure isn't exit !! Pleae try again" << endl;
+		removeCourse();
+	}		
+	//Xoa Course
+	numberChoice = -1;
+	while (numberChoice == -1)
+	{
+		cout << ">> Course name :" << Course[NOofCourse].courseName << endl;
+		cout << ">> Class :" << Course[NOofCourse].className << endl;
+		cout << "Are you sure to remove above course" << endl;
+		cout << "0.NO              1. Yes" << endl;
+		numberChoice = choiceScreen(1);
+		switch (numberChoice)
+		{
+			case 0:
+			{
+				system("CLS");
+				editFeatureCourse();
+				break;
+			}
+			case -1:
+			{
+				system("CLS");
+				warnScreen();
+				break;
+			}
+		}
+	}
+	string fileNameCourse = "fileCourse/" + currentSemester + '-' + "Schedule-" + Course[NOofCourse].className + ".txt";
+	
+	//Xoa du lieu tong file Schedule 
+	removeFileCourse(fileName, IDRemove);
+	
+	// Xoa du lieu trong file Schedule-Lop hoc					
+	removeFileCourse(fileNameCourse, IDRemove);				
+		
+	cout << "Your course is remove successfully!!" << endl;
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");
+	editFeatureCourse();
+}
 //************************//

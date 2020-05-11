@@ -321,10 +321,9 @@ void editFeatureCourse()
 	cout << "2. Add new course" << endl;
 	cout << "3. Edit course" << endl;
 	cout << "4. Remove course" << endl;
-	cout << "5. Create semester" << endl;
+	cout << "5. Update semester" << endl;
 	cout << "6. Delete semester" << endl;
-	cout << "7. Update semester" << endl;
-	int numberChoice = choiceScreen(7);	
+	int numberChoice = choiceScreen(6);	
 	clearScreen();
 	switch (numberChoice)
 	{
@@ -348,21 +347,19 @@ void editFeatureCourse()
 		}
 		case 4:
 		{
+			removeCourse();
 			break;
 		}
 		case 5:
 		{
+			updateSemester();
 			break;
 		}
 		case 6:
 		{
+			deleteSemester();
 			break;
 		}
-		case 7:
-		{
-			updateSemester();
-			break;
-		}	
 		default:
 		{
 			warnScreen();
@@ -399,6 +396,7 @@ void viewFeatureCourse()
 		}
 		case 3:
 		{
+			viewSemester();
 			break;
 		}
 		default:
