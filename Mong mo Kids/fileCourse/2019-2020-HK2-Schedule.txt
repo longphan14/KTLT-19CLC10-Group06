@@ -1,5 +1,4 @@
-﻿﻿2
-1
+2
 CS162
 Introduction to Programming
 19APCS1

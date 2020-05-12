@@ -466,10 +466,14 @@ void viewListCourse()
 	userData* Lecturer;
 	int size = 0;
 	ifstream fi;
-	fi.open("fileCourse/2019-2020-HK2-Schedule.txt");		
-	takeDataCourse(fi, Lecturer, Course, size);					
-	fi.close();					
-	
+	fi.open("fileCourse/2019-2020-HK2-Schedule.txt");
+	if(fi.is_open()){
+		cout << "Open!" << endl;
+	}
+	else
+	cout << "Not Open" << endl;
+	takeDataCourse(fi, Lecturer, Course, size);
+	fi.close();
 	for (int i = 0; i < size; i++)
 	{
 		cout << "Course ID: " << Course[i].courseID << endl;
@@ -487,22 +491,10 @@ void viewListCourse()
 		cout << "Room: " << Course[i].Room << endl;
 		cout << endl;
 	}				
-	int numberChoice = -1;
-	while (-1 == numberChoice)
-	{
-		cout << "Enter 0 to return" << endl;
-		numberChoice = choiceScreen(0);
-		if (0 == numberChoice)
-		{
-			system("CLS");			
-			viewFeatureCourse();	
-		}
-		else
-		{
-			system("CLS");
-			cout << "Your choose isn't wrong !! Choice again" << endl;
-		}
-	}
+		string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");	
+	viewFeatureCourse();	
 }
 
 void removeCourse()//Hao : Xoa mot mon hoc

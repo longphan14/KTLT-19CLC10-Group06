@@ -11,4 +11,6 @@ void viewListCourse();
 void insertCourse(ifstream &filein, ofstream &fileout);
 void editStudent();
 void viewAllLecturer();
+void viewListCourse();
+
 #endif
