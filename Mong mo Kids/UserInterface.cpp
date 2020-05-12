@@ -390,6 +390,7 @@ void viewFeatureCourse()
 		}
 		case 1:
 		{
+			viewListCourse();
 			break;
 		}
 		case 2:

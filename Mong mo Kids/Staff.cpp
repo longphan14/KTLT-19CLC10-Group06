@@ -27,7 +27,7 @@ void editStudentInFile(string className, string courseName, string ID, userData 
 	string semesterCurrent;
 	takeCurrentSemester(semesterCurrent);
 	string fileName;
-	fileName = "fileClass/" + semesterCurrent + "-" + className + "-" + courseName + "-" + "Student.txt";
+	fileName = "fileCourse/" + semesterCurrent + "-" + className + "-" + courseName + "-" + "Student.txt";
 	
 	userData * Student;
 	int size;
@@ -81,7 +81,6 @@ void importCourse() {
 	}
 	if(fo.is_open()){
 		cout << "Fileout is Open!" << endl;
-		insertCourse(fi, fo);
 	}
 	else{
 		cout << "Fileout is not Open" << endl;
@@ -91,35 +90,6 @@ void importCourse() {
 	fo.close();
 	cout << endl;
 	editFeatureCourse();
-}
-
-void insertCourse(ifstream &filein, ofstream &fileout){
-	userData info[100];
-	string firstline;
-	if(filein.is_open() && fileout.is_open()){
-		getline(filein, firstline);
-		int i = 0;
-		while(!filein.eof()){
-			getline(filein, info[i].NO , ',');
-			getline(filein, info[i].ID, ',');
-			getline(filein, info[i].Name, ',');
-			getline(filein, info[i].DoB, ',');
-			getline(filein, info[i].className,',');
-			i++;
-		}
-		for(int k = 0; k <= i;k++){
-			fileout << info[k].NO << " ";
-			fileout << info[k].ID << " ";
-			fileout << info[k].Name << " ";
-			fileout << info[k].DoB <<" ";
-			fileout << info[k].className <<" ";
-		}
-		cout << endl;
-		cout << "Transfer Sussces" << endl;
-	}
-	else{
-		cout << "Cannot processing file!" << endl;
-	}
 }
 void addCourse();
 void viewListCourse();
@@ -337,6 +307,51 @@ void viewAllLecturer()
 		cout << "Name : " << Lecturer[i].Name << endl;
 		cout << "Degree : " << Lecturer[i].Degree << endl;
 		cout << endl;	
+	}				
+	int numberChoice = -1;
+	while (-1 == numberChoice)
+	{
+		cout << "Enter 0 to return" << endl;
+		numberChoice = choiceScreen(0);
+		if (0 == numberChoice)
+		{
+			system("CLS");			
+			viewFeatureCourse();	
+		}
+		else
+		{
+			system("CLS");
+			cout << "Your choose isn't wrong !! Choice again" << endl;
+		}
+	}
+}
+void viewListCourse()
+{
+	cout << "List of all List Course in school" << endl;
+	courseData* Course;
+	userData* Lecturer;
+	int size = 0;
+	ifstream fi;
+	fi.open("fileCourse/2019-2020-HK2-Schedule.txt");		
+	takeDataCourse(fi, Lecturer, Course, size);					
+	fi.close();					
+	
+	for (int i = 0; i < size; i++)
+	{
+		cout << "Course ID: " << Course[i].courseID << endl;
+		cout << "Course Name: " << Course[i].courseName << endl;
+		cout << "Course ClassName: " << Course[i].className << endl;
+		cout << "Lecturer ID: " << Lecturer[i].ID << endl;
+		cout << "Lecturer Name: " << Lecturer[i].Name << endl;
+		cout << "Lecturer Degree: " << Lecturer[i].Degree << endl;
+		cout << "Lecturer Gender: " << Lecturer[i].Gender << endl;
+		cout << "Start Date: " << Course[i].startDate << endl;
+		cout << "End Data: " << Course[i].endDate << endl;
+		cout << "Date of Week: " << Course[i].DoW << endl;
+		cout << "Start Time: " << Course[i].startTime << endl;
+		cout << "End Time: " << Course[i].endTime << endl;
+		cout << "Room: " << Course[i].Room << endl;
+		cout << endl;
 	}				
 	int numberChoice = -1;
 	while (-1 == numberChoice)
