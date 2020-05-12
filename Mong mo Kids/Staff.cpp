@@ -466,7 +466,11 @@ void viewListCourse()
 	userData* Lecturer;
 	int size = 0;
 	ifstream fi;
-	fi.open("fileCourse/2019-2020-HK2-Schedule.txt");
+	string semesterCurrent ;
+	takeCurrentSemester(semesterCurrent);
+	string filename;
+	filename = "fileCourse/" + semesterCurrent +"-Schedule.txt";
+	fi.open(filename.c_str());
 	if(fi.is_open()){
 		cout << "Open!" << endl;
 	}
@@ -587,4 +591,44 @@ void removeCourse()//Hao : Xoa mot mon hoc
 	system("CLS");
 	editFeatureCourse();
 }
+void addStudentToCourse(){
+	userData* studentinfo;
+	bool check = false;
+	bool check2 = false;
+	int size = 0;
+	userData* student;
+	cout << "Enter student name: ";
+	cin >> student->Name;
+	ifstream fi;
+	fi.open("fileUser/Student.txt");
+	takeDataUser(fi,studentinfo, size, 2);
+	for(int i = 0; i < size; i++){
+		if(studentinfo[i].Name == student->Name){
+			check = true;
+	}
+}
+	if(check == true){
+		cout << "Student exist!" << endl;
+		cout << "Enter class name: ";
+		cin >> student->className;
+		for(int i = 0; i < size; i++){
+			if(studentinfo[i].className == student->className){
+				check2 = true;
+			}
+		}
+		if(check2 == true){
+			cout << "Student has " << student->className << " in his profile!" << endl;
+			
+		}
+	}
+	else 
+	cout << "Student is not exist!" << endl;
+
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");
+	editFeatureStu();
+}
+
+
 //************************//

@@ -1,6 +1,6 @@
 #include "Header.h"
 #include "Staff.h"
-
+#include "Student.h"
 accountData dataAccess;
 
 
@@ -153,6 +153,7 @@ void editFeatureStu()
 		}
 		case 2:
 		{
+			addStudentToCourse();
 			break;
 		}
 		case 3:
