@@ -84,9 +84,13 @@ void returnScreen(void (*functionCurrent)(), void (*functionPrevious)());
 
 //User Interface STUDENT//
 void studentUI();
+void studentShowMenu();
 //*********************//
 
 //User Interface LECTURER//
 void lecturerUI();
+void lecturerShowMenu();
+void viewFeatureOfLecturer();
+void jobFeature();
 //**********************//	
 #endif					

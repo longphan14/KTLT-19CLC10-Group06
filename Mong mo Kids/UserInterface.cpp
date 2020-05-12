@@ -28,7 +28,7 @@ void Login() // Hao. Chuc nang: Dang nhap
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
 			dataAccess = Data;
-			kt = 1;
+			kt = 3;
 			switch(kt)
 			{
 				case 1:
@@ -37,10 +37,12 @@ void Login() // Hao. Chuc nang: Dang nhap
 				}
 				case 2:
 				{
+					studentUI();
 					break;
 				}
 				case 3:
 				{
+					lecturerUI();
 					break;
 				}
 				default:
@@ -522,13 +524,256 @@ void staffUI()
 //******STUDENT USER INTERFACE*****//
 void studentUI()
 {
-	
+	cout << "Hello ";
+	cout << dataAccess.Name << endl;
+	cout << "0. Logout" << endl;
+	cout << "1. Show Menu" << endl;
+	cout << "2. Change Password" << endl;
+	cout << "3. Information" << endl;
+	int numberChoice = choiceScreen(3);
+	clearScreen();
+	switch(numberChoice)
+	{
+		case 0:
+		{
+			Login();
+			break;
+		}
+		case 1:
+		{
+			studentShowMenu();
+			break;
+		}
+		case 2:
+		{
+
+			break;
+		}
+		case 3:
+		{
+			
+			break;
+		}
+		default:
+		{
+			warnScreen();
+			studentUI();
+			break;
+		}
+	}
+}
+
+void studentShowMenu()
+{
+	cout << "Show Menu: " << endl;
+	cout << "0. Return " << endl;
+	cout << "1. Check-in" << endl;
+	cout << "2. View check-in result" << endl;
+	cout << "3. View schedules" << endl;
+	cout << "4. View scores of a course" << endl;
+	cout << "5. Information" << endl;
+	int numberChoice = choiceScreen(5);
+	clearScreen();
+	switch (numberChoice)
+	{
+		case 0:
+		{
+			studentUI();
+			break;
+		}
+		case 1:
+		{
+
+			break;
+		}
+		case 2:
+		{
+		
+			break;
+		}	
+		case 3:
+		{
+			break;	
+		}
+		case 4:
+		{
+			break;
+		}
+		case 5:
+		{
+			break;
+		}
+		default:
+		{
+			warnScreen();
+			studentShowMenu();
+			break;	
+		}
+	} 
 }
 //********************************//
 
 //******LECTURER USER INTERFACE***//
 void lecturerUI()
 {
-	
+	cout << "Hello ";
+	if (dataAccess.Gender == 0)
+		cout << "Mr ";
+	else
+		cout << "Mrs ";
+	cout << dataAccess.Name << endl;
+	cout << "0. Logout" << endl;
+	cout << "1. Show Menu" << endl;
+	cout << "2. Change Password" << endl;
+	cout << "3. Information" << endl;
+	int numberChoice = choiceScreen(3);
+	clearScreen();
+	switch(numberChoice)
+	{
+		case 0:
+		{
+			Login();
+			break;
+		}
+		case 1:
+		{
+			lecturerShowMenu();
+			break;
+		}
+		case 2:
+		{
+			changePassword(dataAccess.ID, dataAccess.Password, 1);
+			break;
+		}
+		case 3:
+		{
+			break;
+		}
+		default:
+		{
+			warnScreen();
+			lecturerUI();
+			break;
+		}
+	}
 }
-//********************************//
+
+void lecturerShowMenu()
+{
+	cout << "Show Menu: " << endl;
+	cout << "0. Return " << endl;
+	cout << "1. View feature" << endl;
+	cout << "2. Job" << endl;
+	int numberChoice = choiceScreen(2);
+	clearScreen();
+	switch (numberChoice)
+	{
+		case 0:
+		{
+			lecturerUI();
+			break;
+		}
+		case 1:
+		{
+			viewFeatureOfLecturer();
+			break;
+		}
+		case 2:
+		{
+			jobFeature();
+			break;
+		}	
+		default:
+		{
+			warnScreen();
+			lecturerShowMenu();
+			break;	
+		}
+	} 
+}
+
+void viewFeatureOfLecturer()
+{
+	cout << "View features :" << endl;
+	cout << "0. Return" << endl;
+	cout << "1. View list of course" << endl;
+	cout << "2. View list student of a course" << endl;
+	cout << "3. View attendance list" << endl;
+	cout << "4. View a scoreboard" << endl;
+	int numberChoice = choiceScreen(4);
+	clearScreen();
+	switch (numberChoice)
+	{
+		case 0:
+		{
+			lecturerShowMenu();
+			break;
+		}
+		case 1:
+		{
+		
+			break;
+		}
+		case 2:
+		{
+	
+			break;
+		}
+		case 3:
+		{
+	
+			break;
+		}
+		case 4:
+		{
+			
+			break;
+		}
+		default:
+		{
+			warnScreen();
+			viewFeatureOfLecturer();
+			break;
+		}
+	}
+}
+
+void jobFeature()
+{
+	cout << "Feature support to your job :" << endl;
+	cout << "0. Return" << endl;
+	cout << "1. Edit an attendance" << endl;
+	cout << "2. Import scoreboard" << endl;
+	cout << "3. Edit grade of a student" << endl;
+	int numberChoice = choiceScreen(3);
+	clearScreen();
+	switch (numberChoice)
+	{
+		case 0:
+		{
+			lecturerShowMenu();
+			break;
+		}
+		case 1:
+		{
+		
+			break;
+		}
+		case 2:
+		{
+	
+			break;
+		}
+		case 3:
+		{
+	
+			break;
+		}
+		default:
+		{
+			warnScreen();
+			jobFeature();
+			break;
+		}
+	}
+}
