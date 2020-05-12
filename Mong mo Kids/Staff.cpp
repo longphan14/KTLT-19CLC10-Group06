@@ -592,40 +592,84 @@ void removeCourse()//Hao : Xoa mot mon hoc
 	editFeatureCourse();
 }
 void addStudentToCourse(){
-	userData* studentinfo;
+	userData *studentinfo;
 	bool check = false;
 	bool check2 = false;
 	int size = 0;
-	userData* student;
-	cout << "Enter student name: ";
-	cin >> student->Name;
+	userData student, studenttemp;
+	string coursename, classname;
+	cout << "Enter student id: ";
+	cin >> student.ID;
 	ifstream fi;
+	ofstream fo3;
 	fi.open("fileUser/Student.txt");
 	takeDataUser(fi,studentinfo, size, 2);
 	for(int i = 0; i < size; i++){
-		if(studentinfo[i].Name == student->Name){
+		if(studentinfo[i].ID == student.ID){
+			cout << studentinfo[i].ID << " - " << studentinfo[i].Name << endl;
+			classname = studentinfo[i].className;
+			studenttemp = studentinfo[i];
 			check = true;
 	}
 }
 	if(check == true){
-		cout << "Student exist!" << endl;
-		cout << "Enter class name: ";
-		cin >> student->className;
-		for(int i = 0; i < size; i++){
-			if(studentinfo[i].className == student->className){
-				check2 = true;
-			}
-		}
-		if(check2 == true){
-			cout << "Student has " << student->className << " in his profile!" << endl;
+		cout << "Student exist!" << endl << endl;
+		cout << "List of Course in school" << endl;
+		courseData* Course;
+		userData* Lecturer;
+		int size1 = 0;
+		ifstream fi1;
+		string semesterCurrent;
+		takeCurrentSemester(semesterCurrent);
+		string filename;
+		filename = "fileCourse/" + semesterCurrent +"-Schedule.txt";
+		fi1.open(filename.c_str());
+		takeDataCourse(fi1, Lecturer, Course, size1);
+		fi1.close();
+		for (int i = 0; i < size1; i++)
+		{
+			cout << "Course ID: " << Course[i].courseID << endl;
+			cout << "Course Name: " << Course[i].courseName << endl;
+			cout << "Lecturer Name: " << Lecturer[i].Name << endl;
+			cout << "Room: " << Course[i].Room << endl;
+			cout << endl;
+		}	
+
+	cout << "Enter course name: ";
+	cin >> coursename;
+	for (int i = 0; i < size1; i++){
+		if(coursename == Course[i].courseID){
+			check2 = true;
 			
 		}
 	}
-	else 
+
+		if(check2 == true){
+			string semesterCurrent3;
+			takeCurrentSemester(semesterCurrent3);
+			string fileName3;
+			fileName3 = "fileClass/" + semesterCurrent3 + "-" + classname + "-" + coursename + "-" + "Student.txt";
+			fo3.open(fileName3.c_str());
+			fo3 << studenttemp.ID << endl;			
+			fo3 << studenttemp.Name << endl;
+			fo3 << studenttemp.Gender << endl;
+			if (studenttemp.Type == 2)
+			{
+				fo3 << studenttemp.DoB << endl;
+				fo3 << studenttemp.className << endl;
+				fo3 << studenttemp.Status << endl;
+			}
+				cout << "Student has " << coursename << " in his profile!" << endl;
+			}
+	}
+	if(check == false)
 	cout << "Student is not exist!" << endl;
 
+	
+
 	string key;
-	cout << "Press any key to return :"; cin >> key;
+	cout << "Press any key to return :"; 
+	cin >> key;
 	system("CLS");
 	editFeatureStu();
 }
