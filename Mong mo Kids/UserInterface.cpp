@@ -153,7 +153,7 @@ void editFeatureStu()
 		}
 		case 2:
 		{
-			addStudentToCourse();
+			
 			break;
 		}
 		case 3:
@@ -175,6 +175,7 @@ void editFeatureStu()
 		}
 		case 7:
 		{
+			addStudentToCourse();
 			break;
 		}
 		default:
