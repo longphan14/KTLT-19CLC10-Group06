@@ -14,6 +14,7 @@ struct accountData{
 	string Password;
 	string Name;
 	int Gender;
+	int Status;
 };
 
 struct scoreData{

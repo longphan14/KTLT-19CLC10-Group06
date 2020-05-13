@@ -28,7 +28,7 @@ void Login() // Hao. Chuc nang: Dang nhap
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
 			dataAccess = Data;
-			kt = 3;
+//			kt = 1
 			switch(kt)
 			{
 				case 1:
@@ -165,6 +165,7 @@ void editFeatureStu()
 		}
 		case 4:
 		{
+			removeStudent();
 			break;
 		}
 		case 5:
