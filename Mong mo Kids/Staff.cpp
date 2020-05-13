@@ -31,7 +31,6 @@ void editStudentInFile(string className, string courseName, string ID, userData 
 	
 	userData * Student;
 	int size;
-	cout << fileName << endl;
 								
 	ifstream fi;
 	fi.open(fileName.c_str());
@@ -186,25 +185,6 @@ void editStudent() // Hao : Chinh sua thong tin sinh vien
 		cout << "Your student isn't exit !! Please try again" << endl;
 		editStudent();
 	}
-	
-//	cout << "Are you sure to edit this student ?" << endl;
-//	cout << "0.No                1.Yes" << endl;
-//	numberChoice = choiceScreen(1);
-//	switch(numberChoice)
-//	{
-//		case 0:
-//		{
-//			system("CLS");
-//			editFeatureStu();
-//			break;	
-//		}	
-//		case -1:
-//		{
-//			system("CLS");
-//			cout << "Your choice is wrong !! Choice again" << endl;
-//			break;
-//		}
-//	}
 	numberChoice = -1;
 	while (numberChoice == -1)
 	{
@@ -237,7 +217,7 @@ void editStudent() // Hao : Chinh sua thong tin sinh vien
 	cin.ignore();
 	cout << "Enter new ID : " ; getline(cin, ID);
 	cout << "Enter new Name : "; getline(cin, Name);
-	cout << "Enter new DoB : "; getline(cin, DoB);
+	cout << "Enter new DoB (Year Month Day No hypen('-')) : "; getline(cin, DoB);
 	cout << "Enter new Gender (0:Male, 1:Female) :" ; cin >> Gender;
 	Student[NOofStudent].ID = ID; Data.ID = ID;
 	Student[NOofStudent].Name = Name; Data.Name = Name;
@@ -591,6 +571,7 @@ void removeCourse()//Hao : Xoa mot mon hoc
 	system("CLS");
 	editFeatureCourse();
 }
+
 void addStudentToCourse(){
 	userData *studentinfo;
 	bool check = false;
@@ -669,6 +650,154 @@ void addStudentToCourse(){
 
 	string key;
 	cout << "Press any key to return :"; 
+	cin >> key;
+	system("CLS");
+	editFeatureStu();
+}
+
+
+void removeStudentInFile(string className, string courseName, string ID, userData Data) //Hao: Duyet tung phan tu cuar file student in course
+{
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
+	string fileName;
+	fileName = "fileCourse/" + semesterCurrent + "-" + className + "-" + courseName + "-" + "Student.txt";
+	
+	userData * Student;
+	int size;
+								
+	ifstream fi;
+	fi.open(fileName.c_str());
+	takeDataUser(fi, Student, size, 4);
+	fi.close();					
+	
+	for (int i = 0; i < size; i++)
+	if (Student[i].ID == ID)
+	{
+		Student[i].Status = 0;
+		break;
+	}
+	insertDataStudentInCourse(fileName, Student, size);
+}
+
+void removeStudent() // Hao : Chinh sua thong tin sinh vien
+{
+	string IDFound;											
+	cout << "Do you want to remove student ?" << endl;
+	cout << "0.No                 1.Yes" << endl;
+	int numberChoice = choiceScreen(1);
+	system("CLS");
+	switch(numberChoice)
+	{
+		case 0:
+		{
+			editFeatureStu();
+			break;	
+		}	
+		case -1:
+		{
+			cout << "Your choice is wrong !! Choice again" << endl;
+			removeStudent();
+			break;
+		}
+	}				
+	cout << "Press ID Student you want edit : "; cin >> IDFound;
+	
+	//Lay du lieu trong dataUser
+	userData * Student;
+	userData Data;
+	int size = 0;
+	ifstream fi;
+	fi.open("fileUser/Student.txt");
+	takeDataUser(fi, Student, size, 2);		
+
+	fi.close();						
+	// Kiem tra ID
+	int NOofStudent = -1; // Vi tri cua sinh vien can tim]
+	for (int i = 0; i < size; i++)
+	if (IDFound == Student[i].ID)
+	{									
+		NOofStudent = i;
+		break;
+	}	
+	
+
+	if ((NOofStudent == -1) || (Student[NOofStudent].Status == 0))
+	{					
+			system("CLS");
+			cout << "Your student isn't exit !! Please try again" << endl;
+			removeStudent();
+	}
+	
+	numberChoice = -1;
+	while (numberChoice == -1)
+	{
+		cout << ">>" << Student[NOofStudent].Name << endl;
+		cout << ">>" << Student[NOofStudent].DoB << endl;
+		cout << "Are you sure to remove this student ?" << endl;
+		cout << "0.No                1.Yes" << endl;
+		numberChoice = choiceScreen(1);
+		switch(numberChoice)
+		{
+			case 0:
+			{
+				system("CLS");
+				editFeatureStu();
+				break;	
+			}	
+			case -1:
+			{
+				system("CLS");
+				cout << "Your choice is wrong !! Choice again" << endl;
+				break;
+			}
+		}
+	}	
+	
+	//Remove student
+	system("CLS");
+	Student[NOofStudent].Status = 0;
+	//Dua du lieu vao lai file
+	ofstream fo;
+	fo.open("fileUser/Student.txt");
+	insertDataUser(fo, Student, size);
+	fo.close();	
+	
+	string fileName ;
+	fileName = "fileClass/" + Student[NOofStudent].className;			
+	fileName += "-Student.txt";
+	//Lay du lieu sinh vien trong file (nameClass)-Student.txt
+	fi.open(fileName.c_str());
+	takeDataUser(fi, Student, size, 2);
+	fi.close();							
+	
+	for (int i = 0; i < size; i++)
+	if (Student[i].ID == IDFound)
+	{
+		Student[i].Status = 0;
+		break;
+	}
+	//Dua du lieu vao file Data (nameClass)-Student.txt
+	fo.open(fileName.c_str());
+	insertDataUser(fo, Student, size);
+	fo.close();				
+	
+	//Lay du lieu sinh vien trong cac file mon hoc
+	string semesterCurrent ;
+	takeCurrentSemester(semesterCurrent);
+	fileName = "fileCourse/" + semesterCurrent + "-Schedule.txt";	
+	courseData * Course;
+	userData * Lecturer;
+	fi.open(fileName.c_str());
+	takeDataCourse(fi, Lecturer, Course, size);
+	fi.close();			
+	
+	for (int i = 0; i < size; i++)
+		removeStudentInFile(Course[i].className, Course[i].courseID, IDFound, Data);
+	
+	string key;
+	cout << "Your student is remove successfully" << endl;
+	cout << "Press any key to return" << endl;
 	cin >> key;
 	system("CLS");
 	editFeatureStu();

@@ -16,4 +16,5 @@ void removeCourse();
 void deleteSemester();
 void viewSemester();
 void addStudentToCourse();
+void removeStudent();
 #endif

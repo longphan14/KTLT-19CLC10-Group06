@@ -69,59 +69,6 @@ void deleteSpace(string &str) // Hao. Xoa khoang trang du thua o khuc cuoi
 	str = s;
 }
 
-bool check(ifstream &fi, string Username, string Password, accountData &Data, int number) // Hao . Chuc nang: Lay du lieu va Kiem tra tung tai khoan
-{
-	int n;
-	fi >> n;
-	fi.ignore(255, '\n');
-	accountData dataCheck;
-	for (int i = 0; i < n; i++)
-	{
-		getline(fi, dataCheck.ID); deleteSpace(dataCheck.ID);									
-		getline(fi, dataCheck.Password); deleteSpace(dataCheck.Password);						
-		getline(fi, dataCheck.Name); deleteSpace(dataCheck.Name);
-		fi >> dataCheck.Gender;
-		ignoreLine(fi, number);
-		if ((dataCheck.ID == Username) && (dataCheck.Password == Password))
-		{
-			Data = dataCheck;
-			return true;
-		}
-	}
-	return false;
-}
-
-int checkPassword(string Username, string Password, accountData &Data) // Hao .Chuc nang : Kiem tra tai khoan .
-{
-	string nameFolder = "fileUser/";
-	string nameFile = "";
-	ifstream fi;
-	bool kt;
-	
-	nameFile = nameFolder + "Staff.txt";
-	fi.open(nameFile.c_str());
-	kt = check(fi, Username, Password, Data, 2);
-	if (kt)
-		return 1;
-	fi.close();
-	
-	nameFile = nameFolder + "Lecturer.txt";
-	fi.open(nameFile.c_str());
-	kt = check(fi, Username, Password, Data, 3);
-	if (kt)
-		return 2;
-	fi.close();
-	
-	nameFile = nameFolder + "Student.txt";
-	fi.open(nameFile.c_str());
-	kt = check(fi, Username, Password, Data, 5);
-	if (kt)
-		return 3;
-	fi.close();
-	
-	return -1;
-}
-
 void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : LAy du lieu trong file fi dua vao Data 
 {
 	size = 0;			
@@ -443,7 +390,6 @@ void insertDataStudentInCourse(string fileName, userData *Data, int size) //Dua 
 			break;
 	}
 	
-	cout << startDate;
 		
 	ofstream fo;
 	fo.open(fileName.c_str());
@@ -470,6 +416,72 @@ void insertDataStudentInCourse(string fileName, userData *Data, int size) //Dua 
 //*********************************************************//
 
 //*********************Cac ham dung chung ****************//
+
+bool check(ifstream &fi, string Username, string Password, accountData &Data, int number) // Hao . Chuc nang: Lay du lieu va Kiem tra tung tai khoan
+{
+	int n;
+	fi >> n;
+	fi.ignore(255, '\n');
+	accountData dataCheck;
+	for (int i = 0; i < n; i++)
+	{
+		getline(fi, dataCheck.ID); deleteSpace(dataCheck.ID);									
+		getline(fi, dataCheck.Password); deleteSpace(dataCheck.Password);						
+		getline(fi, dataCheck.Name); deleteSpace(dataCheck.Name);
+		fi >> dataCheck.Gender;
+		if (5 == number)
+		{
+			ignoreLine(fi, 3);
+			fi >> dataCheck.Status;												
+			ignoreLine(fi, 2);
+		}
+		else
+		{								
+			ignoreLine(fi, number);
+			dataCheck.Status = 1;
+		}
+		if ((dataCheck.ID == Username) && (dataCheck.Password == Password))
+		{
+			if (dataCheck.Status == 1)
+			{			
+				Data = dataCheck;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+int checkPassword(string Username, string Password, accountData &Data) // Hao .Chuc nang : Kiem tra tai khoan .
+{
+		string nameFolder = "fileUser/";
+	string nameFile = "";
+	ifstream fi;
+	bool kt;
+	
+	nameFile = nameFolder + "Staff.txt";
+	fi.open(nameFile.c_str());
+	kt = check(fi, Username, Password, Data, 2);
+	if (kt)
+		return 1;
+	fi.close();
+	
+	nameFile = nameFolder + "Lecturer.txt";
+	fi.open(nameFile.c_str());
+	kt = check(fi, Username, Password, Data, 3);
+	if (kt)
+		return 3;
+	fi.close();
+	
+	nameFile = nameFolder + "Student.txt";
+	fi.open(nameFile.c_str());
+	kt = check(fi, Username, Password, Data, 5);
+	if (kt)
+		return 2;
+	fi.close();
+	
+	return -1;
+}
 
 void changePassword(string Username, string Password, int type) // Hao : Ham thay doi password
 {
