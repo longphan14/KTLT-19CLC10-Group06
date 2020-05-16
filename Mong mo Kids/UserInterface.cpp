@@ -28,7 +28,7 @@ void Login() // Hao. Chuc nang: Dang nhap
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
 			dataAccess = Data;
-//			kt = 1
+			kt = 1;
 			switch(kt)
 			{
 				case 1:
