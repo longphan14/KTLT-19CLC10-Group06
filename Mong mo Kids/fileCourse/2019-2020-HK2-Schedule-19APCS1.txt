@@ -1,4 +1,4 @@
-2
+3
 CS162
 Introduction to Programming
 19APCS1
@@ -26,4 +26,18 @@ GS
 13 30
 17 30
 I23
+
+E1
+English 1
+19APCS1
+nvthuan
+Nguyen Van Thuan
+ThS
+0
+2020 00 00
+2020 00 00
+2
+7 30
+11 30
+I32
 

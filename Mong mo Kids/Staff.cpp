@@ -188,17 +188,34 @@ void addDataForImportCourse(userData Lecturer, courseData Course) // Ham dua du 
 
 void formatDate(string &Date)
 {
+		//Format khi no sai
+	bool check = false;
+	int n = Date.length();
+	for (int i = 0; i < n; i++)
+		if ((Date[i] < '0') || (Date[i] > '9'))
+		{
+			if ((Date[i] != ' ') && (Date[i] != '-'))
+			{
+				check = true;
+				break;
+			}
+		}
+
 	//Dua ve dung dang yyyy mm dd
 	string newDate = "";
 	string year = "", month = "", day = "";
 	int i = 0;
 	while ((Date[i] <= '9') && (Date[i] >= '0'))
 		year += Date[i++];
-	
+	if (year.length() > 2)
+		check = true;
 	i++;
 	while ((Date[i] <= '9') && (Date[i] >= '0'))
 		month += Date[i++];
-	
+		
+	if (month.length() > 2)
+		check = true;
+
 	if (month.length() == 1)
 		month = '0' + month;
 		
@@ -206,10 +223,41 @@ void formatDate(string &Date)
 	while ((Date[i] <= '9') && (Date[i] >= '0'))
 		day += Date[i++];
 	
+	if (day.length() > 2)
+		check = true;
+		
 	if (day.length() == 1)
 		day = '0' + day;
 	
+	if (check)
+	{
+		Date = "2020 00 00";
+		return;
+	}
 	Date = year + ' ' + month + ' ' + day ;
+}
+
+void showCourse(userData Lecturer, courseData Course) // hien ra danh sach mon hoc
+{
+	cout << "Information Course you add" << endl;
+	cout << "Course ID :" << Course.courseID << endl;
+	cout << "Course name :" << Course.courseName << endl;
+	cout << "Class of course :" << Course.className << endl;
+	cout << "Room :" << Course.Room << endl;
+	cout << "Start date :" << Course.startDate << endl;
+	cout << "End date :" << Course.endDate << endl;
+	cout << "Start time :" << Course.startTime << endl;
+	cout << "End time :" << Course.endTime << endl;
+	cout << "Information Lecturer who teach this course" << endl;
+	cout << "ID lecturer :" << Lecturer.ID << endl;
+	cout << "Name of lecturer :" << Lecturer.Name << endl;
+	cout << "Gender of Lecturer :";
+	if (Lecturer.Gender == 0)
+		cout << "Male";
+	else
+		cout << "Female";
+	cout << endl;
+	cout << "Degree of lecturer :" << Lecturer.Degree << endl;
 }
 
 
@@ -355,7 +403,160 @@ void importCourse() {
 	editFeatureCourse();
 
 }
-void addCourse();
+void addCourse()
+{
+	cout << "Do you want to import course ?" << endl;
+	cout << "0.No                 1.Yes" << endl;
+	int numberChoice = choiceScreen(1);
+	system("CLS");
+	switch(numberChoice)
+	{
+		case 0:
+		{
+			editFeatureCourse();
+			break;	
+		}	
+		case -1:
+		{
+			cout << "Your choice is wrong !! Choice again" << endl;
+			addCourse();
+			break;
+		}
+	}
+	cin.ignore();
+	
+	userData Lecturer;
+	courseData Course;
+	cout << "Enter course ID : "; getline(cin, Course.courseID);		
+	cout << "Enter course name : "; getline(cin, Course.courseName);
+	system("CLS");
+	
+	//Lay du lieu trong class de in ra 
+	string nameClass[500];
+	int size = 0;								
+	ifstream fi("fileClass/Class.txt");
+	takeDataClass(fi, nameClass, size);			
+	fi.close();				
+	
+	numberChoice = -1;
+	
+	while (numberChoice == -1)
+	{														
+		cout << "*******LIST CLASS**********" << endl;
+		for (int i = 0; i < size; i++)
+			cout << i  << " " << nameClass[i] << endl;
+		cout << "**************************" << endl;
+		
+		cout << "Choose one class in above list " << endl;
+		numberChoice = choiceScreen(size - 1);
+		if (numberChoice == -1)
+		{																							
+			system("CLS");																				
+			cout << "Your class which you choose isn't exit !! please choose again " << endl;
+		}
+	}
+	Course.className = nameClass[numberChoice];
+	cin.ignore();												
+	
+	system("CLS");										
+	cout << "Enter lecturer account : "; getline(cin, Course.lecturerAccount);
+	Lecturer.ID = Course.lecturerAccount;
+	Lecturer.Password = Lecturer.ID;
+		
+	cout << "Enter Lecturer name : "; getline(cin, Lecturer.Name);
+		
+	cout << "Enter lecturer degree : "; getline(cin, Lecturer.Degree);
+	
+	numberChoice = -1;	
+	string Gender;
+	while (numberChoice == -1)
+	{													
+		cout << "Enter gender of lecturer " << endl;
+		cout << "0. Male     1. Female" << endl;
+		numberChoice = choiceScreen(1);
+		if (numberChoice == -1)
+		{	
+			system("CLS");																					
+			cout << "Your gender which you choose isn't exit !! please choose again " << endl;
+		}
+	}
+	Lecturer.Gender = numberChoice;
+	
+	system("CLS");
+	cin.ignore();
+	cout << "Enter start date of course(yyyy mm dd) : "; getline(cin, Course.startDate);
+	formatDate(Course.startDate);
+		
+	cout << "enter end date of course(yyyy mm dd) : "; getline(cin, Course.endDate);
+	formatDate(Course.endDate);	
+	
+	numberChoice = -1;
+	while (numberChoice == -1)
+	{												
+		cout << "Enter day of week of course : " << endl;
+		cout << "0. Monday" << endl << "1. Tuesday" << endl;
+		cout << "2. Wednesday" << endl << "3. Thursday" << endl;
+		cout << "4. Friday" << endl << "5. Saturday" << endl;
+		numberChoice = choiceScreen(5);
+		if (-1 == numberChoice)
+		{
+			system("CLS");																	
+			cout << "Your day which you choose isn't exit !! please choose again " << endl;
+		}
+	}
+	Course.DoW = char(numberChoice + 2 + 48);
+	system("CLS");
+	cin.ignore();
+	string sHour;					
+	cout << "Enter start hour of course : "; getline(cin, sHour);
+		
+	string sMinute;
+	cout << "Enter start minute of course : "; getline(cin, sMinute);
+		
+	string eHour;					
+	cout << "Enter end hour of course : "; getline(cin, eHour);
+		
+	string eMinute;
+	cout << "Enter end minute of course : "; getline(cin, eMinute);
+		
+	Course.startTime = sHour + ' ' + sMinute;
+	Course.endTime = eHour + ' ' + eMinute;
+		
+	cout << "Enter room of course : "; getline(cin, Course.Room);
+	Lecturer.Type = 3;
+	system("CLS");
+	
+	numberChoice = -1;
+	while (numberChoice == -1)
+	{				
+		showCourse(Lecturer, Course);										
+		cout << "Are you sure to add above information to data ?" << endl;
+		cout << "0.No                 1.Yes" << endl;
+		numberChoice = choiceScreen(1);
+		switch (numberChoice)
+		{
+			case 0:
+			{
+				system("CLS");
+				addCourse();
+				break;
+			}
+			case -1:
+			{
+				system("CLS");
+				cout << "Your choice is wrong !! Choice again " << endl;
+				break;
+			}
+		}
+	}
+	addDataForImportCourse(Lecturer, Course);	
+	string key;
+	cout << "Import Successfully " << endl;
+	cout << "Enter any key to return :";
+	cin >> key;		
+	system("CLS");
+	editFeatureCourse();
+}
 void viewListCourse();
 
 void updateSemester()

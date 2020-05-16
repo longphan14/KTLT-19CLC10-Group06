@@ -344,6 +344,7 @@ void editFeatureCourse()
 		}
 		case 2:
 		{
+			addCourse();
 			break;
 		}
 		case 3:
