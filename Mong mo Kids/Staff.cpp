@@ -1043,8 +1043,10 @@ void addStudentToCourse(){
 	bool check = false;
 	bool check2 = false;
 	int size = 0;
+	int size1 = 0;
 	userData student, studenttemp;
-	string coursename, classname;
+	string classname, coursename, courseid;
+	int courseNo;
 	cout << "Enter student id: ";
 	cin >> student.ID;
 	ifstream fi;
@@ -1054,7 +1056,6 @@ void addStudentToCourse(){
 	for(int i = 0; i < size; i++){
 		if(studentinfo[i].ID == student.ID){
 			cout << studentinfo[i].ID << " - " << studentinfo[i].Name << endl;
-			classname = studentinfo[i].className;
 			studenttemp = studentinfo[i];
 			check = true;
 	}
@@ -1072,20 +1073,25 @@ void addStudentToCourse(){
 		filename = "fileCourse/" + semesterCurrent +"-Schedule.txt";
 		fi1.open(filename.c_str());
 		takeDataCourse(fi1, Lecturer, Course, size1);
+		int NO[size1 - 1];
 		fi1.close();
 		for (int i = 0; i < size1; i++)
 		{
-			cout << "Course ID: " << Course[i].courseID << endl;
+			NO[i + 1] = i + 1;
+			cout << i + 1<<". " << "Course ID: " << Course[i].courseID << endl;
 			cout << "Course Name: " << Course[i].courseName << endl;
 			cout << "Lecturer Name: " << Lecturer[i].Name << endl;
 			cout << "Room: " << Course[i].Room << endl;
 			cout << endl;
 		}	
 
-	cout << "Enter course name: ";
-	cin >> coursename;
+	cout << "Enter course No: ";
+	cin >> courseNo;
 	for (int i = 0; i < size1; i++){
-		if(coursename == Course[i].courseID){
+		if(courseNo == NO[i + 1]){
+			classname = Course[i].className;
+			courseid = Course[i].courseID;
+			coursename = Course[i].courseName;
 			check2 = true;
 			
 		}
@@ -1095,20 +1101,43 @@ void addStudentToCourse(){
 			string semesterCurrent3;
 			takeCurrentSemester(semesterCurrent3);
 			string fileName3;
-			fileName3 = "fileClass/" + semesterCurrent3 + "-" + classname + "-" + coursename + "-" + "Student.txt";
+			fileName3 = "fileCourse/" + semesterCurrent3 + "-" + classname + "-" + courseid + "-" + "Student.txt";
 			fo3.open(fileName3.c_str());
-			fo3 << studenttemp.ID << endl;			
-			fo3 << studenttemp.Name << endl;
-			fo3 << studenttemp.Gender << endl;
-			if (studenttemp.Type == 2)
-			{
-				fo3 << studenttemp.DoB << endl;
-				fo3 << studenttemp.className << endl;
-				fo3 << studenttemp.Status << endl;
+			
+			userData * studentCourse;
+			int size3 = 0;					
+			ifstream fi3;
+			fi3.open(fileName3.c_str());	
+			takeDataUser(fi3, studentCourse, size3, 4);
+			fi3.close();						
+			cout << size3 << endl;
+			studentCourse[size3].ID = studenttemp.ID;
+			studentCourse[size3].Password = studenttemp.Password;
+			studentCourse[size3].Name = studenttemp.Name;
+			studentCourse[size3].Gender = studenttemp.Gender;
+			studentCourse[size3].DoB =  studenttemp.DoB ;
+			studentCourse[size3].className = studenttemp.className ;
+			studenttemp.Score.Midterm = -1;
+			studentCourse[size3].Score.Midterm = studenttemp.Score.Midterm;
+			studenttemp.Score.Final = -1;								
+			studentCourse[size3].Score.Final = studenttemp.Score.Final;
+			studenttemp.Score.Bonus = -1;
+			studentCourse[size3].Score.Bonus = studenttemp.Score.Bonus ;
+			studenttemp.Score.Total = -1;
+			studentCourse[size3].Score.Total = studenttemp.Score.Total;	
+
+			for (int i = 0; i < 10; i++)
+				studentCourse[size3].Attendance[i] = -1;
+			size3 = size3 + 1;
+			insertDataStudentInCourse(fileName3, studentCourse, size3);
 			}
-				cout << "Student has " << coursename << " in his profile!" << endl;
+			fo3.close();
+			
+			
+			cout << "Student has " << courseid << " " << coursename << " in his profile!" << endl;
 			}
-	}
+			
+			
 	if(check == false)
 	cout << "Student is not exist!" << endl;
 
@@ -1269,5 +1298,158 @@ void removeStudent() // Hao : Chinh sua thong tin sinh vien
 	editFeatureStu();
 }
 
+void viewListStudentinCourse(){
+	userData *studentinfo;
+	bool check = false;
+	bool check2 = false;
+	int size = 0;
+	int size1 = 0;
+	userData student, studenttemp;
+	string classname, coursename, courseid;
+	int courseNo;
+		cout << "List of Course in school" << endl;
+		courseData* Course;
+		userData* Lecturer;
+		ifstream fi1;
+		string semesterCurrent;
+		takeCurrentSemester(semesterCurrent);
+		string filename;
+		filename = "fileCourse/" + semesterCurrent +"-Schedule.txt";
+		fi1.open(filename.c_str());
+		takeDataCourse(fi1, Lecturer, Course, size1);
+		int NO[size1 - 1];
+		fi1.close();
+		for (int i = 0; i < size1; i++)
+		{
+			NO[i + 1] = i + 1;
+			cout << i + 1<<". " << "Course ID: " << Course[i].courseID << endl;
+			cout << "Course Name: " << Course[i].courseName << endl;
+			cout << "Lecturer Name: " << Lecturer[i].Name << endl;
+			cout << "Room: " << Course[i].Room << endl;
+			cout << endl;
+		}	
+
+	cout << "Enter course No: ";
+	cin >> courseNo;
+	for (int i = 0; i < size1; i++){
+		if(courseNo == NO[i + 1]){
+			classname = Course[i].className;
+			courseid = Course[i].courseID;
+			coursename = Course[i].courseName;
+		}
+	}
+	string semesterCurrent2;
+	takeCurrentSemester(semesterCurrent2);
+	string fileName3;
+	fileName3 = "fileCourse/" + semesterCurrent2 + "-" + classname + "-" + courseid + "-" + "Student.txt";
+	ifstream fi2;	
+	fi2.open(fileName3.c_str());
+	userData* studentCourse;
+	int size3 = 0;
+	takeDataUser(fi2, studentCourse, size3, 4);
+	cout << "The Numbers of student: " << size3 << endl;
+	for(int i = 0; i < size3; i++){
+		cout << endl;
+			cout << studentCourse[i].ID << endl;
+			cout << studentCourse[i].Name << endl;
+			cout << studentCourse[i].Gender << endl;
+			cout << studentCourse[i].DoB << endl;
+			cout << studentCourse[i].className << endl;
+//			cout << studenttemp.Score.Midterm = -1;
+			cout << studentCourse[i].Score.Midterm << endl;
+//			cout << studenttemp.Score.Final = -1;								
+			cout << studentCourse[i].Score.Final << endl;
+//			cout << studenttemp.Score.Bonus = -1;
+			cout << studentCourse[i].Score.Bonus << endl;
+//			cout << studenttemp.Score.Total = -1;
+			cout << studentCourse[i].Score.Total << endl;	
+
+	}
+	
+	
+	fi2.close();
+	
+	string key;
+	cout << "Press any key to return: ";
+	cin >> key;
+	system("CLS");
+	viewFeatureStu();
+}
+void removeStudentinCourse(){
+		userData *studentinfo;
+	bool check = false;
+	bool check2 = false;
+	int size = 0;
+	int size1 = 0;
+	userData student, studenttemp;
+	string classname, coursename, courseid;
+	int courseNo;
+		cout << "List of Course in school" << endl;
+		courseData* Course;
+		userData* Lecturer;
+		ifstream fi1;
+		string semesterCurrent;
+		takeCurrentSemester(semesterCurrent);
+		string filename;
+		filename = "fileCourse/" + semesterCurrent +"-Schedule.txt";
+		fi1.open(filename.c_str());
+		takeDataCourse(fi1, Lecturer, Course, size1);
+		int NO[size1 - 1];
+		fi1.close();
+		for (int i = 0; i < size1; i++)
+		{
+			NO[i + 1] = i + 1;
+			cout << i + 1<<". " << "Course ID: " << Course[i].courseID << endl;
+			cout << "Course Name: " << Course[i].courseName << endl;
+			cout << "Lecturer Name: " << Lecturer[i].Name << endl;
+			cout << "Room: " << Course[i].Room << endl;
+			cout << endl;
+		}	
+
+	cout << "Enter course No: ";
+	cin >> courseNo;
+	for (int i = 0; i < size1; i++){
+		if(courseNo == NO[i + 1]){
+			classname = Course[i].className;
+			courseid = Course[i].courseID;
+			coursename = Course[i].courseName;
+		}
+	}
+	string semesterCurrent2;
+	takeCurrentSemester(semesterCurrent2);
+	string fileName3;
+	fileName3 = "fileCourse/" + semesterCurrent2 + "-" + classname + "-" + courseid + "-" + "Student.txt";
+	ifstream fi2;	
+	fi2.open(fileName3.c_str());
+	userData* studentCourse;
+	int size3 = 0;
+	takeDataUser(fi2, studentCourse, size3, 4);
+	cout << "The Numbers of student: " << size3 << endl;
+	int NO1[size3 - 1];
+	for(int i = 0; i < size3; i++){
+		cout << endl;
+			cout << "No" << i + 1 << "." << studentCourse[i].ID << endl;
+			cout << studentCourse[i].Name << endl;
+			cout << studentCourse[i].Gender << endl;
+			cout << studentCourse[i].DoB << endl;
+			cout << studentCourse[i].className << endl;
+			cout << studentCourse[i].Score.Midterm << endl;								
+			cout << studentCourse[i].Score.Final << endl;
+			cout << studentCourse[i].Score.Bonus << endl;
+			cout << studentCourse[i].Score.Total << endl;
+	}
+	int choice;
+	cout << "Choose No to remove: ";
+	cin >> choice;
+	studentCourse[choice - 1].Status = 0;
+	insertDataStudentInCourse(fileName3, studentCourse, size3);
+	fi2.close();
+	
+	string key;
+	cout << "Press any key to return: ";
+	cin >> key;
+	system("CLS");
+	editFeatureStu();
+}
 
 //************************//

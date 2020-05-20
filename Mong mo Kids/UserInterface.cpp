@@ -174,6 +174,7 @@ void editFeatureStu()
 		}
 		case 6:
 		{
+			removeStudentinCourse();
 			break;
 		}
 		case 7:
@@ -231,6 +232,7 @@ void viewFeatureStu()
 		}
 		case 6:
 		{
+			viewListStudentinCourse();
 			break;
 		}
 		default:
