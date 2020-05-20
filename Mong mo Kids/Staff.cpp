@@ -1102,12 +1102,13 @@ void addStudentToCourse(){
 			takeCurrentSemester(semesterCurrent3);
 			string fileName3;
 			fileName3 = "fileCourse/" + semesterCurrent3 + "-" + classname + "-" + courseid + "-" + "Student.txt";
-			fo3.open(fileName3.c_str());
 			
 			userData * studentCourse;
 			int size3 = 0;					
 			ifstream fi3;
-			fi3.open(fileName3.c_str());	
+			fi3.open(fileName3.c_str());
+			if (!fi3.is_open())
+				fo3.open(fileName3.c_str());	
 			takeDataUser(fi3, studentCourse, size3, 4);
 			fi3.close();						
 			cout << size3 << endl;
@@ -1140,7 +1141,6 @@ void addStudentToCourse(){
 			
 	if(check == false)
 	cout << "Student is not exist!" << endl;
-
 	
 
 	string key;
