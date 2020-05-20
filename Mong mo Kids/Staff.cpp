@@ -48,49 +48,515 @@ void editStudentInFile(string className, string courseName, string ID, userData 
 	insertDataStudentInCourse(fileName, Student, size);
 }
 
+bool checkCSV(string fileName)
+{
+	int n = fileName.length();
+	if (fileName[n - 1] != 'v')
+		return false;
+	if (fileName[n - 2] != 's')
+		return false;
+	if (fileName[n - 3] != 'c')
+		return false;
+	return true;
+}
+
+void addDataCourse(string fileName, userData Lecturer, courseData Course)
+{
+
+	//Dua du lieu Course vao file Schedule.txt
+	courseData * courseList;
+	userData * lecturerList;
+	int size = 0;			
+	// Lay list course tu file
+	ifstream fi;
+	fi.open(fileName.c_str());
+	if (!fi.is_open())
+	{
+		ofstream fo;
+		fo.open(fileName.c_str());
+		fo << 0 << endl;
+		fo.close();
+	}
+	takeDataCourse(fi, lecturerList, courseList, size);
+	fi.close();										
+	
+	//Kiem tra xem co ton tai chua 
+	
+	bool check = true;				
+	for (int i = 0; i < size; i++)
+		if ((courseList[i].courseID == Course.courseID))
+		{
+			check = false;
+			break;
+		}
+	
+	//Dua du lieu vao file
+	
+	if (check)
+	{	
+		ofstream fo;
+		fo.open(fileName.c_str());
+		//Them du lieu vao phan tu cuoi cung cuar lecturerList va courseList
+		lecturerList[size] = Lecturer;
+		courseList[size] = Course;
+		size++;																		 
+		insertDataCourse(fo, lecturerList, courseList, size);		
+		fo.close();				
+	}
+												
+	//Xoa du lieu trong heap
+	delete [] lecturerList;
+	delete [] courseList; 
+}
+
+void addStudentForImportCourse(userData Lecturer, courseData Course)
+{
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
+	userData * Student;
+	int size = 0;											
+	//LAy du lieu trong file (class)-student.txt
+	string fileName;
+	fileName = "fileClass/" + Course.className + "-Student.txt";
+	ifstream fi;
+	fi.open(fileName.c_str());
+	takeDataUser(fi, Student, size, 2);					
+	fi.close();				
+	
+	//Them bang diem va bang diem danh
+	for (int i = 0; i < size; i++)
+	{					
+		Student[i].Score.Midterm = -1;
+		Student[i].Score.Final = -1;
+		Student[i].Score.Bonus = -1;
+		Student[i].Score.Total = -1;
+		for (int j = 0; j < 10; j++)
+			Student[i].Attendance[j] = -1;
+	}	
+	
+	//Dua du lieu vao file (hoc ki)-(mon hoc)-(class)-Student.txt
+	fileName = "fileCourse/" + semesterCurrent + '-' + Course.className + '-' + Course.courseID + "-Student.txt";	
+	insertDataStudentInCourse(fileName, Student, size);
+}
+
+void addDataForImportCourse(userData Lecturer, courseData Course) // Ham dua du lieu vao ho tro import course
+{
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
+	//Dua du lieu Course vao file (Hoc ki)-Schedule.txt
+	string fileName = "fileCourse/" + semesterCurrent + "-Schedule.txt"; 
+	addDataCourse(fileName, Lecturer, Course);
+	//Dua du lieu Course vao file (Hoc ki)-(Ten lop)-Schedule.txt
+	
+	//TAo file (hoc ki)-(Ten lop)-Schedule.txt
+	fileName = "fileCourse/" + semesterCurrent + '-' + "Schedule-" + Course.className + ".txt";
+	addDataCourse(fileName, Lecturer, Course);
+	
+	//Dua du lieu Lecturer vao file Lecturer.txt
+	userData * lecturerList;
+	int size = 0;
+										
+	fileName = "fileUser/Lecturer.txt";
+	ifstream fi;
+	fi.open(fileName.c_str());
+	takeDataUser(fi, lecturerList, size, 3);
+	fi.close();						
+	
+	//Kiem tra xem co ton tai Lecture trong list hay chua 
+	bool check = true;
+	for (int i = 0; i < size; i++)
+		if (lecturerList[i].ID == Lecturer.ID)
+		{
+			check = false;
+			break;
+		}
+	
+	//Dua du lieu vao
+	ofstream fo;
+	if (check)
+	{
+		lecturerList[size++] = Lecturer;
+
+		fo.open(fileName.c_str());
+		insertDataUser(fo, lecturerList, size);
+		fo.close();									
+	}
+	
+	//Dua du lieu hoc sinhg vao file (hoc ki)-(ten lop)-(Ten mon hoc)-Student.txt
+	addStudentForImportCourse(Lecturer, Course);
+}
+
+void formatDate(string &Date)
+{
+		//Format khi no sai
+	bool check = false;
+	int n = Date.length();
+	for (int i = 0; i < n; i++)
+		if ((Date[i] < '0') || (Date[i] > '9'))
+		{
+			if ((Date[i] != ' ') && (Date[i] != '-'))
+			{
+				check = true;
+				break;
+			}
+		}
+
+	//Dua ve dung dang yyyy mm dd
+	string newDate = "";
+	string year = "", month = "", day = "";
+	int i = 0;
+	while ((Date[i] <= '9') && (Date[i] >= '0'))
+		year += Date[i++];
+	if (year.length() > 2)
+		check = true;
+	i++;
+	while ((Date[i] <= '9') && (Date[i] >= '0'))
+		month += Date[i++];
+		
+	if (month.length() > 2)
+		check = true;
+
+	if (month.length() == 1)
+		month = '0' + month;
+		
+	i++	;
+	while ((Date[i] <= '9') && (Date[i] >= '0'))
+		day += Date[i++];
+	
+	if (day.length() > 2)
+		check = true;
+		
+	if (day.length() == 1)
+		day = '0' + day;
+	
+	if (check)
+	{
+		Date = "2020 00 00";
+		return;
+	}
+	Date = year + ' ' + month + ' ' + day ;
+}
+
+void showCourse(userData Lecturer, courseData Course) // hien ra danh sach mon hoc
+{
+	cout << "Information Course you add" << endl;
+	cout << "Course ID :" << Course.courseID << endl;
+	cout << "Course name :" << Course.courseName << endl;
+	cout << "Class of course :" << Course.className << endl;
+	cout << "Room :" << Course.Room << endl;
+	cout << "Start date :" << Course.startDate << endl;
+	cout << "End date :" << Course.endDate << endl;
+	cout << "Start time :" << Course.startTime << endl;
+	cout << "End time :" << Course.endTime << endl;
+	cout << "Information Lecturer who teach this course" << endl;
+	cout << "ID lecturer :" << Lecturer.ID << endl;
+	cout << "Name of lecturer :" << Lecturer.Name << endl;
+	cout << "Gender of Lecturer :";
+	if (Lecturer.Gender == 0)
+		cout << "Male";
+	else
+		cout << "Female";
+	cout << endl;
+	cout << "Degree of lecturer :" << Lecturer.Degree << endl;
+}
+
 
 //**********************************************//
 
 //Tinh Nang cua User STAFF//
 
 void importCourse() {
+	//Giao dien dau vao
+	cout << "Do you want to import course ?" << endl;
+	cout << "0.No                 1.Yes" << endl;
+	int numberChoice = choiceScreen(1);
+	system("CLS");
+	switch(numberChoice)
+	{
+		case 0:
+		{
+			editFeatureCourse();
+			break;	
+		}	
+		case -1:
+		{
+			cout << "Your choice is wrong !! Choice again" << endl;
+			importCourse();
+			break;
+		}
+	}
+	//Cho nguoi dung nhap file
+	string fileName;
+	cout << "Enter locate file csv you want import (Example c:\\download\\aaa.csv) :" ;
+	cin >> fileName;
+	
 	ifstream fi;
-	ofstream fo;
-	string file, fileout;
-	int size;
-	
-	std::cout << "Nhap duong truyen file: ";
-	std::cin >> file;
-	size = file.length();
-	int i = size;
-	if(file[i - 1] == 'v' && file[i - 2] == 's' && file[i - 3] == 'c')
-		cout << "This is csv file!" << endl;
+	fi.open(fileName.c_str());
+	system("CLS");	
+	//Check xem file co dung yeu cau khong 
+	if (!fi.is_open())
+	{
+		cout << "Don't find your file !! Try again" << endl;
+		importCourse();
+	}
 	else
-		cout << "This is not csv file!" << endl;
-		
-		
-	fi.open(file.c_str());
-	fileout = "fileCourse/2019-2020-HK2-CS162-19CLC10-Students.txt";
-	fo.open(fileout.c_str());
-	if(fi.is_open()){
-		cout << "Filein is Open!" << endl;
+	{
+		if (!checkCSV(fileName))
+		{											
+			cout << "Your file isn't CSV type !! Try again" << endl;
+			importCourse();
+		}
+										
 	}
-	else{
-		cout << "Filein is not Open" << endl;
+	numberChoice = -1;				
+	while (numberChoice == -1)
+	{
+		cout << "Are you sure to import course ? "  << endl;
+		cout << "0.No                1.Yes" << endl;
+		numberChoice = choiceScreen(1);
+		switch(numberChoice)
+		{
+			case 0:
+			{
+				system("CLS");
+				editFeatureCourse();
+				break;	
+			}	
+			case -1:
+			{
+				system("CLS");
+				cout << "Your choice is wrong !! Choice again" << endl;
+				break;
+			}
+		}
 	}
-	if(fo.is_open()){
-		cout << "Fileout is Open!" << endl;
-	}
-	else{
-		cout << "Fileout is not Open" << endl;
-	}
+	//Lay du lieu
+	userData Lecturer;
+	courseData Course;
 	
-	fi.close();
-	fo.close();
-	cout << endl;
+	fi.ignore(500, '\n');
+	while (!fi.eof())
+	{
+		string No;
+		getline(fi, No, ',');
+		if ((No == "") || (No == " "))
+			break;
+		else if (No.length() >= 2)
+		{
+			if ((No[0] == ' ') && (No[1] == ' '))
+				break;
+		}
+		getline(fi, Course.courseID, ',');
+		
+		getline(fi,Course.courseName, ',');
+		
+		getline(fi, Course.className, ',');
+		
+		getline(fi,Course.lecturerAccount, ',');
+		Lecturer.ID = Course.lecturerAccount;
+		Lecturer.Password = Lecturer.ID;
+		
+		getline(fi, Lecturer.Name, ',');
+		
+		getline(fi,Lecturer.Degree, ',');
+		
+		string Gender;
+		getline(fi, Gender, ',');
+		if ((Gender[0] == 'f') || (Gender[0] == 'F'))
+			Lecturer.Gender = 1;
+		else
+			Lecturer.Gender = 0;
+				
+		getline(fi,Course.startDate, ',');
+		formatDate(Course.startDate);
+		
+		getline(fi, Course.endDate, ',');
+		formatDate(Course.endDate);	
+		
+		getline(fi,Course.DoW, ',');
+		
+		string sHour;					
+		getline(fi, sHour, ',');
+		
+		string sMinute;
+		getline(fi, sMinute, ',');
+		
+		string eHour;					
+		getline(fi, eHour, ',');
+		
+		string eMinute;
+		getline(fi, eMinute, ',');
+		
+		Course.startTime = sHour + ' ' + sMinute;
+		Course.endTime = eHour + ' ' + eMinute;
+		
+		getline(fi, Course.Room, '\n');
+		Lecturer.Type = 3;
+		addDataForImportCourse(Lecturer, Course);	
+	}				
+	fi.close();		
+	cout << "Import Successfully" << endl;	
+	
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");
+	editFeatureCourse();
+
+}
+void addCourse()
+{
+	cout << "Do you want to import course ?" << endl;
+	cout << "0.No                 1.Yes" << endl;
+	int numberChoice = choiceScreen(1);
+	system("CLS");
+	switch(numberChoice)
+	{
+		case 0:
+		{
+			editFeatureCourse();
+			break;	
+		}	
+		case -1:
+		{
+			cout << "Your choice is wrong !! Choice again" << endl;
+			addCourse();
+			break;
+		}
+	}
+	cin.ignore();
+	
+	userData Lecturer;
+	courseData Course;
+	cout << "Enter course ID : "; getline(cin, Course.courseID);		
+	cout << "Enter course name : "; getline(cin, Course.courseName);
+	system("CLS");
+	
+	//Lay du lieu trong class de in ra 
+	string nameClass[500];
+	int size = 0;								
+	ifstream fi("fileClass/Class.txt");
+	takeDataClass(fi, nameClass, size);			
+	fi.close();				
+	
+	numberChoice = -1;
+	
+	while (numberChoice == -1)
+	{														
+		cout << "*******LIST CLASS**********" << endl;
+		for (int i = 0; i < size; i++)
+			cout << i  << " " << nameClass[i] << endl;
+		cout << "**************************" << endl;
+		
+		cout << "Choose one class in above list " << endl;
+		numberChoice = choiceScreen(size - 1);
+		if (numberChoice == -1)
+		{																							
+			system("CLS");																				
+			cout << "Your class which you choose isn't exit !! please choose again " << endl;
+		}
+	}
+	Course.className = nameClass[numberChoice];
+	cin.ignore();												
+	
+	system("CLS");										
+	cout << "Enter lecturer account : "; getline(cin, Course.lecturerAccount);
+	Lecturer.ID = Course.lecturerAccount;
+	Lecturer.Password = Lecturer.ID;
+		
+	cout << "Enter Lecturer name : "; getline(cin, Lecturer.Name);
+		
+	cout << "Enter lecturer degree : "; getline(cin, Lecturer.Degree);
+	
+	numberChoice = -1;	
+	string Gender;
+	while (numberChoice == -1)
+	{													
+		cout << "Enter gender of lecturer " << endl;
+		cout << "0. Male     1. Female" << endl;
+		numberChoice = choiceScreen(1);
+		if (numberChoice == -1)
+		{	
+			system("CLS");																					
+			cout << "Your gender which you choose isn't exit !! please choose again " << endl;
+		}
+	}
+	Lecturer.Gender = numberChoice;
+	
+	system("CLS");
+	cin.ignore();
+	cout << "Enter start date of course(yyyy mm dd) : "; getline(cin, Course.startDate);
+	formatDate(Course.startDate);
+		
+	cout << "enter end date of course(yyyy mm dd) : "; getline(cin, Course.endDate);
+	formatDate(Course.endDate);	
+	
+	numberChoice = -1;
+	while (numberChoice == -1)
+	{												
+		cout << "Enter day of week of course : " << endl;
+		cout << "0. Monday" << endl << "1. Tuesday" << endl;
+		cout << "2. Wednesday" << endl << "3. Thursday" << endl;
+		cout << "4. Friday" << endl << "5. Saturday" << endl;
+		numberChoice = choiceScreen(5);
+		if (-1 == numberChoice)
+		{
+			system("CLS");																	
+			cout << "Your day which you choose isn't exit !! please choose again " << endl;
+		}
+	}
+	Course.DoW = char(numberChoice + 2 + 48);
+	system("CLS");
+	cin.ignore();
+	string sHour;					
+	cout << "Enter start hour of course : "; getline(cin, sHour);
+		
+	string sMinute;
+	cout << "Enter start minute of course : "; getline(cin, sMinute);
+		
+	string eHour;					
+	cout << "Enter end hour of course : "; getline(cin, eHour);
+		
+	string eMinute;
+	cout << "Enter end minute of course : "; getline(cin, eMinute);
+		
+	Course.startTime = sHour + ' ' + sMinute;
+	Course.endTime = eHour + ' ' + eMinute;
+		
+	cout << "Enter room of course : "; getline(cin, Course.Room);
+	Lecturer.Type = 3;
+	system("CLS");
+	
+	numberChoice = -1;
+	while (numberChoice == -1)
+	{				
+		showCourse(Lecturer, Course);										
+		cout << "Are you sure to add above information to data ?" << endl;
+		cout << "0.No                 1.Yes" << endl;
+		numberChoice = choiceScreen(1);
+		switch (numberChoice)
+		{
+			case 0:
+			{
+				system("CLS");
+				addCourse();
+				break;
+			}
+			case -1:
+			{
+				system("CLS");
+				cout << "Your choice is wrong !! Choice again " << endl;
+				break;
+			}
+		}
+	}
+	addDataForImportCourse(Lecturer, Course);	
+	string key;
+	cout << "Import Successfully " << endl;
+	cout << "Enter any key to return :";
+	cin >> key;		
+	system("CLS");
 	editFeatureCourse();
 }
-void addCourse();
 void viewListCourse();
 
 void updateSemester()

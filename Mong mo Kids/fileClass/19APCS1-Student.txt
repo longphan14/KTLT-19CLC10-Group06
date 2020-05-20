@@ -5,7 +5,7 @@ Trinh Van Minh
 0
 2001 04 01
 19APCS1
-0
+1
 
 19128001
 20200401
@@ -36,6 +36,6 @@ Do Vuong Phuc hoi Nhieu
 Bui Nguyen Nhat Hao
 0
 2001 05 27
-2001 05 27
-19
+19APCS1
+1
 
