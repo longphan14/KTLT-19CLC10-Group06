@@ -19,4 +19,8 @@ void addStudentToCourse();
 void removeStudent();
 void viewListStudentinCourse();
 void removeStudentinCourse();
+void searchViewAttendanceList();
+void spviewAttendanceList(string filename, string courseID);
+void viewAttendanceList();
+void spviewStudentAttendanceList(string filename);
 #endif

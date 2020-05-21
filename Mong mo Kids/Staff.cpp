@@ -1452,4 +1452,133 @@ void removeStudentinCourse(){
 	editFeatureStu();
 }
 
+void spviewStudentAttendanceList(string filename){
+	ifstream fi;
+	fi.open(filename.c_str());
+	userData* studentdata;
+	int size = 0;
+	takeDataUser(fi, studentdata, size, 4);
+	cout << "Student Name        ";
+	for(int i = 0; i < 10; i++){
+		cout << "Week " << i + 1 << " ";
+	} 
+	cout << endl;
+	for(int i = 0; i < size; i++){
+		cout << studentdata[i].Name;
+		int length = studentdata[i].Name.length();
+		for (int j = 0; j < 20 - length; j++)
+			cout << " ";
+		for(int j = 0; j < 10; j++){
+			if(studentdata[i].Attendance[j] == 0)
+				cout << "X";
+			else if(studentdata[i].Attendance[j] == 1)
+				cout << "V";
+			else if(studentdata[i].Attendance[j] == -1)
+				cout << "O";
+			for (int k = 0; k < 6; k++)
+				cout << " ";
+		}
+		cout << endl;
+	}
+}
+
+void searchViewAttendanceList(){
+	string Courseid, Classname;
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
+	cout << "Enter Class name: ";
+	cin >> Classname;
+	cout << "Enter Course id: ";
+	cin >> Courseid;
+	string filename;
+	filename = "fileCourse/" + semesterCurrent + "-" + Classname + "-" + Courseid + "-Student.txt";
+	string filename1;
+	filename1 = "fileCourse/" + semesterCurrent + "-Schedule-" + Classname + ".txt";
+	
+	
+	spviewAttendanceList(filename1, Courseid);
+	spviewStudentAttendanceList(filename);
+	
+	
+	string key;
+	cout << "Press any key to return: ";
+	cin >> key;
+	system("CLS");
+	viewFeatureStu();
+}
+
+
+void viewAttendanceList(){
+	ifstream fi;
+	string filename;
+	string semesterCurrent;
+	userData * Lecturer;
+	courseData * Course;
+	int size = 0;
+	string classname, coursename, courseid;
+	
+	
+	takeCurrentSemester(semesterCurrent);
+	filename = "fileCourse/" + semesterCurrent + "-Schedule.txt";
+	fi.open(filename.c_str());
+	takeDataCourse(fi, Lecturer, Course, size);
+	int NO[size - 1];
+	fi.close();
+	for (int i = 0; i < size; i++)
+	{
+		NO[i + 1] = i + 1;
+		cout << i + 1<<". " << "Course ID: " << Course[i].courseID << endl;
+		cout << "Course Name: " << Course[i].courseName << endl;
+		cout << "Lecturer Name: " << Lecturer[i].Name << endl;
+		cout << endl;
+	}	
+	int courseNo;
+	cout << "Enter course No: ";
+	cin >> courseNo;
+	for (int i = 0; i < size; i++){
+		if(courseNo == NO[i + 1]){
+			classname = Course[i].className;
+			courseid = Course[i].courseID;
+			coursename = Course[i].courseName;
+		}
+	}
+	string filename1;
+	filename1 = "fileCourse/" + semesterCurrent + "-" + classname + "-" + courseid + "-Student.txt";
+	spviewAttendanceList(filename, courseid);
+	spviewStudentAttendanceList(filename1);
+	
+	
+	string key;
+	cout << "Press any key to return: ";
+	cin >> key;
+	system("CLS");
+	viewFeatureStu();
+}
+void spviewAttendanceList(string filename, string courseID){
+	ifstream fi;
+	int sizeCourse;
+	userData * Lecturer;
+	courseData * Course;
+	string startDate = "", startTime = "", endTime = "" ;
+	fi.open(filename.c_str());
+	if(fi.is_open()){
+		takeDataCourse(fi, Lecturer, Course, sizeCourse);					
+	
+		for (int i = 0; i < sizeCourse; i++)
+		if (courseID == Course[i].courseID)
+		{
+				startDate = Course[i].startDate;
+				startTime = Course[i].startTime;
+			 	endTime = Course[i].endTime;
+				break;
+		}
+	}
+	else{
+		cout << "Course does not exist!" << endl;
+	}
+	readAttendanceToFile(startDate, startTime, endTime);
+	fi.close();
+}
+
+
 //************************//

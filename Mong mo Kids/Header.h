@@ -67,6 +67,7 @@ void takeDataClass(ifstream &fi, string nameClass[], int &size);
 void insertDataClass(ofstream &fo, string nameClass[], int size);
 void takeCurrentSemester(string &semesterCurrent);
 void insertDataStudentInCourse(string fileName, userData *Data, int size);
+void readAttendanceToFile(string startDate, string startTime, string endTime);
 //***************//
 
 //User Interface STAFF//

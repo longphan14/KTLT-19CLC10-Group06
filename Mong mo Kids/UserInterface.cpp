@@ -28,7 +28,7 @@ void Login() // Hao. Chuc nang: Dang nhap
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
 			dataAccess = Data;
-//			kt = 1;
+			kt = 1;
 			switch(kt)
 			{
 				case 1:
@@ -224,10 +224,12 @@ void viewFeatureStu()
 		}
 		case 4:
 		{
+			viewAttendanceList();
 			break;
 		}
 		case 5:
 		{
+			searchViewAttendanceList();
 			break;
 		}
 		case 6:
