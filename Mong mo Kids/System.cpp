@@ -119,7 +119,12 @@ void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : 
 					if (s[n - 2] == '-')
 						Data[i].Attendance[j] = -1;
 					else
-						Data[i].Attendance[j] = 1;
+					{
+						if (s[n - 1] == '1')
+							Data[i].Attendance[j] = 1;
+						else
+							Data[i].Attendance[j] = 0;
+					}
 				}
 				fi >> Data[i].Status;	
 				fi.ignore();
@@ -657,5 +662,6 @@ void readAttendanceToFile(string startDate, string startTime, string endTime) //
 		}	
 	}
 }
+
 //*******************************************************//	
 

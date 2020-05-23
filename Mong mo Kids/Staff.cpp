@@ -1507,7 +1507,6 @@ void searchViewAttendanceList(){
 	viewFeatureStu();
 }
 
-
 void viewAttendanceList(){
 	ifstream fi;
 	string filename;
@@ -1524,27 +1523,34 @@ void viewAttendanceList(){
 	takeDataCourse(fi, Lecturer, Course, size);
 	int NO[size - 1];
 	fi.close();
-	for (int i = 0; i < size; i++)
-	{
-		NO[i + 1] = i + 1;
-		cout << i + 1 << ". " << "Course ID: " << Course[i].courseID << endl;
-		cout << "Course Name: " << Course[i].courseName << endl;
-		cout << "Lecturer Name: " << Lecturer[i].Name << endl;
-		cout << endl;
-	}	
 	int courseNo;
-	cout << "Enter course No: ";
-	cin >> courseNo;
-//	courseNo = choiceScreen(size - 1);   
-//	if (courseNo == -1)
-//	{
-//		cout << "Your choice is wrong !!" << endl;
-//		cout << "Press any key to return" << endl;
-//		string key;
-//		cin >> key; 
-//		system("CLS");
-//		viewFeatureStu();
-//	}
+	while (true)
+	{					
+		for (int i = 0; i < size; i++)
+		{
+			NO[i + 1] = i + 1;
+			cout << i + 1 << ". " << "Course ID: " << Course[i].courseID << endl;
+			cout << "Course Name: " << Course[i].courseName << endl;
+			cout << "Lecturer Name: " << Lecturer[i].Name << endl;
+			cout << endl;
+		}	
+		string Choice;
+		cout << "Enter course No(Press 0 to return): ";
+		cin >> Choice;
+		if(Choice == "0")
+	{									
+		system("CLS");
+		viewFeatureStu();
+	}
+		courseNo = checkChoice(Choice, size);
+		if ((courseNo != 0) && (courseNo != -1))
+			break;
+		else
+		{
+			system("CLS");
+			cout << "Your choice isn't correct !! Choose again !!" << endl;
+		}
+	}
 	for (int i = 0; i < size; i++){
 		if(courseNo == NO[i + 1]){
 			classname = Course[i].className;
@@ -1552,6 +1558,7 @@ void viewAttendanceList(){
 			coursename = Course[i].courseName;
 		}
 	}
+
 	string filename1;
 	filename1 = "fileCourse/" + semesterCurrent + "-" + classname + "-" + courseid + "-Student.txt";
 	spviewAttendanceList(filename, courseid);
