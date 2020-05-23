@@ -201,7 +201,8 @@ void viewFeatureStu()
 	cout << "4. View attendance list of a course" << endl;
 	cout << "5. Search and view attendance list of a course" << endl;
 	cout << "6. View list of students in a course" << endl;
-	int numberChoice = choiceScreen(6);
+	cout << "7. View scoreboard list of a course" << endl;
+	int numberChoice = choiceScreen(7);
 	clearScreen();
 	switch(numberChoice)
 	{
@@ -220,6 +221,7 @@ void viewFeatureStu()
 		}
 		case 3:
 		{
+			searchViewScoreboardList();
 			break;
 		}
 		case 4:
@@ -235,6 +237,10 @@ void viewFeatureStu()
 		case 6:
 		{
 			viewListStudentinCourse();
+			break;
+		}
+		case 7:{
+			ViewScoreboardList();
 			break;
 		}
 		default:

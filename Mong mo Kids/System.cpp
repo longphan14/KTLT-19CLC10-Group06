@@ -629,6 +629,11 @@ void readAttendanceToFile(string startDate, string startTime, string endTime) //
 		}
 	}
 	
+	cout << "       ";
+	cout << "Date        ";
+	cout << "Start Time ";
+	cout << "End Time" << endl;
+	
 	for (int i = 0 ; i < 10; i++)
 	{
 		cout << "Week " << i + 1<< " ";
@@ -638,7 +643,7 @@ void readAttendanceToFile(string startDate, string startTime, string endTime) //
 		cout << Month << " ";
 		if (Day < 10)
 			cout << "0";
-		cout << Day << " " << startTime << " " << endTime << " " << endl;
+		cout << Day << "  " << startTime << "       " << endTime << " " << endl;
 		Day = Day + 7;										
 		if (Day > dateOfMonth[Month])
 		{

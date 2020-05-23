@@ -1580,5 +1580,145 @@ void spviewAttendanceList(string filename, string courseID){
 	fi.close();
 }
 
+void spViewScoreboardList(string courseid, string classname){
+	string filename;
+	userData* studentinfo;
+	int size = 0;
+	
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
+	filename = "fileCourse/" + semesterCurrent + "-" + classname + "-" + courseid + "-Student.txt";
+	ifstream fi;
+	fi.open(filename.c_str());
+	takeDataUser(fi, studentinfo, size, 4);
+	fi.close();
+	
+	
+	cout << "Name                ";
+	cout << "Midterm ";
+	cout << "Bonus ";
+	cout << "Final ";
+	cout << "Total ";
+	cout << endl;
+	for(int i = 0; i < size; i++){
+		cout << studentinfo[i].Name;
+		int length = studentinfo[i].Name.length();
+		for (int j = 0; j < 20 - length; j++)
+			cout << " ";
+	
+	cout << studentinfo[i].Score.Midterm << "      ";
+	cout << studentinfo[i].Score.Bonus << "     ";
+	cout << studentinfo[i].Score.Final << "     ";
+	cout << studentinfo[i].Score.Total << endl;
+}
+}
 
+void searchViewScoreboardList(){
+	string courseid, classname;
+	userData* Lecturer;
+	courseData* CourseData;
+	int size = 0;
+	bool check = false;
+	
+	cout << "Enter Course ID: ";
+	cin >> courseid;
+	cout << "Enter Class(name): ";
+	cin >> classname;
+	
+	string filename;
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
+	filename = "fileCourse/" + semesterCurrent + "-Schedule.txt";
+	ifstream fi;
+	fi.open(filename.c_str());
+	takeDataCourse(fi, Lecturer, CourseData, size);
+	fi.close();
+	
+	for(int i = 0; i < size; i++){
+		if(courseid == CourseData[i].courseID && classname == CourseData[i].className)
+			check = true;
+	}
+	
+	if(check == false)
+		cout << "Invalid Course ID or Class(name)!" << endl;
+	else
+		spViewScoreboardList(courseid, classname);
+	
+	
+	cout << endl;
+	string key;
+	cout << "Press any key to return: ";
+	cin >> key;
+	system("CLS");
+	viewFeatureStu();
+}
+void ViewScoreboardList(){
+	string filename, filename1;
+	userData* Lecturer;
+	courseData* CourseData;
+	int size, size1;
+	string nameClass[1000];
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
+	filename = "fileCourse/" + semesterCurrent + "-Schedule.txt";
+	ifstream fi;
+	fi.open(filename.c_str());
+	takeDataCourse(fi, Lecturer, CourseData, size);
+	fi.close();
+	filename1 = "fileClass/Class.txt";
+	ifstream fi2;
+	fi2.open(filename1.c_str());
+	takeDataClass(fi2, nameClass, size1);
+	fi2.close();
+	cout << "List of Class: " << endl;
+	for(int i = 0; i < size1; i++){
+		cout << i+1 << "." << nameClass[i] << endl;
+	}
+	string nameclass;
+	bool check = false;
+	cout << "Enter Class to view (Name of Class)(Press 0 to exit): ";
+	cin >> nameclass;
+	
+	if(nameclass == "0")
+	{									
+		system("CLS");
+		viewFeatureStu();
+	}
+		
+	for(int i = 0; i < size1; i++){
+		if(nameclass == nameClass[i])
+			check = true;
+}
+	if(check == false){
+		cout << "Invalid enter!" << endl;
+	}
+	
+	
+	
+	else{
+	for(int i = 0; i < size; i++){
+		cout << i+1 << "." << CourseData[i].courseID << "-" << CourseData[i].courseName << endl;
+	}
+	string Courseid;
+	cout << "Enter Course ID: ";
+	cin >> Courseid;
+	bool check1 = false;
+	for(int i = 0; i < size1; i++){
+		if(Courseid == CourseData[i].courseID)
+			check1 = true;
+}
+	if(check1 == false){
+		cout << "Invalid enter!" << endl;
+	}
+	else{
+		spViewScoreboardList(Courseid, nameclass);
+	}
+}
+	cout << endl;
+	string key;
+	cout << "Press any key to return: ";
+	cin >> key;
+	system("CLS");
+	viewFeatureStu();
+}
 //************************//

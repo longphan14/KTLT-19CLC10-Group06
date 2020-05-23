@@ -23,4 +23,7 @@ void searchViewAttendanceList();
 void spviewAttendanceList(string filename, string courseID);
 void viewAttendanceList();
 void spviewStudentAttendanceList(string filename);
+void searchViewScoreboardList();
+void ViewScoreboardList();
+void spViewScoreboardList();
 #endif
