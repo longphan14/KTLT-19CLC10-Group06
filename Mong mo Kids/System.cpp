@@ -119,7 +119,12 @@ void takeDataUser(ifstream &fi, userData * &Data, int &size, int type) // Hao : 
 					if (s[n - 2] == '-')
 						Data[i].Attendance[j] = -1;
 					else
-						Data[i].Attendance[j] = 1;
+					{
+						if (s[n - 1] == '1')
+							Data[i].Attendance[j] = 1;
+						else
+							Data[i].Attendance[j] = 0;
+					}
 				}
 				fi >> Data[i].Status;	
 				fi.ignore();
@@ -584,5 +589,79 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 		fi.close();	
 	}	
 }
+
+void readAttendanceToFile(string startDate, string startTime, string endTime) // viet Bang diem danh vao tung sinh vien
+{
+	int dateOfMonth[20];
+	int Day = 0, Month = 0, Year = 0;
+	int i = 0;
+	while (startDate[i] != ' ')									
+		Year = Year * 10 + int(startDate[i++]) - 48;
+	i++;
+	
+	while (startDate[i] != ' ')
+		Month = Month * 10 + int(startDate[i++]) - 48;
+
+	i++;	
+	int n = startDate.length();
+	
+	while (i != n)
+		Day = Day * 10 + int(startDate[i++]) - 48; 
+													
+	
+	for (int i = 1; i <= 12; i++)
+	{
+		switch(i)
+		{
+			case 1: case 3: case 5: case 7: case 8 : case 10: case 12:
+			{
+				dateOfMonth[i] = 31;
+				break;
+			}
+			case 4: case 6: case 9: case 11:
+			{
+				dateOfMonth[i] = 30;
+				break;
+			}
+			default:
+			{
+				if (isLeapYear(Year))
+					dateOfMonth[i] = 29;
+				else
+					dateOfMonth[i] = 28;
+				break;
+			}
+		}
+	}
+	
+	cout << "       ";
+	cout << "Date        ";
+	cout << "Start Time ";
+	cout << "End Time" << endl;
+	
+	for (int i = 0 ; i < 10; i++)
+	{
+		cout << "Week " << i + 1<< " ";
+		cout << Year << " ";
+		if (Month < 10)
+			cout << "0";
+		cout << Month << " ";
+		if (Day < 10)
+			cout << "0";
+		cout << Day << "  " << startTime << "       " << endTime << " " << endl;
+		Day = Day + 7;										
+		if (Day > dateOfMonth[Month])
+		{
+			Day = Day % dateOfMonth[Month];
+			Month++;
+			if (Month > 12)
+			{
+				Year++;
+				Month = 1;
+			}
+		}	
+	}
+}
+
 //*******************************************************//	
 
