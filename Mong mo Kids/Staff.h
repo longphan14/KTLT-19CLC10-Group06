@@ -26,4 +26,6 @@ void spviewStudentAttendanceList(string filename);
 void searchViewScoreboardList();
 void ViewScoreboardList();
 void spViewScoreboardList();
+void viewListStudentinClass();
+void changeClass();
 #endif

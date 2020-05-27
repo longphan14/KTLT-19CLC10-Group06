@@ -170,6 +170,7 @@ void editFeatureStu()
 		}
 		case 5:
 		{
+			changeClass();
 			break;
 		}
 		case 6:
@@ -213,6 +214,7 @@ void viewFeatureStu()
 		}
 		case 1:
 		{
+			viewListStudentinClass();
 			break;
 		}
 		case 2:
