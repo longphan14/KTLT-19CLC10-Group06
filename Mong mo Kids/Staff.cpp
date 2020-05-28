@@ -1478,6 +1478,7 @@ void spviewStudentAttendanceList(string filename){
 			for (int k = 0; k < 6; k++)
 				cout << " ";
 		}
+		cout << studentdata[i].ID;
 		cout << endl;
 	}
 }
@@ -1877,4 +1878,6 @@ void changeClass(){
 	system("CLS");
 	editFeatureStu();
 }
+
+
 //************************//

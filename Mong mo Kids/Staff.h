@@ -4,7 +4,6 @@
 
 void updateSemester();
 
-// task tuan 1
 void importCourse();
 void addCourse();
 void viewListCourse();
@@ -28,4 +27,5 @@ void ViewScoreboardList();
 void spViewScoreboardList();
 void viewListStudentinClass();
 void changeClass();
+void editAttendance(string ID);
 #endif
