@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = Lecturer.o main.o Staff.o Student.o System.o UserInterface.o
-LINKOBJ  = Lecturer.o main.o Staff.o Student.o System.o UserInterface.o
+OBJ      = Lecturer.o main.o Student.o System.o UserInterface.o Staff.o
+LINKOBJ  = Lecturer.o main.o Student.o System.o UserInterface.o Staff.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -g3
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.8.1/include/c++"
@@ -30,9 +30,6 @@ Lecturer.o: Lecturer.cpp
 main.o: main.cpp
 	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
 
-Staff.o: Staff.cpp
-	$(CPP) -c Staff.cpp -o Staff.o $(CXXFLAGS)
-
 Student.o: Student.cpp
 	$(CPP) -c Student.cpp -o Student.o $(CXXFLAGS)
 
@@ -41,3 +38,6 @@ System.o: System.cpp
 
 UserInterface.o: UserInterface.cpp
 	$(CPP) -c UserInterface.cpp -o UserInterface.o $(CXXFLAGS)
+
+Staff.o: Staff.cpp
+	$(CPP) -c Staff.cpp -o Staff.o $(CXXFLAGS)
