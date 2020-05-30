@@ -239,6 +239,7 @@ void formatDate(string &Date)
 void showCourse(userData Lecturer, courseData Course) // hien ra danh sach mon hoc
 {
 	cout << "Information Course you add" << endl;
+	cout << "************************************" << endl;
 	cout << "Course ID :" << Course.courseID << endl;
 	cout << "Course name :" << Course.courseName << endl;
 	cout << "Class of course :" << Course.className << endl;
@@ -247,16 +248,21 @@ void showCourse(userData Lecturer, courseData Course) // hien ra danh sach mon h
 	cout << "End date :" << Course.endDate << endl;
 	cout << "Start time :" << Course.startTime << endl;
 	cout << "End time :" << Course.endTime << endl;
+	cout << "************************************" << endl;
+	
+	cout << endl << endl;
+
 	cout << "Information Lecturer who teach this course" << endl;
+	cout << "************************************" << endl;
 	cout << "ID lecturer :" << Lecturer.ID << endl;
 	cout << "Name of lecturer :" << Lecturer.Name << endl;
 	cout << "Gender of Lecturer :";
 	if (Lecturer.Gender == 0)
-		cout << "Male";
+		cout << "Male" << endl;
 	else
-		cout << "Female";
-	cout << endl;
+		cout << "Female" << endl;								
 	cout << "Degree of lecturer :" << Lecturer.Degree << endl;
+	cout << "************************************" << endl;
 }
 
 void printNewCourse(courseData courseNew) // Hao : In ra man hinh 
@@ -466,11 +472,11 @@ void importCourse() {
 	cout << "Press any key to return :"; cin >> key;
 	system("CLS");
 	editFeatureCourse();
-
 }
+
 void addCourse()
 {
-	cout << "Do you want to import course ?" << endl;
+	cout << "Do you want to add course ?" << endl;
 	cout << "0.No                 1.Yes" << endl;
 	int numberChoice = choiceScreen(1);
 	system("CLS");
@@ -572,20 +578,47 @@ void addCourse()
 	Course.DoW = char(numberChoice + 2 + 48);
 	system("CLS");
 	cin.ignore();
-	string sHour;					
-	cout << "Enter start hour of course : "; getline(cin, sHour);
-		
-	string sMinute;
-	cout << "Enter start minute of course : "; getline(cin, sMinute);
-		
-	string eHour;					
-	cout << "Enter end hour of course : "; getline(cin, eHour);
-		
-	string eMinute;
-	cout << "Enter end minute of course : "; getline(cin, eMinute);
-		
-	Course.startTime = sHour + ' ' + sMinute;
-	Course.endTime = eHour + ' ' + eMinute;
+	numberChoice = -1;
+	while (-1 == numberChoice)
+	{															
+		cout << "0. 7 30" << endl << "1. 9 30" << endl << "2. 13 30" << endl << "3. 15 30" << endl;
+		cout << "Choose one for start time of course" << endl;
+		numberChoice = choiceScreen(3);
+		if (0 == numberChoice)
+			Course.startTime = "7 30";
+		else if (1 == numberChoice)
+			Course.startTime = "9 30";
+		else if (2 == numberChoice)
+			Course.startTime = "13 30";
+		else if (3 == numberChoice)
+			Course.startTime = "15 30";
+		else
+		{
+			system("CLS");																		
+			cout << "Your choice isn't correct !! please choose again " << endl;
+		}
+	}
+	numberChoice = -1;
+	while (-1 == numberChoice)
+	{															
+		cout << "0. 9 30" << endl << "1. 11 30" << endl << "2. 15 30" << endl << "3. 17 30" << endl;
+		cout << "Choose one for end time of course" << endl;
+		numberChoice = choiceScreen(3);
+		if (0 == numberChoice)
+			Course.endTime = "9 30";
+		else if (1 == numberChoice)
+			Course.endTime = "11 30";
+		else if (2 == numberChoice)
+			Course.endTime = "15 30";
+		else if (3 == numberChoice)
+			Course.endTime = "17 30";
+		else
+		{
+			system("CLS");																		
+			cout << "Your choice isn't correct !! please choose again " << endl;
+		}
+	}
+	cin.ignore();
 		
 	cout << "Enter room of course : "; getline(cin, Course.Room);
 	Lecturer.Type = 3;
@@ -616,7 +649,7 @@ void addCourse()
 	}
 	addDataForImportCourse(Lecturer, Course);	
 	string key;
-	cout << "Import Successfully " << endl;
+	cout << "Add course Successfully " << endl;
 	cout << "Enter any key to return :";
 	cin >> key;		
 	system("CLS");

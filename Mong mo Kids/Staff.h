@@ -3,7 +3,6 @@
 #include "Header.h"
 
 void updateSemester();
-
 void importCourse();
 void addCourse();
 void viewListCourse();

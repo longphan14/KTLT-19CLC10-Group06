@@ -2,5 +2,6 @@
 #define _STUDENT_H_
 #include "Header.h"
 
+void viewSchedules(string ID);
 
 #endif
