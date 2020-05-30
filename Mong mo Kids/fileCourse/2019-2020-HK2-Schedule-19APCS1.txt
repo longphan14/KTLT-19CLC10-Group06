@@ -1,4 +1,4 @@
-3
+2
 CS162
 Introduction to Programming
 19APCS1
@@ -12,20 +12,6 @@ TS
 7 30
 11 30
 I42
-
-CM101
-Communications
-19APCS1
-dnvu
-Duong Nguyen Vu
-GS
-0
-2020 04 06
-2020 06 01
-7
-13 30
-17 30
-I23
 
 E1
 English 1

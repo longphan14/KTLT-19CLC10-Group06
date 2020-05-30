@@ -28,4 +28,5 @@ void spViewScoreboardList();
 void viewListStudentinClass();
 void changeClass();
 void editAttendance(string ID);
+void editCourse();
 #endif
