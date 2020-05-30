@@ -1478,6 +1478,7 @@ void spviewStudentAttendanceList(string filename){
 			for (int k = 0; k < 6; k++)
 				cout << " ";
 		}
+		cout << studentdata[i].ID;
 		cout << endl;
 	}
 }
@@ -1738,4 +1739,145 @@ void ViewScoreboardList(){
 	system("CLS");
 	viewFeatureStu();
 }
+void viewListStudentinClass(){
+	string Class[100];
+	userData* Student;
+	int size = 0;
+	ifstream fi;
+	fi.open("fileClass/Class.txt");
+	takeDataClass(fi, Class, size);
+	fi.close();
+	cout << "Classes Available : " << endl;
+	for (int i = 0; i < size; i++){
+		cout << i << " " << Class[i] << endl;
+	}
+	cout << "\n" << "Please choose the class you want to view: " << endl;
+	int numberChoice = choiceScreen(size - 1);
+	if (numberChoice == -1)
+		cout << "Chon sai lop" << endl;
+	else
+	{
+		string fileName;
+		cout << "\n" << Class[numberChoice] << " Information: "<< "\n" <<  endl;
+		fileName = "fileClass/" + Class[numberChoice] + "-Student.txt";
+		fi.open(fileName.c_str());
+		takeDataUser(fi, Student, size, 2);
+		for (int j = 0; j < size; j++){
+			if (Student[j].Status == 1){
+				cout << "Name: "<< Student[j].Name << endl;
+				cout << "* " << "Student ID: " << Student[j].ID << endl;
+				cout << "* " << "DOB: " << Student[j].DoB << endl;
+				if (Student[j].Gender == 1){
+					cout << "* " << "Gender: Female" << endl;
+				}
+				else{
+					cout << "* " << "Gender: Male" << endl;
+				}
+				cout << "* " << "Class: " << Student[j].className << endl;
+				cout << "\n";
+			}
+		}
+		fi.close();
+	}
+	cout << "Press any key to return !!!" << endl;
+	string key;
+	cin >> key;
+	system("CLS");
+	viewFeatureStu();							
+}
+void deleteFileInClassFolder(string Class, string ID){
+	userData* Student;
+	ifstream fi;
+	ofstream fo;
+	int size = 0;
+	string NameTag;
+	NameTag = "fileClass/" + Class + "-Student.txt";
+	fi.open(NameTag.c_str());
+	takeDataUser(fi, Student, size, 2);
+	userData* StudentDelete = new userData[size];
+	int k = 0;					
+	for (int i = 0; i < size; i++){
+		if (Student[i].ID != ID){
+			StudentDelete[k] = Student[i];
+			k++;
+		}
+	}
+	fo.open(NameTag.c_str());
+	insertDataUser(fo, StudentDelete, size - 1);
+	fi.close();
+	fo.close();
+}
+void insertFileInClassFolder(string Class, userData insert){
+	userData* Student;
+	ifstream fi;
+	int size = 0;
+	string NameTag;
+	NameTag = "fileClass/" + Class + "-Student.txt";
+	fi.open(NameTag.c_str());
+	userData* insertStudent = new userData[size + 1];
+	takeDataUser(fi, insertStudent, size, 2);
+	insertStudent[size] = insert;
+	ofstream fo;
+	fo.open(NameTag.c_str());
+	insertDataUser(fo, insertStudent, size + 1);
+	fo.close();
+	fi.close();
+}
+void changeClass(){
+	int size = 0;
+	string Class[100];
+	string ClassChange;
+	userData* Student;
+	ifstream fi;
+	ofstream fo;
+	ifstream fi2;
+	string StudentID;
+	int size1 = 0;
+	bool checkStudent = false;
+	fi.open("fileUser/Student.txt");
+	takeDataUser(fi, Student , size, 2);
+	cout << "Please input the ID: ";
+	cin >> StudentID;
+	for (int i = 0; i < size; i++){
+		if (StudentID == Student[i].ID){
+			checkStudent = true;
+			cout << "Student is in Class: " << Student[i].className << endl;
+			fi2.open("fileClass/Class.txt");
+			takeDataClass(fi2, Class, size1);
+			fi2.close();
+			cout << "Classes Available : " << endl;
+			for (int j = 0; j < size1; j++){
+				cout << Class[j] << endl;
+			}
+			bool check = false;
+			cout << "Input new class: ";
+			cin >> ClassChange;
+				for(int k = 0; k < size1; k++){
+					if (ClassChange == Class[k]){
+					 	fo.open("fileUser/Student.txt");
+						deleteFileInClassFolder(Student[i].className, StudentID);
+						Student[i].className = ClassChange;
+						insertDataUser(fo, Student, size);
+						insertFileInClassFolder(ClassChange, Student[i]);
+						cout << "Class changed successfully! " << endl;
+						check = true;
+						break;
+					}
+			 	}
+					if(check == false)
+						cout << "Invalid Class!" << endl;
+		  	}
+		}
+	if (!checkStudent)
+		cout << "Invalid ID !!" << endl;
+	fi.close();
+	fo.close();
+	cout << "Press any key to return !!!" << endl;
+	string key;
+	cin >> key;
+	system("CLS");
+	editFeatureStu();
+}
+
+
 //************************//
