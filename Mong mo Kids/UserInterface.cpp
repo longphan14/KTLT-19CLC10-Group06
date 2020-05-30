@@ -602,11 +602,11 @@ void studentShowMenu()
 		}
 		case 2:
 		{
-		
 			break;
 		}	
 		case 3:
 		{
+			viewSchedules(dataAccess.ID);
 			break;	
 		}
 		case 4:
