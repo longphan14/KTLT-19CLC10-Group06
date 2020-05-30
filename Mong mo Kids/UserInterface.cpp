@@ -597,7 +597,7 @@ void studentShowMenu()
 		}
 		case 1:
 		{
-
+			check_in(dataAccess.ID);
 			break;
 		}
 		case 2:
