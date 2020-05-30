@@ -207,8 +207,7 @@ void formatDate(string &Date)
 	int i = 0;
 	while ((Date[i] <= '9') && (Date[i] >= '0'))
 		year += Date[i++];
-	if (year.length() > 2)
-		check = true;
+	
 	i++;
 	while ((Date[i] <= '9') && (Date[i] >= '0'))
 		month += Date[i++];
@@ -260,6 +259,72 @@ void showCourse(userData Lecturer, courseData Course) // hien ra danh sach mon h
 	cout << "Degree of lecturer :" << Lecturer.Degree << endl;
 }
 
+void printNewCourse(courseData courseNew) // Hao : In ra man hinh 
+{
+	cout << "New course ID : " << courseNew.courseID << endl;
+	cout << "New course name : " << courseNew.courseName << endl;	
+	cout << "New course class : " << courseNew.className << endl;			
+	cout << "New start date of course :" << courseNew.startDate << endl;
+	cout << "New end date :" << courseNew.endDate << endl;
+	cout << "New day of week is : " << courseNew.DoW << endl;
+	cout << "New room of course is : " << courseNew.Room << endl;
+	cout << "New start hour is :" << courseNew.startTime << endl;
+	cout << "New end hour is :" << courseNew.endTime << endl;
+}
+
+void spChangeCourse(string fileNameOld, string fileNameNew, courseData Course, userData Lecturer) // HAo : Chuc nang ho tro chuyen du lieu
+{
+	courseData * courseOld, * courseNew;
+	userData * lecturerOld, *lecturerNew;
+	int sizeOld = 0, sizeNew = 0 ;
+	ifstream fi;
+	// Lay du lieu o fileNameOld
+	fi.open(fileNameOld.c_str());
+	takeDataCourse(fi, lecturerOld, courseOld, sizeOld);
+	fi.close();
+	//Xoa du lieu o fileNameOld
+	courseNew = new courseData[sizeOld + 1];
+	lecturerNew = new userData[sizeOld + 1];
+	sizeNew = sizeOld - 1;			
+	int k = 0;			
+	for (int i = 0; i < sizeOld; i++)
+	if (courseOld[i].courseID != Course.courseID)
+	{
+		courseNew[k] = courseOld[i];
+		lecturerNew[k] = lecturerOld[i];
+		k++;
+	}
+	
+	ofstream fo;
+	fo.open(fileNameOld.c_str());
+	insertDataCourse(fo, lecturerNew, courseNew, sizeNew);
+	fo.close();			
+	
+	delete[] courseNew;
+	delete[] lecturerNew;
+	delete[] courseOld;
+	delete[] lecturerOld;
+	//Them du lieu o fileNameNew
+	
+	//Lay du lieu o fileNameNew
+	fi.open(fileNameNew.c_str());
+	sizeOld = 0;
+	takeDataCourse(fi, lecturerOld, courseOld, sizeOld);
+	fi.close();			
+	
+	//Them du lieu o fileNameNew;
+
+	courseOld[sizeOld] = Course;
+	lecturerOld[sizeOld] = Lecturer;
+	sizeOld++;
+	fo.open(fileNameNew.c_str());									
+	insertDataCourse(fo, lecturerOld, courseOld, sizeOld);
+	fo.close();
+	
+	delete[] courseOld;
+	delete[] lecturerOld;
+	
+}
 
 //**********************************************//
 
@@ -1877,6 +1942,169 @@ void changeClass(){
 	cin >> key;
 	system("CLS");
 	editFeatureStu();
+}
+
+void editCourse()
+{
+	string IDFound;											
+	cout << "Do you want to edit Course ?" << endl;
+	cout << "0.No                 1.Yes" << endl;
+	int numberChoice = choiceScreen(1);
+	system("CLS");
+	switch(numberChoice)
+	{
+		case 0:
+		{
+			editFeatureCourse();
+			break;	
+		}	
+		case -1:
+		{
+			cout << "Your choice is wrong !! Choice again" << endl;
+			editCourse();
+			break;
+		}
+	}				
+	cout << "Press ID Course you want edit : "; cin >> IDFound;
+	
+	//Lay du lieu trong dataUser
+	courseData * Course;
+	userData * Lecturer;
+	courseData Data;
+	int size = 0;
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
+	string fileName = "fileCourse/" + semesterCurrent + "-Schedule.txt";
+	ifstream fi;
+	fi.open(fileName.c_str());
+	takeDataCourse(fi, Lecturer, Course, size);			
+	fi.close();						
+	// Kiem tra ID
+	int NOofCourse = -1; // Vi tri cua sinh vien can tim]
+	for (int i = 0; i < size; i++)
+	if (IDFound == Course[i].courseID)
+	{									
+		NOofCourse = i;
+		break;
+	}	
+	
+	if (NOofCourse == -1)
+	{
+		system("CLS");
+		cout << "Your course isn't exit !! Please try again" << endl;
+		editCourse();
+	}
+	numberChoice = -1;
+	while (numberChoice == -1)
+	{
+		cout << ">>" << "Course name : " << Course[NOofCourse].courseName << endl;
+		cout << ">>" << "Lecturer : " << Lecturer[NOofCourse].Name << endl;
+		cout << "Are you sure to edit this course ?" << endl;
+		cout << "0.No                1.Yes" << endl;
+		numberChoice = choiceScreen(1);
+		switch(numberChoice)
+		{
+			case 0:
+			{
+				system("CLS");
+				editFeatureCourse();
+				break;	
+			}	
+			case -1:
+			{
+				system("CLS");
+				cout << "Your choice is wrong !! Choice again" << endl;
+				break;
+			}
+		}
+	}
+	//Edit thong tin khoa hoc
+	system("CLS");
+	userData lecturerNew;
+	courseData courseNew;
+	cin.ignore();	
+	cout << "Now you can change this course !!" << endl;
+	cout << "Press new information to edit course" << endl;
+	cout << "********************************" << endl;
+	cout << "Old course ID : " << Course[NOofCourse].courseID << endl;
+	cout << "Enter your new ID : "; getline(cin, courseNew.courseID) ;
+	cout << "********************************" << endl;
+	cout << "Old course name : " << Course[NOofCourse].courseName << endl;
+	cout << "Enter your new course name : "; getline(cin, courseNew.courseName);	
+	cout << "********************************" << endl;
+	cout << "Old course class : " << Course[NOofCourse].className << endl;
+	cout << "Enter your new course class : "; getline(cin, courseNew.className);			
+	cout << "********************************" << endl;
+	cout << "Old start date of course :" << Course[NOofCourse].startDate << endl;
+	cout << "Enter your new date of course : "; getline(cin, courseNew.startDate);
+	formatDate(courseNew.startDate);
+	cout << "********************************" << endl;
+	cout << "Old end date :" << Course[NOofCourse].endDate << endl;
+	cout << "Enter your new lecturer :"; getline(cin, courseNew.endDate);
+	formatDate(courseNew.endDate);
+	cout << "********************************" << endl;
+	cout << "Old day of week is : " << Course[NOofCourse].DoW << endl;
+	cout << "Enter new day of week :"; getline(cin, courseNew.DoW);
+	cout << "********************************" << endl;
+	cout << "Old room of course is : " << Course[NOofCourse].Room << endl;
+	cout << "Enter new room : "; getline(cin, courseNew.Room);
+	cout << "********************************" << endl;
+	cout << "Old start hour is :" << Course[NOofCourse].startTime << endl;
+	cout << "Enter new hour : "; getline(cin, courseNew.startTime);
+	cout << "********************************" << endl;
+	cout << "old end hour is :" << Course[NOofCourse].endTime << endl;
+	cout << "Enter new end hour : "; getline(cin, courseNew.endTime);
+	
+	system("CLS");
+	cout << "This is new information after edit " << endl;
+	printNewCourse(courseNew);
+	numberChoice = -1;
+	while (-1 == numberChoice)
+	{
+		cout << "Are you sure to edit course ?" << endl;
+		cout << "0. No         1. Yes" << endl;
+		numberChoice = choiceScreen(1);
+		system("CLS");
+		if (numberChoice == 0)
+		{
+			editFeatureCourse();		
+		}
+		else if (numberChoice == -1)
+		{
+			cout << "Your choice isn't correct, please choice again!!" << endl;
+		}
+	}
+	cout << "Your course is edited !! " << endl;
+	
+	//Dua du lieu vao lai file
+	ofstream fo;
+	fo.open(fileName.c_str());
+	courseData courseOld = Course[NOofCourse];
+	Course[NOofCourse] = courseNew;
+	insertDataCourse(fo, Lecturer, Course, size);
+	fo.close();	
+	//Chuyen thong tin tu file schedule cu sang file schedule moi
+	string fileNameNew = "fileCourse/" + semesterCurrent + "-Schedule-" + courseNew.className + ".txt";
+	string fileNameOld = "fileCourse/" + semesterCurrent + "-Schedule-" + courseOld.className + ".txt";
+	spChangeCourse(fileNameOld, fileNameNew, courseNew, Lecturer[NOofCourse]);
+	//Doi ten file
+	fileNameOld = "fileCourse/" + semesterCurrent + "-" + courseOld.className + "-" + courseOld.courseID + "-Student.txt";
+	fileNameNew = "fileCourse/" + semesterCurrent + "-" + courseNew.className + "-" + courseNew.courseID + "-Student.txt";
+	rename(fileNameOld.c_str(), fileNameNew.c_str());
+	
+	//Lay du lieu sv
+	userData * Student;
+	fi.open(fileNameNew.c_str());
+	size = 0;
+	takeDataUser(fi, Student, size, 4);
+	fi.close();		
+	//Dua sv vao lai file
+	insertDataStudentInCourse(fileNameNew, Student, size);	
+	string key;
+	cout << "Choice any key to return " << endl;
+	cin >> key;
+	system("CLS");
+	editFeatureCourse();		
 }
 
 

@@ -360,6 +360,7 @@ void editFeatureCourse()
 		}
 		case 3:
 		{
+			editCourse();
 			break;
 		}
 		case 4:
