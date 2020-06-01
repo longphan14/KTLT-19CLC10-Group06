@@ -1,0 +1,29 @@
+2
+CM101
+Communications
+19APCS2
+dnvu
+Duong Nguyen Vu
+GS
+0
+2020 10 05
+2020 12 01
+2
+13 30
+17 30
+I23
+
+MB
+Management Bussiness
+19APCS2
+BG
+Bill Gates
+Professor
+0
+2020 02 27
+2020 05 01
+2
+13 30
+17 30
+I53
+

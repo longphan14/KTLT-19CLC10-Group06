@@ -5,7 +5,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <cmath>
-
+#include <sstream>
+#include <ctime>
 
 using namespace std;
 
@@ -68,6 +69,7 @@ void insertDataClass(ofstream &fo, string nameClass[], int size);
 void takeCurrentSemester(string &semesterCurrent);
 void insertDataStudentInCourse(string fileName, userData *Data, int size);
 void readAttendanceToFile(string startDate, string startTime, string endTime);
+void ignoreLine(ifstream &fi, int number);
 //***************//
 
 //User Interface STAFF//

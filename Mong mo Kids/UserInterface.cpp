@@ -28,7 +28,6 @@ void Login() // Hao. Chuc nang: Dang nhap
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
 			dataAccess = Data;
-			kt = 1;
 			switch(kt)
 			{
 				case 1:
@@ -361,6 +360,7 @@ void editFeatureCourse()
 		}
 		case 3:
 		{
+			editCourse();
 			break;
 		}
 		case 4:
@@ -597,16 +597,16 @@ void studentShowMenu()
 		}
 		case 1:
 		{
-
+			check_in(dataAccess.ID);
 			break;
 		}
 		case 2:
 		{
-		
 			break;
 		}	
 		case 3:
 		{
+			viewSchedules(dataAccess.ID);
 			break;	
 		}
 		case 4:
@@ -770,7 +770,7 @@ void jobFeature()
 		}
 		case 1:
 		{
-		
+			editAttendance(dataAccess.ID);
 			break;
 		}
 		case 2:

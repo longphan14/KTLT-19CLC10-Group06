@@ -13,20 +13,6 @@ TS
 11 30
 I42
 
-CM101
-Communications
-19APCS1
-dnvu
-Duong Nguyen Vu
-GS
-0
-2020 04 06
-2020 06 01
-7
-13 30
-17 30
-I23
-
 E1
 English 1
 19APCS1
@@ -40,4 +26,18 @@ ThS
 7 30
 11 30
 I32
+
+TH12
+Tin Hoc 12
+19APCS1
+dtthanh
+Do Thai Thanh
+ThS
+0
+2020 05 27
+2020 07 27
+6
+7 30
+11 30
+I23
 
