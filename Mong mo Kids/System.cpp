@@ -662,6 +662,88 @@ void readAttendanceToFile(string startDate, string startTime, string endTime) //
 		}	
 	}
 }
+void viewInfor(string ID, int type){
+	int size = 0;
+	ifstream fiStaff;
+	ifstream fiStudent;
+	ifstream fiLecturer;
+	userData* Staff;
+	userData* Student;
+	userData* Lecturer;
+	if (type == 1){
+		fiStaff.open("fileUser/Staff.txt");
+		takeDataUser(fiStaff, Staff, size, 1);
+		for (int k = 0; k < size; k++){
+			if (ID == Staff[k].ID){
+				cout << "Name: " << Staff[k].Name << endl;
+				cout << "* " << "Staff ID: " << Staff[k].ID << endl;
+				if (Staff[k].Gender == 1){
+					cout << "* " << "Gender: Female" << endl;
+				}
+				else{
+					cout << "* " << "Gender: Male" << endl;
+				}
+				cout << "\n";
+			}
+		}
+		fiStaff.close();
+		cout << "Press any key to return !!!" << endl;
+		string key;
+		cin >> key;
+		system("CLS");
+		staffUI();
+	}
+	else if (type == 2){
+		fiStudent.open("fileUser/Student.txt");
+		takeDataUser(fiStudent, Student, size, 2);
+		for (int i = 0; i < size; i++){
+			if (ID == Student[i].ID){
+				cout << "Name: " << Student[i].Name << endl;
+				cout << "* " << "Student ID: " << Student[i].ID << endl;
+				cout << "* " << "DOB: " << Student[i].DoB << endl;
+				if (Student[i].Gender == 1){
+					cout << "* " << "Gender: Female" << endl;
+				}
+				else{
+					cout << "* " << "Gender:  Male" << endl;
+				}
+				cout << "* " << "Class: " << Student[i].className << endl;
+				cout << "\n";
+			}
+		}
+		fiStudent.close();
+		cout << "Press any key to return !!!" << endl;
+		string key;
+		cin >> key;
+		system("CLS");
+		studentUI();
+		}
+
+	else if (type == 3){
+		fiLecturer.open("fileUser/Lecturer.txt");
+		takeDataUser(fiLecturer, Lecturer, size, 3);
+		for (int j = 0; j < size; j++){
+			if (ID == Lecturer[j].ID){
+				cout << "Name: " << Lecturer[j].Name << endl;
+				cout << "* " << "Lecturer ID: " << Lecturer[j].ID << endl;
+				if(Lecturer[j].Gender == 1){
+					cout << "* " << "Gender: Female" << endl;
+				}
+				else{
+					cout << "* " << "Gender: Male" << endl;
+				}
+				cout << "* " << "Degree: " << Lecturer[j].Degree << endl;
+				cout << "\n";
+			}
+		}
+		fiLecturer.close();
+		cout << "Press any key to return !!!" << endl;
+		string key;
+		cin >> key;
+		system("CLS");
+		lecturerUI();
+	}
+}
 
 //*******************************************************//	
 

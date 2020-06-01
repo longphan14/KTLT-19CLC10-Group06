@@ -5,7 +5,7 @@
 void updateSemester();
 void importCourse();
 void addCourse();
-void viewListCourse();
+void viewListCourse(int type);
 void insertCourse(ifstream &filein, ofstream &fileout);
 void editStudent();
 void viewAllLecturer();
@@ -15,7 +15,7 @@ void deleteSemester();
 void viewSemester();
 void addStudentToCourse();
 void removeStudent();
-void viewListStudentinCourse();
+void viewListStudentinCourse(int type);
 void removeStudentinCourse();
 void searchViewAttendanceList();
 void spviewAttendanceList(string filename, string courseID);

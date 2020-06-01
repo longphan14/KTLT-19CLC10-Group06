@@ -107,3 +107,48 @@ void spinputLecturer(string LecturerID , string &filename, string &filename1, st
 		cout << "Don't have any course!";
 	}
 }
+void viewAttendanceListOfLecturer(string ID){
+	int size = 0;
+	string currentSemester;
+	string LecturerChoice[100];
+	userData* Lecturer;
+	courseData* Course;
+	takeCurrentSemester(currentSemester);
+	ifstream fi;
+	ifstream fi2;
+	string filename ="fileCourse/" + currentSemester + "-Schedule.txt";
+	fi.open(filename.c_str());
+	takeDataCourse(fi, Lecturer, Course, size);
+	int number = 0;	
+	courseData courseLecturer[50];		
+	for (int i = 0; i < size; i++){
+		if (ID == Lecturer[i].ID){
+			cout << "Classes Instructed: " << endl;
+			cout << number << ". "<< Course[i].courseID << " - " <<  Course[i].courseName << endl;
+			courseLecturer[number++] = Course[i];
+		}	
+	}
+	if (number == 0){
+		cout << "This lecturer does not instruct any class!!" << endl;
+		cout << "Press any keys to return!" << endl;
+		string key;
+		cin >> key;
+		system("CLS");
+		viewFeatureOfLecturer();
+	}
+	cout << "Please choose class to view attendance list!" << endl;
+	int numberChoice = choiceScreen(number - 1);
+	string filename2 = "fileCourse/" + currentSemester + "-" + courseLecturer[numberChoice].className+ "-" + courseLecturer[numberChoice].courseID +"-Student.txt";
+	if (numberChoice == -1){
+		cout << "Wrong Class!" << endl;
+	}
+	else
+	{
+		spviewStudentAttendanceList(filename2);	
+	}
+	cout << "Press any keys to return!!" << endl;
+	string key;
+	cin >> key;
+	system("CLS");
+	viewFeatureOfLecturer();
+}
