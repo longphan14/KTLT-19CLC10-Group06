@@ -5,6 +5,6 @@
 
 void editAttendance(string LecturerID);
 void spinputLecturer(string LecturerID , string &filename, string &filename1, string &studentID, string &CourseID);
-
+void viewAttendanceListOfLecturer(string ID);
 
 #endif					
