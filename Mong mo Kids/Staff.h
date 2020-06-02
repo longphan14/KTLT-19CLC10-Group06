@@ -23,7 +23,7 @@ void viewAttendanceList();
 void spviewStudentAttendanceList(string filename);
 void searchViewScoreboardList();
 void ViewScoreboardList();
-void spViewScoreboardList();
+void spViewScoreboardList(string courseid, string classname);
 void viewListStudentinClass();
 void changeClass();
 void editAttendance(string ID);

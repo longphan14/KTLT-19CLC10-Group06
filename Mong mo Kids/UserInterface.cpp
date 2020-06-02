@@ -608,6 +608,7 @@ void studentShowMenu()
 		}
 		case 2:
 		{
+			viewCheckIn(dataAccess.ID);
 			break;
 		}	
 		case 3:
@@ -765,7 +766,7 @@ void jobFeature()
 	cout << "0. Return" << endl;
 	cout << "1. Edit an attendance" << endl;
 	cout << "2. Import scoreboard" << endl;
-	cout << "3. Edit grade of a student" << endl;
+	cout << "3. Edit Score of a student" << endl;
 	int numberChoice = choiceScreen(3);
 	clearScreen();
 	switch (numberChoice)
@@ -787,7 +788,7 @@ void jobFeature()
 		}
 		case 3:
 		{
-	
+			editScoreboard(dataAccess.ID);
 			break;
 		}
 		default:

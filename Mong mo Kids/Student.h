@@ -4,5 +4,6 @@
 
 void viewSchedules(string ID);
 void check_in(string ID);
+void viewCheckIn(string StudentID);
 
 #endif
