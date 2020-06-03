@@ -1003,7 +1003,7 @@ void removeFileCourse(string fileName, string IDRemove) //HAo : Ham dung de xoa 
 	delete [] Lecturer;
 	delete [] Course;		
 }
-void viewListCourse()
+void viewListCourse(int type)
 {
 	cout << "List of all List Course in school" << endl;
 	courseData* Course;
@@ -1041,8 +1041,13 @@ void viewListCourse()
 	}				
 		string key;
 	cout << "Press any key to return :"; cin >> key;
-	system("CLS");	
-	viewFeatureCourse();	
+	system("CLS");
+	if (type ==  1){
+		viewFeatureCourse();
+	}
+	else{
+		viewFeatureOfLecturer();
+	}	
 }
 
 void removeCourse()//Hao : Xoa mot mon hoc
@@ -1128,12 +1133,14 @@ void removeCourse()//Hao : Xoa mot mon hoc
 	
 	// Xoa du lieu trong file Schedule-Lop hoc					
 	removeFileCourse(fileNameCourse, IDRemove);				
-		
+	
 	cout << "Your course is remove successfully!!" << endl;
 	string key;
 	cout << "Press any key to return :"; cin >> key;
 	system("CLS");
+	
 	editFeatureCourse();
+
 }
 
 void addStudentToCourse(){
@@ -1396,7 +1403,7 @@ void removeStudent() // Hao : Chinh sua thong tin sinh vien
 	editFeatureStu();
 }
 
-void viewListStudentinCourse(){
+void viewListStudentinCourse(int type){
 	userData *studentinfo;
 	bool check = false;
 	bool check2 = false;
@@ -1471,7 +1478,13 @@ void viewListStudentinCourse(){
 	cout << "Press any key to return: ";
 	cin >> key;
 	system("CLS");
-	viewFeatureStu();
+	if (type == 1){
+		viewFeatureStu();
+	}
+	else {
+		viewFeatureOfLecturer();
+	}
+	
 }
 void removeStudentinCourse(){
 		userData *studentinfo;
@@ -1556,13 +1569,13 @@ void spviewStudentAttendanceList(string filename){
 	userData* studentdata;
 	int size = 0;
 	takeDataUser(fi, studentdata, size, 4);
-	cout << "Student Name        ";
+	cout << "  Student Name        ";
 	for(int i = 0; i < 10; i++){
 		cout << "Week " << i + 1 << " ";
 	} 
 	cout << endl;
 	for(int i = 0; i < size; i++){
-		cout << studentdata[i].Name;
+		cout << i + 1 << "."<< studentdata[i].Name;
 		int length = studentdata[i].Name.length();
 		for (int j = 0; j < 20 - length; j++)
 			cout << " ";
@@ -1710,13 +1723,14 @@ void spViewScoreboardList(string courseid, string classname){
 	fi.close();
 	
 	
-	cout << "Name                ";
+	cout << "  Name                ";
 	cout << "Midterm ";
 	cout << "Bonus ";
 	cout << "Final ";
 	cout << "Total ";
 	cout << endl;
 	for(int i = 0; i < size; i++){
+		cout << i + 1 << ".";
 		cout << studentinfo[i].Name;
 		int length = studentinfo[i].Name.length();
 		for (int j = 0; j < 20 - length; j++)
