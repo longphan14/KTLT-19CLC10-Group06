@@ -1,6 +1,7 @@
 #include "Header.h"
 #include "Staff.h"
 #include "Student.h"
+#include "Lecturer.h"
 accountData dataAccess;
 
 
@@ -237,7 +238,7 @@ void viewFeatureStu()
 		}
 		case 6:
 		{
-			viewListStudentinCourse();
+			viewListStudentinCourse(1);
 			break;
 		}
 		case 7:{
@@ -405,7 +406,7 @@ void viewFeatureCourse()
 		}
 		case 1:
 		{
-			viewListCourse();
+			viewListCourse(1);
 			break;
 		}
 		case 2:
@@ -505,7 +506,8 @@ void staffUI()
 	cout << "0. Logout" << endl;
 	cout << "1. Show Menu" << endl;
 	cout << "2. Change Password" << endl;
-	int numberChoice = choiceScreen(2);
+	cout << "3. View Information" << endl;
+	int numberChoice = choiceScreen(3);
 	clearScreen();
 	switch(numberChoice)
 	{
@@ -522,6 +524,11 @@ void staffUI()
 		case 2:
 		{
 			changePassword(dataAccess.ID, dataAccess.Password, 1);
+			break;
+		}
+		case 3:
+		{
+			viewInfor(dataAccess.ID, 1);
 			break;
 		}
 		default:
@@ -543,7 +550,7 @@ void studentUI()
 	cout << "0. Logout" << endl;
 	cout << "1. Show Menu" << endl;
 	cout << "2. Change Password" << endl;
-	cout << "3. Information" << endl;
+	cout << "3. View Information" << endl;
 	int numberChoice = choiceScreen(3);
 	clearScreen();
 	switch(numberChoice)
@@ -560,12 +567,11 @@ void studentUI()
 		}
 		case 2:
 		{
-
 			break;
 		}
 		case 3:
 		{
-			
+			viewInfor(dataAccess.ID, 2);
 			break;
 		}
 		default:
@@ -585,7 +591,7 @@ void studentShowMenu()
 	cout << "2. View check-in result" << endl;
 	cout << "3. View schedules" << endl;
 	cout << "4. View scores of a course" << endl;
-	cout << "5. Information" << endl;
+	cout << "5. View Information" << endl;
 	int numberChoice = choiceScreen(5);
 	clearScreen();
 	switch (numberChoice)
@@ -602,6 +608,7 @@ void studentShowMenu()
 		}
 		case 2:
 		{
+			viewCheckIn(dataAccess.ID);
 			break;
 		}	
 		case 3:
@@ -639,7 +646,7 @@ void lecturerUI()
 	cout << "0. Logout" << endl;
 	cout << "1. Show Menu" << endl;
 	cout << "2. Change Password" << endl;
-	cout << "3. Information" << endl;
+	cout << "3. View Information" << endl;
 	int numberChoice = choiceScreen(3);
 	clearScreen();
 	switch(numberChoice)
@@ -661,6 +668,7 @@ void lecturerUI()
 		}
 		case 3:
 		{
+			viewInfor(dataAccess.ID, 3);
 			break;
 		}
 		default:
@@ -725,17 +733,17 @@ void viewFeatureOfLecturer()
 		}
 		case 1:
 		{
-		
+			viewListCourse(2);
 			break;
 		}
 		case 2:
 		{
-	
+			viewListStudentinCourse(2);
 			break;
 		}
 		case 3:
 		{
-	
+			viewAttendanceListOfLecturer(dataAccess.ID);
 			break;
 		}
 		case 4:
@@ -758,7 +766,7 @@ void jobFeature()
 	cout << "0. Return" << endl;
 	cout << "1. Edit an attendance" << endl;
 	cout << "2. Import scoreboard" << endl;
-	cout << "3. Edit grade of a student" << endl;
+	cout << "3. Edit Score of a student" << endl;
 	int numberChoice = choiceScreen(3);
 	clearScreen();
 	switch (numberChoice)
@@ -780,7 +788,7 @@ void jobFeature()
 		}
 		case 3:
 		{
-	
+			editScoreboard(dataAccess.ID);
 			break;
 		}
 		default:

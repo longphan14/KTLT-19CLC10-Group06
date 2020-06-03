@@ -54,6 +54,7 @@ void check_in_takeTime(string &dateNow, string &timeNow)
 }
 
 
+
 void viewSchedules_findCourse(string IDStudent, courseData studentCourse[], string lecturerName[], int &ncStudent) // Tim tat ca mon hoc hien co
 {
 	//Lay hoc ki hien tai 
@@ -76,6 +77,67 @@ void viewSchedules_findCourse(string IDStudent, courseData studentCourse[], stri
 			studentCourse[ncStudent++] = Course[i];
 		}
 }					
+
+void viewCheckIn(string StudentID){
+	courseData studentCourse[30];
+	string lecturerName[30];
+	int size = 0;
+	viewSchedules_findCourse(StudentID, studentCourse, lecturerName, size);
+	for(int i = 0; i < size; i++){
+		cout << i + 1 << "." << studentCourse[i].courseID << "-" << studentCourse[i].courseName << "   Lecturer Name: " << lecturerName[i] << endl;
+	}
+	string NO1;
+	stringstream NOSS;
+	int NO;
+	cout << "Enter Number of Order: ";
+	cin >> NO1;
+	NOSS << NO1;
+	NOSS >> NO;
+	if(NO == 0 || NO > size || NO < 0){
+		cout << "Invalid Enter!" << endl;
+		return studentShowMenu();
+	}
+	string semesterCurrent;
+	takeCurrentSemester(semesterCurrent);
+	string filename;
+	filename = "fileCourse/" + semesterCurrent + "-" + studentCourse[NO - 1].className + "-" + studentCourse[NO - 1].courseID + "-Student.txt";
+	ifstream fi;
+	fi.open(filename.c_str());
+	userData* studentdata;
+	int size1 = 0;
+	takeDataUser(fi, studentdata, size1, 4);
+	cout << "  Student Name                ";
+	for(int i = 0; i < 10; i++){
+		cout << "Week " << i + 1 << " ";
+	} 
+	cout << endl;
+	for(int i = 0; i < size1; i++){
+		if(studentdata[i].ID == StudentID){
+		cout << studentdata[i].Name;
+		int length = studentdata[i].Name.length();
+		for (int j = 0; j < 30 - length; j++)
+			cout << " ";
+		for(int j = 0; j < 10; j++){
+			if(studentdata[i].Attendance[j] == 0)
+				cout << "X";
+			else if(studentdata[i].Attendance[j] == 1)
+				cout << "V";
+			else if(studentdata[i].Attendance[j] == -1)
+				cout << "O";
+			for (int k = 0; k < 6; k++)
+				cout << " ";
+		}
+		cout << studentdata[i].ID;
+		cout << endl;
+	}
+	}
+	cout << endl;
+	cout << "Press any key to return" << endl;
+	string key;
+	cin >> key;
+	system("CLS");
+	return studentShowMenu();
+}
 
 void viewSchedules_printSpace(int number)		
 {
