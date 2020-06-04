@@ -150,12 +150,12 @@ void editFeatureStu()
 		}
 		case 1:
 		{
-	
+			importStudent();
 			break;
 		}
 		case 2:
 		{
-			
+			addStudent();
 			break;
 		}
 		case 3:
@@ -219,6 +219,7 @@ void viewFeatureStu()
 		}
 		case 2:
 		{
+			viewListClassused(); // dung sua ten ham nay nha lop du chu ca mo
 			break;
 		}
 		case 3:
@@ -271,10 +272,12 @@ void exportFeatureStu()
 		}
 		case 1:
 		{
+			exportScoreboadrdList();
 			break;
 		}
 		case 2:
 		{
+			exportAttendanceList();
 			break;
 		}
 		default:
@@ -783,7 +786,7 @@ void jobFeature()
 		}
 		case 2:
 		{
-	
+			ImportScoreBoard();
 			break;
 		}
 		case 3:
