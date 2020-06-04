@@ -751,7 +751,7 @@ void viewFeatureOfLecturer()
 		}
 		case 4:
 		{
-			
+			viewScoreboardListOfLecturer(dataAccess.ID);
 			break;
 		}
 		default:
@@ -786,7 +786,7 @@ void jobFeature()
 		}
 		case 2:
 		{
-			ImportScoreBoard();
+			ImportScoreBoard(dataAccess.ID);
 			break;
 		}
 		case 3:
