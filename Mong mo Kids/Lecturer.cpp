@@ -1,4 +1,54 @@
 #include "Lecturer.h"
+float stof(string number)
+{
+	stringstream ss;
+	ss << number;
+	float so;
+	ss >> so;
+	return so;
+}
+
+void takeScoreCSVData(ifstream& fi, userData*& Data, int& size)
+{
+	Data = new userData[1000];
+	string Midterm, Final, Bonus, Total;
+	int i = 0;
+	fi.ignore(1000, '\n');
+
+	while (!fi.eof())
+	{
+		Data[i].Name = "";
+		getline(fi, Data[i].Name, ',');
+		if (Data[i].Name.length() == 0)
+			break;
+		getline(fi, Midterm, ',');
+		if (Midterm == "x")
+			Data[i].Score.Midterm = -1;
+		else 
+			Data[i].Score.Midterm = stof(Midterm);
+			
+		getline(fi, Bonus, ',');
+		if (Bonus == "x")
+			Data[i].Score.Bonus = -1;
+		else
+			Data[i].Score.Bonus = stof(Bonus);
+
+		getline(fi, Final, ',');
+		if (Final == "x")
+			Data[i].Score.Final = -1;
+		else
+			Data[i].Score.Final = stof(Final);
+
+		getline(fi, Total,'\n');
+		if (Total == "x")
+			Data[i].Score.Total = -1;
+		else
+			Data[i].Score.Total = stof(Total);
+
+		size++;
+		i++;
+	}
+}
 
 void editAttendance(string LecturerID){
 	
@@ -357,4 +407,374 @@ void spinputLecturer(string LecturerID , string &filename, string &filename1, st
 	else{
 		cout << "Don't have any course!";
 	}
+}
+
+void ImportScoreBoard()
+{
+	cout << endl;
+	cout << "\t=== IMPORT STUDENT SCORE BOARD ===" << endl;
+	cout << endl;
+	userData* Selected;
+	int csvsize2 = 0;
+	int size = 0;
+	userData* Data2;
+	string filename;
+	//view class
+	viewListClass();
+	//check class
+	int sizeofclass;
+	string nameClass[100];
+	string Class = "fileClass/Class_Mau.txt";
+	ifstream file(Class.c_str());
+
+	if (!file.is_open())
+	{
+		cout << "-> ERROR: File Open 1" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else
+	{
+		takeDataClass(file, nameClass, sizeofclass);
+		file.close();
+	}
+
+	//enter class
+	string classroom;
+	string classchoice;
+	int choice;
+	while (true)
+	{
+		cout << "* Enter the number of the class which you chose: ";
+		cin >> classchoice;
+
+		stringstream zz(classchoice);
+		if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+			cout << "-> Please try again" << endl;
+		else
+			break;
+	}
+	cout << endl;
+
+	for (int i = 0; i < sizeofclass; i++)
+	{
+		if (choice == i + 1)
+			classroom = nameClass[i];
+	}
+	//enter semester
+	string semester;
+	takeCurrentSemester(semester);
+	//view course id
+	cout << endl;
+	courseData* Course;
+	Course = new courseData[10000];
+	int sizecourse;
+
+	while (true)
+	{
+		cout << "===List of " << classroom << "'s course===" << endl;
+		string name = "fileCourse/" + semester + "-Schedule-" + classroom + ".txt";
+		ifstream coursefile(name.c_str());
+		if (!coursefile.is_open())
+		{
+			cout << "-> Course File does not exist" << endl;
+			cout << "-> Please check your information again" << endl;
+
+			while (true)
+			{
+				cout << "* Enter your choice of class: ";
+				cin >> classchoice;
+
+				stringstream zz(classchoice);
+				if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+					cout << "-> Please try again" << endl;
+				else
+					break;
+			}
+			cout << endl;
+
+			for (int i = 0; i < sizeofclass; i++)
+			{
+				if (choice == i + 1)
+					classroom = nameClass[i];
+			}
+		}
+		else
+		{
+			coursefile >> sizecourse;
+			coursefile.ignore();
+			for (int i = 0; i < sizecourse; i++)
+			{
+				getline(coursefile, Course[i].courseID);
+				cout << "\t" << i+1 << ". Course ID: " << Course[i].courseID << endl;
+				getline(coursefile, Course[i].courseName);
+				cout << "\tCourse Name : " << Course[i].courseName << endl;
+				for (int j = 0; j < 12; j++)
+					coursefile.ignore(1000, '\n');
+			}
+			break;
+		}
+	}
+	//enter course name
+	string coursename, courseid;
+	string coursechoice;
+	int coursenum;
+	while (true)
+	{
+		cout << "* Enter your choice (1 -> 2): ";
+		cin >> coursechoice;
+
+		stringstream aa(coursechoice);
+		if ((aa >> coursenum).fail())
+		{
+			cout << "-> Unavailable course" << endl;
+			cout << "-> Please enter again" << endl;
+		}
+		else
+		{
+			if (coursenum > sizecourse)
+			{
+				cout << "-> Unavailable course" << endl;
+				cout << "-> Please enter again" << endl;
+			}
+			else
+			{
+				coursename = Course[coursenum - 1].courseName;
+				courseid = Course[coursenum - 1].courseID;
+				break;
+			}
+		}
+	}
+	// take score data
+	int csvsize;
+	string fileName = "fileCourse/" + semester + "-" + classroom + "-" + courseid + "-Student.txt";
+	ifstream scorefile(fileName.c_str());
+
+	while (true)
+	{
+		ifstream scorefile(fileName.c_str());
+		if (!scorefile.is_open())
+		{
+			cout << "-> Score file isn't available" << endl;
+			cout << "-> Please check your Course ID or Class again" << endl;
+
+			//view course id
+			cout << endl;
+			courseData* Course;
+			Course = new courseData[10000];
+			int sizecourse;
+
+			while (true)
+			{
+				cout << "===List of " << classroom << "'s course===" << endl;
+				string name = "fileCourse/" + semester + "-Schedule-" + classroom + ".txt";
+				ifstream coursefile(name.c_str());
+				if (!coursefile.is_open())
+				{
+					cout << "-> Course File does not exist" << endl;
+					cout << "-> Please check your information again" << endl;
+
+					while (true)
+					{
+						cout << "* Enter your choice of class: ";
+						cin >> classchoice;
+
+						stringstream zz(classchoice);
+						if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+							cout << "-> Please try again" << endl;
+						else
+							break;
+					}
+					cout << endl;
+
+					for (int i = 0; i < sizeofclass; i++)
+					{
+						if (choice == i + 1)
+							classroom = nameClass[i];
+					}
+				}
+				else
+				{
+					coursefile >> sizecourse;
+					coursefile.ignore();
+					for (int i = 0; i < sizecourse; i++)
+					{
+						getline(coursefile, Course[i].courseID);
+						cout << "\t" <<i + 1 << ". Course ID: " << Course[i].courseID << endl;
+						getline(coursefile, Course[i].courseName);
+						cout << "\tCourse Name : " << Course[i].courseName << endl;
+						for (int j = 0; j < 12; j++)
+							coursefile.ignore(1000, '\n');
+					}
+					break;
+				}
+			}
+			//enter course id
+			string courseid;
+			string coursechoice;
+			int cource;
+
+			while (true)
+			{
+				cout << "* Enter your choice of course (1 -> 2): ";
+				cin >> coursechoice;
+
+				stringstream ss(coursechoice);
+				if ((ss >> cource).fail() || cource > sizecourse || cource <= 0)
+					cout << "-> Please try again" << endl;
+				else
+				{
+					if (cource == 1)
+					{
+						courseid = Course[0].courseID;
+						break;
+					}
+					else if (cource == 2)
+					{
+						courseid = Course[1].courseID;
+						break;
+					}
+					else
+						cout << "-> Please try again" << endl;
+				}
+			}
+
+			cout << endl;
+			for (int i = 0; i < sizeofclass; i++)
+			{
+				if (choice == i + 1)
+					classroom = nameClass[i];
+			}
+			fileName = "fileCourse/" + semester + "-" + classroom + "-" + courseid + "-Student.txt";
+		}
+		else
+		{
+			takeDataUser(scorefile, Data2, csvsize,4);
+			break;
+		}
+	}
+	scorefile.close();
+
+	//create csv score file
+	cout << endl;
+	cout << "\t*** HERE IS THE INSTRUCTION OF IMPORTING STUDENT'S SCORE ***" << endl;
+	cout << "-> All you have to do is to give the " + classroom + "'s " + coursename + " course  a location where you want to store it so you can open the file to edit the score" << endl;
+	cout << endl;
+	cout << UNDERLINE << "Step 1: " << CLOSEUNDERLINE << "Enter the location of the CSV Score File";
+	cout << endl;
+	string filelocation;
+	string filename2;
+	string filecsv;
+	cout << "* Enter where you want to open the csv Score File (for example: C:/file/): ";
+	cin >> filelocation;
+	cout << "* Enter the score CSV file name (for example: 19APCS1-CS1002): ";
+	cin >> filename2;
+
+	filecsv = filelocation + filename2 + ".csv";
+	ofstream studentcourse(filecsv.c_str());
+	while (true)
+	{
+		ofstream studentcourse(filecsv.c_str());
+		if (!studentcourse.is_open())
+		{
+			cout << endl;
+			cout << "--> Can't open file!!!!" << endl;
+			cout << "-> Please check your information again" << endl;
+
+			cout << "* Enter where you want to open the csv Score File (for example: C:/file/): ";
+			cin >> filelocation;
+			cout << "* Enter the score CSV file name (for example: 19APCS1-CS1002): ";
+			cin >> filename;
+			cout << endl;
+			filecsv = filelocation + filename2 + ".csv";
+		}
+		else
+		{
+			studentcourse << "Name,Midterm,Bonus,Final,Total\n";
+			for (int i = 0; i < csvsize; i++)
+			{
+				string midterm = tostring(Data2[i].Score.Midterm);
+				if (Data2[i].Score.Midterm == -1)
+					midterm = "x";
+				string bonus = tostring(Data2[i].Score.Bonus);
+				if (Data2[i].Score.Bonus == -1)
+					bonus = "x";
+				string final = tostring(Data2[i].Score.Final);
+				if (Data2[i].Score.Final == -1)
+					final = "x";
+				string total = tostring(Data2[i].Score.Total);
+				if (Data2[i].Score.Total == -1)
+					total = "x";
+
+				studentcourse << Data2[i].Name << "," << midterm << "," << bonus << "," << final << "," << total << "\n";
+			}
+			break;
+		}
+	}
+	studentcourse.close();
+	scorefile.close();
+	//take score
+	cout << endl;
+	cout << UNDERLINE << "Step 2: " << CLOSEUNDERLINE << "edit the score" << endl;
+	cout << endl;
+	cout << "\t!!! Please Open the CSV Score file to edit the score !!!" << endl;
+	cout << "-> After edting, you have to save the edited file by replacing the old one with the edited one, so you don't have to create a new file after editing" << endl;
+
+	while (true)
+	{
+		cout << endl;
+		cout << "Adress: " << UNDERLINE << filecsv << CLOSEUNDERLINE << endl;
+		cout << "**Have you fixed the CSV Score file yet ?" << endl;
+		cout << "\t1. Yes" << endl;
+		cout << "\t2. No" << endl;
+		cout << "* Enter your choice (1 -> 2): ";
+		string yesno;
+		cin >> yesno;
+		stringstream aa(yesno);
+		int yesnochoice;
+		if ((aa >> yesnochoice).fail() || yesnochoice > 2)
+		{
+			cout << "-> Your input is unvailable" << endl;
+			cout << "-> Please enter again" << endl;
+		}
+		else if (yesnochoice == 1)
+		{
+			ifstream scorecsv1(filecsv.c_str());
+			if (!scorecsv1.is_open())
+			{
+				cout << "Cant open file" << endl;
+			}
+			else
+			{
+				takeScoreCSVData(scorecsv1, Selected, csvsize2);
+				scorecsv1.close();
+				break;
+			}
+		}
+		else
+		{
+			cout << endl;
+			cout << "\t!!! Please Open the CSV Score file to edit the score !!!" << endl;
+			cout << "-> After edting, you have to save the edited file by replacing the old one with the edited one, so you don't have to create a new file after editing" << endl;
+		}
+	}
+	//slected data
+	for (int i = 0; i < csvsize2; i++)
+	{
+		for (int j = 0; j < csvsize2; j++)
+		{
+			if (Selected[i].Name == Data2[j].Name)
+			{
+				Data2[j].Score.Midterm = Selected[i].Score.Midterm;
+				Data2[j].Score.Bonus = Selected[i].Score.Bonus;
+				Data2[j].Score.Final = Selected[i].Score.Final;
+				Data2[j].Score.Total = Selected[i].Score.Total;
+			}
+		}
+	}
+
+	//create file name
+	string txtfilename = "fileCourse/" + semester + "-" + classroom + "-" + courseid + "-Student.txt";
+	insertDataStudentInCourse(txtfilename, Data2, csvsize2);
+	cout << endl;
+	cout << UNDERLINE << "IMPORT SUCCESSFULLY" << CLOSEUNDERLINE << endl;
 }
