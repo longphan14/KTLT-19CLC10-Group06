@@ -8,5 +8,6 @@ void spinputLecturer(string LecturerID , string &filename, string &filename1, st
 void viewAttendanceListOfLecturer(string ID);
 void editScoreboard(string LecturerID);
 void spinputLecturerScoreboard(string LecturerID , string &filename, string &filename1, string &studentID, string &CourseID, string &Classname);
-void ImportScoreBoard();
+void ImportScoreBoard(string ID);
+void viewScoreboardListOfLecturer(string ID);
 #endif					

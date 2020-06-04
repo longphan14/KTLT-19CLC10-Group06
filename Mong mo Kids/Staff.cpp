@@ -1525,7 +1525,11 @@ void addStudentToCourse(){
 	string classname, coursename, courseid;
 	int courseNo;
 	cout << "Enter student id: ";
-	cin >> student.ID;
+	stringstream idss;
+	string ids;
+	cin >> ids;
+	idss << ids;
+	idss >> student.ID;
 	ifstream fi;
 	ofstream fo3;
 	fi.open("fileUser/Student.txt");
@@ -1537,6 +1541,11 @@ void addStudentToCourse(){
 			check = true;
 	}
 }
+	if(check == false){
+		system("CLS");
+		cout << "Error enter!!! Returning menu!!!" << endl;
+		return editFeatureStu();
+	}
 	if(check == true){
 		cout << "Student exist!" << endl << endl;
 		cout << "List of Course in school" << endl;
@@ -1563,7 +1572,11 @@ void addStudentToCourse(){
 		}	
 
 	cout << "Enter course No: ";
-	cin >> courseNo;
+	stringstream Noss;
+	string Nostring;
+	cin >> Nostring;
+	Noss << Nostring;
+	Noss >> courseNo;
 	for (int i = 0; i < size1; i++){
 		if(courseNo == NO[i + 1]){
 			classname = Course[i].className;
@@ -1806,14 +1819,36 @@ void viewListStudentinCourse(int type){
 			cout << endl;
 		}	
 
-	cout << "Enter course No: ";
-	cin >> courseNo;
+	cout << "Enter course No(Enter 0 to return): ";
+	stringstream Noss;
+	string Nos;
+	cin >> Nos;
+	Noss << Nos;
+	Noss >> courseNo;
+	bool checkNo = false;
+	if(courseNo == 0){
+		system("CLS");
+		cout << "Returning menu!!!" << endl;
+		if (type == 1){
+			viewFeatureStu();
+		}
+		else{
+			viewFeatureOfLecturer();
+		}
+	}
 	for (int i = 0; i < size1; i++){
 		if(courseNo == NO[i + 1]){
 			classname = Course[i].className;
 			courseid = Course[i].courseID;
 			coursename = Course[i].courseName;
+			checkNo = true;
 		}
+	}
+	
+	if(checkNo == false){
+		system("CLS");
+		cout << "Invalid Enter!!!" << endl;
+		return viewListStudentinCourse(type);
 	}
 	string semesterCurrent2;
 	takeCurrentSemester(semesterCurrent2);
@@ -1824,23 +1859,23 @@ void viewListStudentinCourse(int type){
 	userData* studentCourse;
 	int size3 = 0;
 	takeDataUser(fi2, studentCourse, size3, 4);
-	cout << "The Numbers of student: " << size3 << endl;
+	system("CLS");
+	int S = 0;
+	for (int i = 0; i < size3; i++){
+		if(studentCourse[i].Status == 1)
+			S++;
+	}
+	cout << "The Numbes of student: " << S << endl;
 	for(int i = 0; i < size3; i++){
+		if(studentCourse[i].Status == 1){
+			
 		cout << endl;
 			cout << studentCourse[i].ID << endl;
 			cout << studentCourse[i].Name << endl;
 			cout << studentCourse[i].Gender << endl;
 			cout << studentCourse[i].DoB << endl;
-			cout << studentCourse[i].className << endl;
-//			cout << studenttemp.Score.Midterm = -1;
-			cout << studentCourse[i].Score.Midterm << endl;
-//			cout << studenttemp.Score.Final = -1;								
-			cout << studentCourse[i].Score.Final << endl;
-//			cout << studenttemp.Score.Bonus = -1;
-			cout << studentCourse[i].Score.Bonus << endl;
-//			cout << studenttemp.Score.Total = -1;
-			cout << studentCourse[i].Score.Total << endl;	
-
+			cout << studentCourse[i].className << endl;	
+		}
 	}
 	
 	
@@ -1888,9 +1923,19 @@ void removeStudentinCourse(){
 			cout << "Room: " << Course[i].Room << endl;
 			cout << endl;
 		}	
-
+	cout << "Enter 0 to exit!!!" << endl;
+	
+	stringstream NOss;
+	string ss;		
 	cout << "Enter course No: ";
-	cin >> courseNo;
+	cin >> ss;
+	NOss << ss;
+	NOss >> courseNo;
+	system("CLS");
+	if(courseNo <= 0 || courseNo >= size1){
+		cout << "Returning menu!" << endl << endl << endl;
+		return editFeatureStu();
+	}
 	for (int i = 0; i < size1; i++){
 		if(courseNo == NO[i + 1]){
 			classname = Course[i].className;
@@ -1906,25 +1951,48 @@ void removeStudentinCourse(){
 	fi2.open(fileName3.c_str());
 	userData* studentCourse;
 	int size3 = 0;
+	int S = 0;
 	takeDataUser(fi2, studentCourse, size3, 4);
-	cout << "The Numbers of student: " << size3 << endl;
-	int NO1[size3 - 1];
+	
+	for(int i = 0; i < size3; i++){
+		if(studentCourse[i].Status != 0){
+			S++;
+		}
+	}
+	if(S == 0){
+		system("CLS");
+		cout << "There are no students in class!! Returning menu !!!" << endl << endl << endl;
+		return editFeatureStu();
+	}
+	cout << "The Numbers of student: " << S << endl;
+	int NO1[200];
+	int number = 1;
+	int  S2 = 0;
 	for(int i = 0; i < size3; i++){
 		cout << endl;
-			cout << "No" << i + 1 << "." << studentCourse[i].ID << endl;
+		if(studentCourse[i].Status != 0){
+															
 			cout << studentCourse[i].Name << endl;
 			cout << studentCourse[i].Gender << endl;
 			cout << studentCourse[i].DoB << endl;
 			cout << studentCourse[i].className << endl;
-			cout << studentCourse[i].Score.Midterm << endl;								
-			cout << studentCourse[i].Score.Final << endl;
-			cout << studentCourse[i].Score.Bonus << endl;
-			cout << studentCourse[i].Score.Total << endl;
+			cout << endl;
+		}
 	}
 	int choice;
-	cout << "Choose No to remove: ";
-	cin >> choice;
-	studentCourse[choice - 1].Status = 0;
+	stringstream choicess;
+	string choices;
+	cout << "Choose Number of orders to remove(Enter 0 to return): ";
+	cin >> choices;
+	system("CLS");
+	choicess << choices;
+	choicess >> choice;
+	if(choice <= 0 || choice > S2){
+		system("CLS");
+		cout << "Returning menu!!!" << endl << endl << endl;
+		return editFeatureStu();
+	}
+	studentCourse[NO1[choice]].Status = 0;
 	insertDataStudentInCourse(fileName3, studentCourse, size3);
 	fi2.close();
 	
@@ -1964,6 +2032,10 @@ void spviewStudentAttendanceList(string filename){
 		cout << studentdata[i].ID;
 		cout << endl;
 	}
+	cout << endl << endl;
+	cout << "V: Attended" << endl;
+	cout << "X: Not Attended" << endl;
+	cout << "O: Not That Week Yet" << endl;
 }
 
 void searchViewAttendanceList(){
@@ -2113,6 +2185,7 @@ void spViewScoreboardList(string courseid, string classname){
 	cout << studentinfo[i].Score.Final << "     ";
 	cout << studentinfo[i].Score.Total << endl;
 }
+cout << endl << "-1 mean that student have no points" << endl;
 }
 
 void searchViewScoreboardList(){
@@ -2142,7 +2215,11 @@ void searchViewScoreboardList(){
 	}
 	
 	if(check == false)
+	{
+		system("CLS");
 		cout << "Invalid Course ID or Class(name)!" << endl;
+		return searchViewScoreboardList();
+		}
 	else
 		spViewScoreboardList(courseid, classname);
 	
@@ -2192,7 +2269,9 @@ void ViewScoreboardList(){
 			check = true;
 }
 	if(check == false){
+		system("CLS");									
 		cout << "Invalid enter!" << endl;
+		return ViewScoreboardList();
 	}
 	
 	
@@ -2211,6 +2290,15 @@ void ViewScoreboardList(){
 }
 	if(check1 == false){
 		cout << "Invalid enter!" << endl;
+		cout << "Enter Course ID:";
+		cin >> Courseid;
+		check1 = false;
+		for (int i = 0 ; i <size1; i++){
+			if(Courseid == CourseData[i].courseID){
+				check1 = true;
+				break;
+			}
+		}
 	}
 	else{
 		spViewScoreboardList(Courseid, nameclass);
@@ -2238,7 +2326,11 @@ void viewListStudentinClass(){
 	cout << "\n" << "Please choose the class you want to view: " << endl;
 	int numberChoice = choiceScreen(size - 1);
 	if (numberChoice == -1)
-		cout << "Chon sai lop" << endl;
+	{
+		system("CLS");
+		cout << "Invalid Enter" << endl;
+		return viewListStudentinClass();	
+		}	
 	else
 	{
 		string fileName;
@@ -2528,6 +2620,14 @@ void editCourse()
 
 void exportScoreboadrdList()
 {
+	string keyStart;
+	cout << "Press 'Y' to continue :";
+	cin >> keyStart;
+	if  (("y" != keyStart) && ("Y" != keyStart))
+	{
+		system("CLS");
+		editFeatureStu();
+	}
 	userData* Data;
 	cout << "\t===EXPORT STUDENT SCORE BOARD LIST===" << endl;
 	cout << endl;
@@ -2537,7 +2637,7 @@ void exportScoreboadrdList()
 	//check class
 	int sizeofclass;
 	string nameClass[100];
-	string Class = "fileclass/Class_Mau.txt";
+	string Class = "fileclass/Class.txt";
 	ifstream file(Class.c_str());
 
 	if (!file.is_open())
@@ -2576,11 +2676,12 @@ void exportScoreboadrdList()
 	courseData* Course;
 	Course = new courseData[1000];
 	int sizecourse;
-
+	string currentSemester;
+	takeCurrentSemester(currentSemester);
 	while (true)
 	{
 		cout << "===List of " << classroom << "'s course===" << endl;
-		string name = "fileCourse/2019-2020-HK2-Schedule-" + classroom + ".txt";
+		string name = "fileCourse/" + currentSemester + "-Schedule-" + classroom + ".txt";
 		ifstream coursefile(name.c_str());
 		if (!coursefile.is_open())
 		{
@@ -2644,7 +2745,7 @@ void exportScoreboadrdList()
 	}
 	// take score data
 	int sizescore;
-	string fileName = "fileCourse/2019-2020-HK2-" + classroom + "-" + courseid + "-Student.txt";
+	string fileName = "fileCourse/" + currentSemester + "-" + classroom + "-" + courseid + "-Student.txt";
 	ifstream scorefile(fileName.c_str());
 
 	while (true)
@@ -2663,7 +2764,7 @@ void exportScoreboadrdList()
 			while (true)
 			{
 				cout << "===List of " << classroom << "'s course===" << endl;
-				string name = "fileCourse/2019-2020-HK2-Schedule-" + classroom + ".txt";
+				string name = "fileCourse/" + currentSemester + "-Schedule-" + classroom + ".txt";
 				ifstream coursefile(name.c_str());
 				if (!coursefile.is_open())
 				{
@@ -2731,7 +2832,7 @@ void exportScoreboadrdList()
 				if (choice == i + 1)
 					classroom = nameClass[i];
 
-				fileName = "fileCourse/2019-2020-HK2-" + classroom + "-" + courseid + "-Student.txt";
+				fileName = "fileCourse/" + currentSemester + "-" + classroom + "-" + courseid + "-Student.txt";
 			}
 		}
 		else
@@ -2776,6 +2877,7 @@ void exportScoreboadrdList()
 			{
 				studentcourse << "Name,Midterm,Bonus,Final,Total,\n";
 				for (int i = 0; i < sizescore; i++)
+				if (Data[i].Status == 1)
 				{
 					string midterm = tostring(Data[i].Score.Midterm);
 					if (Data[i].Score.Midterm == -1)
@@ -2809,6 +2911,14 @@ void exportScoreboadrdList()
 
 void exportAttendanceList()
 {
+	string keyStart;
+	cout << "Press 'Y' to continue :";
+	cin >> keyStart;
+	if  (("y" != keyStart) && ("Y" != keyStart))
+	{
+		system("CLS");
+		editFeatureStu();
+	}
 	cout << endl;
 	userData* Data;
 	cout << "\t=== STUDENT ATTENDANCE ===" << endl;
@@ -2818,7 +2928,7 @@ void exportAttendanceList()
 	//check class
 	int sizeofclass;
 	string nameClass[100];
-	string Class = "fileclass/Class_Mau.txt";
+	string Class = "fileclass/Class.txt";
 	ifstream file(Class.c_str());
 
 	if (!file.is_open())
@@ -2860,11 +2970,12 @@ void exportAttendanceList()
 	courseData* Course;
 	Course = new courseData[10000];
 	int sizecourse;
-
+	string currentSemester;
+	takeCurrentSemester(currentSemester);
 	while (true)
 	{
 		cout << "===List of " << classroom << "'s course===" << endl;
-		string name = "fileCourse/2019-2020-HK2-Schedule-" + classroom + ".txt";
+		string name = "fileCourse/" + currentSemester + "-Schedule-" + classroom + ".txt";
 		ifstream coursefile(name.c_str());
 		if (!coursefile.is_open())
 		{
@@ -2937,7 +3048,7 @@ void exportAttendanceList()
 
 	// take score data
 	int sizescore;
-	string fileName = "fileCourse/2019-2020-HK2-" + classroom + "-" + courseid + "-Student.txt";
+	string fileName = "fileCourse/" + currentSemester + "-" + classroom + "-" + courseid + "-Student.txt";
 	ifstream scorefile(fileName.c_str());
 	int sizeabc;
 
@@ -2981,7 +3092,7 @@ void exportAttendanceList()
 					courseid = Course[h].courseID;
 				}
 			}
-			fileName = "fileCourse/2019-2020-HK2-" + classroom + "-" + courseid + "-Student.txt";
+			fileName = "fileCourse/" + currentSemester + "-" + classroom + "-" + courseid + "-Student.txt";
 		}
 		else
 		{
@@ -3023,6 +3134,7 @@ void exportAttendanceList()
 					{
 						studentcourse << "Name,Week 1,Week 2,Week 3,Week 4,Week 5,Week 6,Week 7,Week 8,Week 9,Week 10\n";
 						for (int i = 0; i < sizeabc; i++)
+						if (Data[i].Status == 1)
 						{
 							studentcourse << Data[i].Name << ",";
 							for (int j = 0; j < 10; j++)
@@ -3087,6 +3199,15 @@ void viewListClassused()
 
 void importStudent()
 {
+	string keyStart;
+	cout << "Press 'Y' to continue :";
+	cin >> keyStart;
+	if  (("y" != keyStart) && ("Y" != keyStart))
+	{
+		system("CLS");
+		editFeatureStu();
+	}
+	
 	cout<<endl;
 	cout << "\t=== IMPORT STUDENT ===" << endl;
 	cout<<endl;
@@ -3165,6 +3286,14 @@ void importStudent()
 
 void addStudent()
 {
+	string keyStart;
+	cout << "Press 'Y' to continue :";
+	cin >> keyStart;
+	if  (("y" != keyStart) && ("Y" != keyStart))
+	{
+		system("CLS");
+		editFeatureStu();
+	}
 	cout<<endl;
 	cout << "\t=== ADD STUDENT ===" << endl;
 	cout<<endl;

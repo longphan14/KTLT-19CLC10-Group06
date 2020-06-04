@@ -44,7 +44,7 @@ int checkChoice(string Choice, int Number)
 	int numberCheck = 0;
 	for (int i = 0 ; i < length; i++)
 		if ((Choice[i] >= '0') && (Choice[i] <= '9'))
-			numberCheck += int(Choice[i]) - 48;
+			numberCheck += numberCheck * 10 + int(Choice[i]) - 48;
 		else 
 			return -1;		
 	if (numberCheck <= Number)						
