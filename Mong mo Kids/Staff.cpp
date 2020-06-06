@@ -1819,14 +1819,14 @@ void viewListStudentinCourse(int type){
 			cout << endl;
 		}	
 
-	cout << "Enter course No(Enter 0 to return): ";
+	cout << "Enter course No(Enter -1 to return): ";
 	stringstream Noss;
 	string Nos;
 	cin >> Nos;
 	Noss << Nos;
 	Noss >> courseNo;
 	bool checkNo = false;
-	if(courseNo == 0){
+	if(courseNo == -1){
 		system("CLS");
 		cout << "Returning menu!!!" << endl;
 		if (type == 1){
@@ -1835,6 +1835,10 @@ void viewListStudentinCourse(int type){
 		else{
 			viewFeatureOfLecturer();
 		}
+	}
+	else if(courseNo == 0){
+		system("CLS");
+		viewListStudentinCourse(type);
 	}
 	for (int i = 0; i < size1; i++){
 		if(courseNo == NO[i + 1]){
@@ -2006,6 +2010,12 @@ void removeStudentinCourse(){
 void spviewStudentAttendanceList(string filename){
 	ifstream fi;
 	fi.open(filename.c_str());
+	if(!fi.is_open()){
+		system("CLS");
+		cout << "Invalid Enter!" << endl;
+		cout << "Exiting to menu" << endl;
+		return Login();
+	}
 	userData* studentdata;
 	int size = 0;
 	takeDataUser(fi, studentdata, size, 4);
@@ -2042,11 +2052,39 @@ void searchViewAttendanceList(){
 	string Courseid, Classname;
 	string semesterCurrent;
 	takeCurrentSemester(semesterCurrent);
-	cout << "Enter Class name: ";
+	cout << "Enter Class name(Enter 0 to exit): ";
 	cin >> Classname;
-	cout << "Enter Course id: ";
+	if(Classname == "0"){
+		system("CLS");
+		return viewFeatureStu();
+	}
+	cout << "Enter Course id(Enter 0 to exit): ";
 	cin >> Courseid;
+	if(Courseid == "0"){
+		system("CLS");
+		return viewFeatureStu();
+	}
 	string filename;
+	string filename3;
+	filename3 = "fileCourse/" + semesterCurrent + "-Schedule.txt" ;
+	ifstream fi;
+	userData *Lecturer;
+	courseData *Course;
+	int size = 0;
+	bool check = false;
+	bool check2 = false;
+	fi.open(filename3.c_str());
+	takeDataCourse(fi, Lecturer, Course, size);
+	for(int i = 0; i < size; i++){
+		if(Course[i].className == Classname)
+			check = true;
+		if(Course[i].courseID == Courseid)
+			check2 = true;
+	}
+	if(check == false || check2 == false || (check == false && check2 == false)){
+		cout << "Invalid Enter!!" << endl;
+		return searchViewAttendanceList();
+	}
 	filename = "fileCourse/" + semesterCurrent + "-" + Classname + "-" + Courseid + "-Student.txt";
 	string filename1;
 	filename1 = "fileCourse/" + semesterCurrent + "-Schedule-" + Classname + ".txt";
@@ -2288,6 +2326,7 @@ void ViewScoreboardList(){
 		if(Courseid == CourseData[i].courseID)
 			check1 = true;
 }
+	while(true){
 	if(check1 == false){
 		cout << "Invalid enter!" << endl;
 		cout << "Enter Course ID:";
@@ -2301,8 +2340,11 @@ void ViewScoreboardList(){
 		}
 	}
 	else{
+		
 		spViewScoreboardList(Courseid, nameclass);
+		break;
 	}
+}
 }
 	cout << endl;
 	string key;
@@ -2321,21 +2363,27 @@ void viewListStudentinClass(){
 	fi.close();
 	cout << "Classes Available : " << endl;
 	for (int i = 0; i < size; i++){
-		cout << i << " " << Class[i] << endl;
+		cout << i + 1 << " " << Class[i] << endl;
 	}
-	cout << "\n" << "Please choose the class you want to view: " << endl;
-	int numberChoice = choiceScreen(size - 1);
+	cout << "\n" << "Please choose the class you want to view(Enter 0 to exit): " << endl;
+	int numberChoice = choiceScreen(size);
 	if (numberChoice == -1)
 	{
 		system("CLS");
 		cout << "Invalid Enter" << endl;
 		return viewListStudentinClass();	
 		}	
+	else if(numberChoice == 0){
+		system("CLS");
+		cout << "Returning menu!!!" << endl;
+		return viewFeatureStu();
+	}
+	
 	else
 	{
 		string fileName;
-		cout << "\n" << Class[numberChoice] << " Information: "<< "\n" <<  endl;
-		fileName = "fileClass/" + Class[numberChoice] + "-Student.txt";
+		cout << "\n" << Class[numberChoice - 1] << " Information: "<< "\n" <<  endl;
+		fileName = "fileClass/" + Class[numberChoice - 1] + "-Student.txt";
 		fi.open(fileName.c_str());
 		takeDataUser(fi, Student, size, 2);
 		for (int j = 0; j < size; j++){
