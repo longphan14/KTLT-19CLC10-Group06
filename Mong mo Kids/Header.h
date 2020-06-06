@@ -7,6 +7,13 @@
 #include <cmath>
 #include <sstream>
 #include <ctime>
+#include<algorithm>
+#include<conio.h>
+#include<stdlib.h>
+
+#define UNDERLINE "\033[4m"
+
+#define CLOSEUNDERLINE "\033[0m"
 
 using namespace std;
 
@@ -85,6 +92,7 @@ void editFeatureCourse();
 void viewFeatureCourse();
 void staffUI();
 void returnScreen(void (*functionCurrent)(), void (*functionPrevious)());
+void exportFeatureStu();
 //**************//	
 
 //User Interface STUDENT//

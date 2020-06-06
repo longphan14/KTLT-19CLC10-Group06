@@ -1,6 +1,378 @@
 #include "Staff.h"
 
 //Nhung Ham ho tro cho viec code Tinh nang STAFF//
+bool checkDuplicate(userData* Data, int size)
+{
+	for (int i = 0; i < size; i++)
+		if (Data[i].ID == Data[size].ID)
+			return false;
+	return true;
+}
+
+void takeStudentData(ifstream& fi, userData*& Data, int& size) // Hao : LAy du lieu trong file fi dua vao Data 
+{
+	fi >> size;
+	fi.ignore();
+
+	Data = new userData[1000];
+
+	for (int i = 0; i < size; i++)
+	{
+		Data[i].Type = 2;
+		getline(fi, Data[i].ID);
+		getline(fi, Data[i].Password);
+		getline(fi, Data[i].Name);
+		fi >> Data[i].Gender;
+		fi.ignore();
+		getline(fi, Data[i].DoB);
+		getline(fi, Data[i].className);
+		fi >> Data[i].Status;
+		fi.ignore();
+		fi.ignore();
+	}
+}
+
+void firstimportStudent(ifstream& fi, userData*& Data, int& size, int sizetxt, string &classroom) // Hao : LAy du lieu trong file fi dua vao Data 
+{
+	fi.ignore(10000, '\n'); // ignore(xoa n ki tu dau: 10000, xoa den ki tu cuoi la: \n)
+
+	int i = sizetxt;
+	string gender, dob;
+
+	while (!fi.eof())
+	{
+		getline(fi, Data[i].NO, ',');
+		if (Data[i].NO == "")
+			return;
+		getline(fi, Data[i].ID, ',');
+		getline(fi, Data[i].Name, ',');
+		//create dob
+		getline(fi, dob, ',');
+		dob.replace(4, 1, " ");
+		dob.replace(7, 1, " ");
+		Data[i].DoB = dob;
+		//create password
+		string str = dob;
+		str.erase(std::remove(str.begin(), str.end(), ' '), str.end()); // xoa ki tu duoc cho san: xoa "-"
+		Data[i].Password = str;
+		//
+		getline(fi, Data[i].className, ',');
+		classroom = Data[i].className;
+		// object from the class stringstream 
+		getline(fi, gender);
+		if (gender == "Nu")
+			Data[i].Gender = 1;
+		else if (gender == "Nam")
+			Data[i].Gender = 0;
+
+		Data[i].Status = 1;
+		Data[i].Type = 2;
+
+		i++;
+		size++;
+	}
+}
+
+void insertStudenttxtDataUser(ofstream& fo, userData*& Data, int size)
+{
+	fo << size << endl;
+	for (int i = 0; i < size; i++)
+	{
+		fo << Data[i].ID << endl;
+		fo << Data[i].Password << endl;
+		fo << Data[i].Name << endl;
+		fo << Data[i].Gender << endl;
+		if (Data[i].Type == 2)
+		{
+			fo << Data[i].DoB << endl;
+			fo << Data[i].className << endl;
+			fo << Data[i].Status << endl;
+		}
+		else if (3 == Data[i].Type)
+			fo << Data[i].Degree << endl;
+		fo << endl;
+	}
+}
+
+void enterinfStudent(userData*& Data, string studentclass, int& size) //size o day tuc la so luong sinh vien da cho
+{
+	string dob, gender;
+
+	cin.ignore();
+	int i = size; // noi tiep cac phan tu da co trong mang Data[]
+	while (true)
+	{
+		cout << "* Enter student name: ";
+		getline(cin, Data[i].Name); // cin ten co space
+
+		cout << "* Enter student id: ";
+		cin >> Data[i].ID;
+		//tim cach loc ra MSSV trong file student.txt de xem coi co bi trung hay khong
+		while (true)
+		{
+			if (checkDuplicate(Data, size) == false)
+			{
+				cout << "-> Student's ID is available!" << endl;
+				cout << "* Enter student id: ";
+				cin >> Data[i].ID;
+			}
+			else
+				break;
+		}
+
+		string year, month, date;
+		cout << "* Enter student day of birth " << endl;
+		//year
+		cout << "--> Enter year of birth: ";
+		cin >> year;
+
+		int yearnum;
+
+		while (true)
+		{
+			stringstream ss(year);
+			if (((ss >> yearnum).fail()) || (yearnum > 2020 || yearnum < 1920))
+			{
+				cout << "-> Please enter again" << endl;
+				cout << "--> Enter year of birth: ";
+				cin >> year;
+			}
+			else
+				break;
+		}
+		//month
+		cout << "--> Enter month of birth: ";
+		cin >> month;
+
+		int monthnum;
+
+		while (true)
+		{
+			stringstream xx(month);
+			if (((xx >> monthnum).fail()) || (monthnum > 12)||( monthnum <= 0) ||( month.length() > 2) )
+			{
+				cout << "-> Please enter again" << endl;
+				cout << "* Enter month of birth: ";
+				cin >> month;
+			}
+			else
+				break;
+		}
+
+		if ((monthnum < 10) && (month.length() != 2) )
+			month = "0" + month;
+		//date
+		cout << "* Enter date of birth: ";
+		cin >> date;
+
+		int datenum;
+
+		while (true)
+		{
+			if (date.length() > 2)
+			{
+				cout << "-> Please enter again" << endl;
+				cout << "* Enter date of birth: ";
+				cin >> date;
+			}
+			else
+			{
+				stringstream zz(date);
+				if ((zz >> datenum).fail())
+				{
+					cout << "-> Please enter again" << endl;
+					cout << "* Enter date of birth: ";
+					cin >> date;
+				}
+				else
+				{
+					if (monthnum == 2)
+					{
+						if (yearnum % 4 == 0)
+						{
+							if (datenum > 29 || datenum <= 0)
+							{
+								cout << "-> Please enter again" << endl;
+								cout << "* Enter date of birth: ";
+								cin >> date;
+							}
+							else
+								break;
+						}
+						else
+						{
+							if (datenum > 28 || datenum <= 0)
+							{
+								cout << "-> Please enter again" << endl;
+								cout << "* Enter date of birth: ";
+								cin >> date;
+							}
+							else
+								break;
+						}
+					}
+					else if (monthnum == 4 || monthnum == 6 || monthnum == 9 || monthnum == 11)
+					{
+						if (datenum > 30 || datenum <= 0)
+						{
+							cout << "-> Please enter again" << endl;
+							cout << "* Enter date of birth: ";
+							cin >> date;
+						}
+						else
+							break;
+					}
+					else if (monthnum == 1 || monthnum == 3 || monthnum == 5 || monthnum == 7 || monthnum == 8 || monthnum == 10 || monthnum == 12)
+					{
+						if (datenum > 31 || datenum <= 0)
+						{
+							cout << "-> Please enter again" << endl;
+							cout << "* Enter date of birth: ";
+							cin >> date;
+						}
+						else
+							break;
+					}
+				}
+			}
+		}
+
+		if ((datenum < 10) && (date.length() != 2) )
+			date = "0" + date;
+		//
+		dob = year + "/" + month + "/" + date;
+		dob.replace(4, 1, " ");
+		dob.replace(7, 1, " ");
+		Data[i].DoB = dob;
+
+		while (true)
+		{
+			cout << "* Enter student gender (Nam/Nu): ";
+			cin >> gender;
+			if (gender == "Nam" || gender == "nam" || gender == "nAm" || gender == "naM" || gender == "NaM" || gender == "nAM" || gender == "NAm" || gender == "NAM")
+			{
+				Data[i].Gender = 0;
+				break;
+			}
+			else if (gender == "Nu" || gender == "nu" || gender == "NU" || gender == "nU")
+			{
+				Data[i].Gender = 1;
+				break;
+			}
+			else
+				cout << "-> Please enter again!" << endl;
+		}
+
+		//create password
+		string str = dob;
+		str.erase(std::remove(str.begin(), str.end(), ' '), str.end()); // xoa ki tu duoc cho san: xoa "-"
+		Data[i].Password = str;
+
+		Data[i].className = studentclass;
+
+		Data[i].Type = 2;
+		Data[i].Status = 1;
+
+		break;
+	}
+	size++;
+}
+//ham dua du lieu sinh vien vao file txt theo lop
+void addStudentbaseonclass(ofstream& fo, userData*& Data, int size, string classroom)
+{
+	int i = 0;
+	int amount = 0;
+
+	while (true)
+	{
+		if (Data[i].className == classroom)
+		{
+			amount++;
+		}
+		i++;
+		if (i + 1 == size)
+			break;
+	}
+
+	fo << amount + 1 << endl;
+	for (int i = 0; i < size; i++)
+	{
+		if (Data[i].className == classroom)
+		{
+			fo << Data[i].ID << endl;
+			fo << Data[i].Password << endl;
+			fo << Data[i].Name << endl;
+			fo << Data[i].Gender << endl;
+			if (Data[i].Type == 2)
+			{
+				fo << Data[i].DoB << endl;
+				fo << Data[i].className << endl;
+				Data[i].Status = 1;
+				fo << Data[i].Status << endl;
+			}
+			else if (3 == Data[i].Type)
+				fo << Data[i].Degree << endl;
+			fo << endl;
+
+		}
+	}
+}
+
+void opentxtandtakeData(ifstream& student, int& sizetxt, userData*& Data)
+{
+	if (!student.is_open())
+	{
+		cout << "-> ERROR: File Open 2" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else
+	{
+		if (student.eof())
+		{
+			cout << "File is empty" << endl;
+			sizetxt = 0;
+		}		else
+		{
+			takeStudentData(student, Data, sizetxt);
+		}
+	}
+
+	student.close();
+}
+string tostring(float number)
+{
+	stringstream ss;
+	ss << number;
+	string s;
+	ss >> s;
+	return s;
+}
+
+void viewListClass()
+{
+	int sizeofclass;
+	string nameClass[100];
+	string Class = "fileClass/Class.txt";
+	ifstream file(Class.c_str());
+
+	if (!file.is_open())
+	{
+		cout << "-> ERROR: File Open 1" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else
+	{
+		takeDataClass(file, nameClass, sizeofclass);
+		file.close();
+	}
+
+	cout << "==List of class==" << endl;
+	for (int i = 0; i < sizeofclass; i++)
+	{
+		cout << "\t" << (i + 1) << ". " << nameClass[i] << endl;
+	}
+}
+
 void copyData(ifstream &fi, ofstream &fo) // copy data from fi to fo
 {
 	string s;
@@ -1153,7 +1525,11 @@ void addStudentToCourse(){
 	string classname, coursename, courseid;
 	int courseNo;
 	cout << "Enter student id: ";
-	cin >> student.ID;
+	stringstream idss;
+	string ids;
+	cin >> ids;
+	idss << ids;
+	idss >> student.ID;
 	ifstream fi;
 	ofstream fo3;
 	fi.open("fileUser/Student.txt");
@@ -1165,6 +1541,11 @@ void addStudentToCourse(){
 			check = true;
 	}
 }
+	if(check == false){
+		system("CLS");
+		cout << "Error enter!!! Returning menu!!!" << endl;
+		return editFeatureStu();
+	}
 	if(check == true){
 		cout << "Student exist!" << endl << endl;
 		cout << "List of Course in school" << endl;
@@ -1191,7 +1572,11 @@ void addStudentToCourse(){
 		}	
 
 	cout << "Enter course No: ";
-	cin >> courseNo;
+	stringstream Noss;
+	string Nostring;
+	cin >> Nostring;
+	Noss << Nostring;
+	Noss >> courseNo;
 	for (int i = 0; i < size1; i++){
 		if(courseNo == NO[i + 1]){
 			classname = Course[i].className;
@@ -1434,14 +1819,40 @@ void viewListStudentinCourse(int type){
 			cout << endl;
 		}	
 
-	cout << "Enter course No: ";
-	cin >> courseNo;
+	cout << "Enter course No(Enter -1 to return): ";
+	stringstream Noss;
+	string Nos;
+	cin >> Nos;
+	Noss << Nos;
+	Noss >> courseNo;
+	bool checkNo = false;
+	if(courseNo == -1){
+		system("CLS");
+		cout << "Returning menu!!!" << endl;
+		if (type == 1){
+			viewFeatureStu();
+		}
+		else{
+			viewFeatureOfLecturer();
+		}
+	}
+	else if(courseNo == 0){
+		system("CLS");
+		viewListStudentinCourse(type);
+	}
 	for (int i = 0; i < size1; i++){
 		if(courseNo == NO[i + 1]){
 			classname = Course[i].className;
 			courseid = Course[i].courseID;
 			coursename = Course[i].courseName;
+			checkNo = true;
 		}
+	}
+	
+	if(checkNo == false){
+		system("CLS");
+		cout << "Invalid Enter!!!" << endl;
+		return viewListStudentinCourse(type);
 	}
 	string semesterCurrent2;
 	takeCurrentSemester(semesterCurrent2);
@@ -1452,23 +1863,23 @@ void viewListStudentinCourse(int type){
 	userData* studentCourse;
 	int size3 = 0;
 	takeDataUser(fi2, studentCourse, size3, 4);
-	cout << "The Numbers of student: " << size3 << endl;
+	system("CLS");
+	int S = 0;
+	for (int i = 0; i < size3; i++){
+		if(studentCourse[i].Status == 1)
+			S++;
+	}
+	cout << "The Numbes of student: " << S << endl;
 	for(int i = 0; i < size3; i++){
+		if(studentCourse[i].Status == 1){
+			
 		cout << endl;
 			cout << studentCourse[i].ID << endl;
 			cout << studentCourse[i].Name << endl;
 			cout << studentCourse[i].Gender << endl;
 			cout << studentCourse[i].DoB << endl;
-			cout << studentCourse[i].className << endl;
-//			cout << studenttemp.Score.Midterm = -1;
-			cout << studentCourse[i].Score.Midterm << endl;
-//			cout << studenttemp.Score.Final = -1;								
-			cout << studentCourse[i].Score.Final << endl;
-//			cout << studenttemp.Score.Bonus = -1;
-			cout << studentCourse[i].Score.Bonus << endl;
-//			cout << studenttemp.Score.Total = -1;
-			cout << studentCourse[i].Score.Total << endl;	
-
+			cout << studentCourse[i].className << endl;	
+		}
 	}
 	
 	
@@ -1516,9 +1927,19 @@ void removeStudentinCourse(){
 			cout << "Room: " << Course[i].Room << endl;
 			cout << endl;
 		}	
-
+	cout << "Enter 0 to exit!!!" << endl;
+	
+	stringstream NOss;
+	string ss;		
 	cout << "Enter course No: ";
-	cin >> courseNo;
+	cin >> ss;
+	NOss << ss;
+	NOss >> courseNo;
+	system("CLS");
+	if(courseNo <= 0 || courseNo >= size1){
+		cout << "Returning menu!" << endl << endl << endl;
+		return editFeatureStu();
+	}
 	for (int i = 0; i < size1; i++){
 		if(courseNo == NO[i + 1]){
 			classname = Course[i].className;
@@ -1534,25 +1955,48 @@ void removeStudentinCourse(){
 	fi2.open(fileName3.c_str());
 	userData* studentCourse;
 	int size3 = 0;
+	int S = 0;
 	takeDataUser(fi2, studentCourse, size3, 4);
-	cout << "The Numbers of student: " << size3 << endl;
-	int NO1[size3 - 1];
+	
+	for(int i = 0; i < size3; i++){
+		if(studentCourse[i].Status != 0){
+			S++;
+		}
+	}
+	if(S == 0){
+		system("CLS");
+		cout << "There are no students in class!! Returning menu !!!" << endl << endl << endl;
+		return editFeatureStu();
+	}
+	cout << "The Numbers of student: " << S << endl;
+	int NO1[200];
+	int number = 1;
+	int  S2 = 0;
 	for(int i = 0; i < size3; i++){
 		cout << endl;
-			cout << "No" << i + 1 << "." << studentCourse[i].ID << endl;
+		if(studentCourse[i].Status != 0){
+															
 			cout << studentCourse[i].Name << endl;
 			cout << studentCourse[i].Gender << endl;
 			cout << studentCourse[i].DoB << endl;
 			cout << studentCourse[i].className << endl;
-			cout << studentCourse[i].Score.Midterm << endl;								
-			cout << studentCourse[i].Score.Final << endl;
-			cout << studentCourse[i].Score.Bonus << endl;
-			cout << studentCourse[i].Score.Total << endl;
+			cout << endl;
+		}
 	}
 	int choice;
-	cout << "Choose No to remove: ";
-	cin >> choice;
-	studentCourse[choice - 1].Status = 0;
+	stringstream choicess;
+	string choices;
+	cout << "Choose Number of orders to remove(Enter 0 to return): ";
+	cin >> choices;
+	system("CLS");
+	choicess << choices;
+	choicess >> choice;
+	if(choice <= 0 || choice > S2){
+		system("CLS");
+		cout << "Returning menu!!!" << endl << endl << endl;
+		return editFeatureStu();
+	}
+	studentCourse[NO1[choice]].Status = 0;
 	insertDataStudentInCourse(fileName3, studentCourse, size3);
 	fi2.close();
 	
@@ -1566,6 +2010,12 @@ void removeStudentinCourse(){
 void spviewStudentAttendanceList(string filename){
 	ifstream fi;
 	fi.open(filename.c_str());
+	if(!fi.is_open()){
+		system("CLS");
+		cout << "Invalid Enter!" << endl;
+		cout << "Exiting to menu" << endl;
+		return Login();
+	}
 	userData* studentdata;
 	int size = 0;
 	takeDataUser(fi, studentdata, size, 4);
@@ -1592,17 +2042,49 @@ void spviewStudentAttendanceList(string filename){
 		cout << studentdata[i].ID;
 		cout << endl;
 	}
+	cout << endl << endl;
+	cout << "V: Attended" << endl;
+	cout << "X: Not Attended" << endl;
+	cout << "O: Not That Week Yet" << endl;
 }
 
 void searchViewAttendanceList(){
 	string Courseid, Classname;
 	string semesterCurrent;
 	takeCurrentSemester(semesterCurrent);
-	cout << "Enter Class name: ";
+	cout << "Enter Class name(Enter 0 to exit): ";
 	cin >> Classname;
-	cout << "Enter Course id: ";
+	if(Classname == "0"){
+		system("CLS");
+		return viewFeatureStu();
+	}
+	cout << "Enter Course id(Enter 0 to exit): ";
 	cin >> Courseid;
+	if(Courseid == "0"){
+		system("CLS");
+		return viewFeatureStu();
+	}
 	string filename;
+	string filename3;
+	filename3 = "fileCourse/" + semesterCurrent + "-Schedule.txt" ;
+	ifstream fi;
+	userData *Lecturer;
+	courseData *Course;
+	int size = 0;
+	bool check = false;
+	bool check2 = false;
+	fi.open(filename3.c_str());
+	takeDataCourse(fi, Lecturer, Course, size);
+	for(int i = 0; i < size; i++){
+		if(Course[i].className == Classname)
+			check = true;
+		if(Course[i].courseID == Courseid)
+			check2 = true;
+	}
+	if(check == false || check2 == false || (check == false && check2 == false)){
+		cout << "Invalid Enter!!" << endl;
+		return searchViewAttendanceList();
+	}
 	filename = "fileCourse/" + semesterCurrent + "-" + Classname + "-" + Courseid + "-Student.txt";
 	string filename1;
 	filename1 = "fileCourse/" + semesterCurrent + "-Schedule-" + Classname + ".txt";
@@ -1741,6 +2223,7 @@ void spViewScoreboardList(string courseid, string classname){
 	cout << studentinfo[i].Score.Final << "     ";
 	cout << studentinfo[i].Score.Total << endl;
 }
+cout << endl << "-1 mean that student have no points" << endl;
 }
 
 void searchViewScoreboardList(){
@@ -1770,7 +2253,11 @@ void searchViewScoreboardList(){
 	}
 	
 	if(check == false)
+	{
+		system("CLS");
 		cout << "Invalid Course ID or Class(name)!" << endl;
+		return searchViewScoreboardList();
+		}
 	else
 		spViewScoreboardList(courseid, classname);
 	
@@ -1820,7 +2307,9 @@ void ViewScoreboardList(){
 			check = true;
 }
 	if(check == false){
+		system("CLS");									
 		cout << "Invalid enter!" << endl;
+		return ViewScoreboardList();
 	}
 	
 	
@@ -1837,12 +2326,25 @@ void ViewScoreboardList(){
 		if(Courseid == CourseData[i].courseID)
 			check1 = true;
 }
+	while(true){
 	if(check1 == false){
 		cout << "Invalid enter!" << endl;
+		cout << "Enter Course ID:";
+		cin >> Courseid;
+		check1 = false;
+		for (int i = 0 ; i <size1; i++){
+			if(Courseid == CourseData[i].courseID){
+				check1 = true;
+				break;
+			}
+		}
 	}
 	else{
+		
 		spViewScoreboardList(Courseid, nameclass);
+		break;
 	}
+}
 }
 	cout << endl;
 	string key;
@@ -1861,17 +2363,27 @@ void viewListStudentinClass(){
 	fi.close();
 	cout << "Classes Available : " << endl;
 	for (int i = 0; i < size; i++){
-		cout << i << " " << Class[i] << endl;
+		cout << i + 1 << " " << Class[i] << endl;
 	}
-	cout << "\n" << "Please choose the class you want to view: " << endl;
-	int numberChoice = choiceScreen(size - 1);
+	cout << "\n" << "Please choose the class you want to view(Enter 0 to exit): " << endl;
+	int numberChoice = choiceScreen(size);
 	if (numberChoice == -1)
-		cout << "Chon sai lop" << endl;
+	{
+		system("CLS");
+		cout << "Invalid Enter" << endl;
+		return viewListStudentinClass();	
+		}	
+	else if(numberChoice == 0){
+		system("CLS");
+		cout << "Returning menu!!!" << endl;
+		return viewFeatureStu();
+	}
+	
 	else
 	{
 		string fileName;
-		cout << "\n" << Class[numberChoice] << " Information: "<< "\n" <<  endl;
-		fileName = "fileClass/" + Class[numberChoice] + "-Student.txt";
+		cout << "\n" << Class[numberChoice - 1] << " Information: "<< "\n" <<  endl;
+		fileName = "fileClass/" + Class[numberChoice - 1] + "-Student.txt";
 		fi.open(fileName.c_str());
 		takeDataUser(fi, Student, size, 2);
 		for (int j = 0; j < size; j++){
@@ -2152,6 +2664,765 @@ void editCourse()
 	cin >> key;
 	system("CLS");
 	editFeatureCourse();		
+}
+
+void exportScoreboadrdList()
+{
+	string keyStart;
+	cout << "Press 'Y' to continue :";
+	cin >> keyStart;
+	if  (("y" != keyStart) && ("Y" != keyStart))
+	{
+		system("CLS");
+		editFeatureStu();
+	}
+	userData* Data;
+	cout << "\t===EXPORT STUDENT SCORE BOARD LIST===" << endl;
+	cout << endl;
+
+	//view class
+	viewListClass();
+	//check class
+	int sizeofclass;
+	string nameClass[100];
+	string Class = "fileclass/Class.txt";
+	ifstream file(Class.c_str());
+
+	if (!file.is_open())
+	{
+		cout << "-> ERROR: File Open 1" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else
+	{
+		takeDataClass(file, nameClass, sizeofclass);
+		file.close();
+	}
+	//enter class
+	string classroom;
+	string classchoice;
+	int choice;
+	while (true)
+	{
+		cout << "* Enter your choice of class: ";
+		cin >> classchoice;
+
+		stringstream zz(classchoice);
+		if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+			cout << "-> Please try again" << endl;
+		else
+			break;
+	}
+	cout << endl;
+
+	for (int i = 0; i < sizeofclass; i++)
+	{
+		if (choice == i + 1)
+			classroom = nameClass[i];
+	}
+	//view course id
+	courseData* Course;
+	Course = new courseData[1000];
+	int sizecourse;
+	string currentSemester;
+	takeCurrentSemester(currentSemester);
+	while (true)
+	{
+		cout << "===List of " << classroom << "'s course===" << endl;
+		string name = "fileCourse/" + currentSemester + "-Schedule-" + classroom + ".txt";
+		ifstream coursefile(name.c_str());
+		if (!coursefile.is_open())
+		{
+			cout << "-> Course File does not exist" << endl;
+			cout << "-> Please check your information again" << endl;
+
+			while (true)
+			{
+				cout << "* Enter your choice of class: ";
+				cin >> classchoice;
+
+				stringstream zz(classchoice);
+				if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+					cout << "-> Please try again" << endl;
+				else
+					break;
+			}
+			cout << endl;
+
+			for (int i = 0; i < sizeofclass; i++)
+			{
+				if (choice == i + 1)
+					classroom = nameClass[i];
+			}
+		}
+		else
+		{
+
+			coursefile >> sizecourse;
+			coursefile.ignore();
+			for (int i = 0; i < sizecourse; i++)
+			{
+				getline(coursefile, Course[i].courseID);
+				cout << "\t" << i + 1 << ". Course ID: " << Course[i].courseID << endl;
+				getline(coursefile, Course[i].courseName);
+				cout << "\tCourse Name : " << Course[i].courseName << endl;
+				for (int j = 0; j < 12; j++)
+					coursefile.ignore(1000, '\n');
+			}
+			break;
+		}
+	}
+	//enter course id
+	string courseid;
+	string coursechoice;
+	int cource;
+
+	while (true)
+	{
+		cout << "* Enter your choice of course: ";
+		cin >> coursechoice;
+
+		stringstream ss(coursechoice);
+		if ((ss >> cource).fail() || cource > sizecourse || cource <= 0)
+			cout << "-> Please try again" << endl;
+		else
+		{
+			courseid = Course[cource-1].courseID;
+			break;
+		}
+	}
+	// take score data
+	int sizescore;
+	string fileName = "fileCourse/" + currentSemester + "-" + classroom + "-" + courseid + "-Student.txt";
+	ifstream scorefile(fileName.c_str());
+
+	while (true)
+	{
+		ifstream scorefile(fileName.c_str());
+		if (!scorefile.is_open())
+		{
+			cout << "-> Score file isn't available" << endl;
+			cout << "-> Please check your Course ID or Class again" << endl;
+			//view course id
+			cout << endl;
+			courseData *Course;
+			Course = new courseData[10000];
+			int sizecourse;
+
+			while (true)
+			{
+				cout << "===List of " << classroom << "'s course===" << endl;
+				string name = "fileCourse/" + currentSemester + "-Schedule-" + classroom + ".txt";
+				ifstream coursefile(name.c_str());
+				if (!coursefile.is_open())
+				{
+					cout << "-> Course File does not exist" << endl;
+					cout << "-> Please check your information again" << endl;
+
+					while (true)
+					{
+						cout << "* Enter your choice of class: ";
+						cin >> classchoice;
+
+						stringstream zz(classchoice);
+						if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+							cout << "-> Please try again" << endl;
+						else
+							break;
+					}
+					cout << endl;
+
+					for (int i = 0; i < sizeofclass; i++)
+					{
+						if (choice == i + 1)
+							classroom = nameClass[i];
+					}
+				}
+				else
+				{
+					coursefile >> sizecourse;
+					coursefile.ignore();
+					for (int i = 0; i < sizecourse; i++)
+					{
+						getline(coursefile, Course[i].courseID);
+						cout << i + 1 << ". Course ID: " << Course[i].courseID << endl;
+						getline(coursefile, Course[i].courseName);
+						cout << "Course Name : " << Course[i].courseName << endl;
+						for (int j = 0; j < 12; j++)
+							coursefile.ignore(1000, '\n');
+					}
+					break;
+				}
+			}
+				//enter course id
+			string courseid;
+			string coursechoice;
+			int cource;
+
+			while (true)
+			{
+				cout << "* Enter your choice of course (1 -> 2): ";
+				cin >> coursechoice;
+
+				stringstream ss(coursechoice);
+				if ((ss >> cource).fail() || cource > sizecourse || cource <= 0)
+					cout << "-> Please try again" << endl;
+				else
+				{
+					courseid = Course[cource - 1].courseID;
+					break;
+				}
+			}
+
+			cout << endl;
+			for (int i = 0; i < sizeofclass; i++)
+			{
+				if (choice == i + 1)
+					classroom = nameClass[i];
+
+				fileName = "fileCourse/" + currentSemester + "-" + classroom + "-" + courseid + "-Student.txt";
+			}
+		}
+		else
+			break;
+	}
+
+	if (scorefile.eof())
+	{
+		cout << "File is empty" << endl;
+		sizescore = 0;
+	}
+	else
+	{
+		cout << endl;
+		takeDataUser(scorefile, Data, sizescore,4);
+		string filelocation;
+		string filename;
+		string filecsv;
+		cout << "* Enter where you want to store the csv Score File (for example: C:/file/): ";
+		cin >> filelocation;
+		cout << "* Enter the score CSV file name (for example: 19APCS1-CS1002): ";
+		cin >> filename;
+
+		filecsv = filelocation + filename + ".csv";
+		ofstream studentcourse(filecsv.c_str());
+		while (true)
+		{
+			if (!studentcourse.is_open())
+			{
+				cout << "--> Can't open file!!!!" << endl;
+				cout << "-> Please check your information again" << endl;
+
+				cout << "* Enter where you want to store the csv Score File (for example: C:/file/): ";
+				cin >> filelocation;
+				cout << "* Enter the score CSV file name (for example: 19APCS1-CS1002): ";
+				cin >> filename;
+				cout << endl;
+				filecsv = filelocation + filename + ".csv";
+				ofstream studentcourse(filecsv.c_str());
+			}
+			else
+			{
+				studentcourse << "Name,Midterm,Bonus,Final,Total,\n";
+				for (int i = 0; i < sizescore; i++)
+				if (Data[i].Status == 1)
+				{
+					string midterm = tostring(Data[i].Score.Midterm);
+					if (Data[i].Score.Midterm == -1)
+						midterm = "x";
+					string bonus = tostring(Data[i].Score.Bonus);
+					if (Data[i].Score.Bonus == -1)
+						bonus = "x";
+					string final = tostring(Data[i].Score.Final);
+					if (Data[i].Score.Final == -1)
+						final = "x";
+					string total = tostring(Data[i].Score.Total);
+					if (Data[i].Score.Total == -1)
+						total = "x";
+
+					studentcourse << Data[i].Name << "," << midterm << "," << bonus << "," << final << "," << total << ",\n";
+						//cout << Data[i].Name << endl;
+				}
+				break;
+			}
+		}
+		studentcourse.close();
+	}
+	scorefile.close();
+	
+	cout << endl;
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");
+	exportFeatureStu();
+}
+
+void exportAttendanceList()
+{
+	string keyStart;
+	cout << "Press 'Y' to continue :";
+	cin >> keyStart;
+	if  (("y" != keyStart) && ("Y" != keyStart))
+	{
+		system("CLS");
+		editFeatureStu();
+	}
+	cout << endl;
+	userData* Data;
+	cout << "\t=== STUDENT ATTENDANCE ===" << endl;
+	cout << endl;
+	//view class
+	viewListClass();
+	//check class
+	int sizeofclass;
+	string nameClass[100];
+	string Class = "fileclass/Class.txt";
+	ifstream file(Class.c_str());
+
+	if (!file.is_open())
+	{
+		cout << "-> ERROR: File Open 1" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else
+	{
+		takeDataClass(file, nameClass, sizeofclass);
+		file.close();
+	}
+
+	//enter class
+	string classroom;
+	string classchoice;
+	int choice;
+	while (true)
+	{
+		cout << "* Enter your choice of class: ";
+		cin >> classchoice;
+
+		stringstream zz(classchoice);
+		if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+			cout << "-> Please try again" << endl;
+		else
+			break;
+	}
+	cout << endl;
+
+	for (int i = 0; i < sizeofclass; i++)
+	{
+		if (choice == i + 1)
+			classroom = nameClass[i];
+	}
+
+	//view course id
+	cout << endl;
+	courseData* Course;
+	Course = new courseData[10000];
+	int sizecourse;
+	string currentSemester;
+	takeCurrentSemester(currentSemester);
+	while (true)
+	{
+		cout << "===List of " << classroom << "'s course===" << endl;
+		string name = "fileCourse/" + currentSemester + "-Schedule-" + classroom + ".txt";
+		ifstream coursefile(name.c_str());
+		if (!coursefile.is_open())
+		{
+			cout << "-> Course File does not exist" << endl;
+			cout << "-> Please check your information again" << endl;
+
+			while (true)
+			{
+				cout << "* Enter the number of the class you choose: ";
+				cin >> classchoice;
+
+				stringstream zz(classchoice);
+				if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+					cout << "-> Please try again" << endl;
+				else
+					break;
+			}
+			cout << endl;
+
+			for (int i = 0; i < sizeofclass; i++)
+			{
+				if (choice == i + 1)
+					classroom = nameClass[i];
+			}
+		}
+		else
+		{
+
+			coursefile >> sizecourse;
+			coursefile.ignore();
+			for (int i = 0; i < sizecourse; i++)
+			{
+				getline(coursefile, Course[i].courseID);
+				cout << "\t" << i+1 << ". Course ID: " << Course[i].courseID << endl;
+				getline(coursefile, Course[i].courseName);
+				cout << "\tCourse Name : " << Course[i].courseName << endl;
+				for (int j = 0; j < 12; j++)
+					coursefile.ignore(1000, '\n');
+			}
+			break;
+		}
+	}
+	//enter course id
+	string courseid;
+	string coursechoice;
+	int cource;
+	
+	while (true)
+	{
+		cout << "* Enter your choice of course: ";
+		cin >> coursechoice;
+		int h;
+		stringstream ss(coursechoice);
+		if ((ss >> cource).fail() || cource > sizecourse || cource <= 0)
+			cout << "-> Please try again" << endl;
+		else
+		{
+			h = cource - 1;
+			courseid = Course[h].courseID;
+			break;
+		}
+	}
+
+	cout << endl;
+	for (int i = 0; i < sizeofclass; i++)
+	{
+		if (choice == i + 1)
+			classroom = nameClass[i];
+	}
+
+	// take score data
+	int sizescore;
+	string fileName = "fileCourse/" + currentSemester + "-" + classroom + "-" + courseid + "-Student.txt";
+	ifstream scorefile(fileName.c_str());
+	int sizeabc;
+
+	while (true)
+	{
+		ifstream scorefile(fileName.c_str());
+		if (!scorefile.is_open())
+		{
+			cout << "-> Score file isn't available" << endl;
+			cout << "-> Please check your Course ID or Class again" << endl;
+
+			while (true)
+			{
+				cout << "* Enter the number of the class you choose: ";
+				cin >> classchoice;
+
+				stringstream zz(classchoice);
+				if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+					cout << "-> Please try again" << endl;
+				else
+					break;
+			}
+			cout << endl;
+
+			for (int i = 0; i < sizeofclass; i++)
+			{
+				if (choice == i + 1)
+					classroom = nameClass[i];
+			}
+			while (true)
+			{
+				cout << "* Enter the number of the course you choose: ";
+				cin >> coursechoice;
+				int h;
+				stringstream ss(coursechoice);
+				if ((ss >> cource).fail() || cource > sizecourse || cource <= 0)
+					cout << "-> Please try again" << endl;
+				else
+				{
+					h = cource - 1;
+					courseid = Course[h].courseID;
+				}
+			}
+			fileName = "fileCourse/" + currentSemester + "-" + classroom + "-" + courseid + "-Student.txt";
+		}
+		else
+		{
+			if (scorefile.eof())
+			{
+				cout << "File is empty" << endl;
+				sizescore = 0;
+			}
+			else
+			{
+				cout << endl;
+				takeDataUser(scorefile, Data, sizeabc, 4);
+				string filelocation;
+				string filename;
+				string filecsv;
+				cout << "* Enter where you want to store the csv ATTENDANCE File (for example: C:/file/): ";
+				cin >> filelocation;
+				cout << "* Enter the attendance CSV file name (for example: 19APCS1-CS1002): ";
+				cin >> filename;
+
+				filecsv = filelocation + filename + ".csv";
+				ofstream studentcourse(filecsv.c_str());
+				while (true)
+				{
+					if (!studentcourse.is_open())
+					{
+						cout << "--> Can't open file!!!!" << endl;
+						cout << "-> Please check your information again" << endl;
+
+						cout << "* Enter where you want to store the csv ATTENDANCE File (for example: C:/file/): ";
+						cin >> filelocation;
+						cout << "* Enter the attendance CSV file name (for example: 19APCS1-CS1002): ";
+						cin >> filename;
+						cout << endl;
+						filecsv = filelocation + filename + ".csv";
+						ofstream studentcourse(filecsv.c_str());
+					}
+					else
+					{
+						studentcourse << "Name,Week 1,Week 2,Week 3,Week 4,Week 5,Week 6,Week 7,Week 8,Week 9,Week 10\n";
+						for (int i = 0; i < sizeabc; i++)
+						if (Data[i].Status == 1)
+						{
+							studentcourse << Data[i].Name << ",";
+							for (int j = 0; j < 10; j++)
+							{
+								if (Data[i].Attendance[i] == 0)
+									studentcourse << "x" << ",";
+								else if (Data[i].Attendance[i] == 1)
+									studentcourse << "v" << ",";
+								else if (Data[i].Attendance[i] == -1)
+									studentcourse << "o" << ",";
+							}
+							studentcourse << endl;
+						}
+						break;
+					}
+				}
+				studentcourse.close();
+			}
+			break;
+		}
+	}
+	scorefile.close();
+	
+	cout << endl;
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");
+	exportFeatureStu();
+}
+
+void viewListClassused()
+{
+	int sizeofclass;
+	string nameClass[100];
+	string Class = "fileClass/Class.txt";
+	ifstream file(Class.c_str());
+
+	if (!file.is_open())
+	{
+		cout << "-> ERROR: File Open 1" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else
+	{
+		takeDataClass(file, nameClass, sizeofclass);
+		file.close();
+	}
+
+	cout<<endl;
+	cout << "==List of class==" << endl;
+	for (int i = 0; i < sizeofclass; i++)
+	{
+		cout << "\t" <<(i + 1)<< ". " << nameClass[i] << endl;
+	}
+	
+	cout << endl;
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");
+	viewFeatureStu();
+}
+
+void importStudent()
+{
+	string keyStart;
+	cout << "Press 'Y' to continue :";
+	cin >> keyStart;
+	if  (("y" != keyStart) && ("Y" != keyStart))
+	{
+		system("CLS");
+		editFeatureStu();
+	}
+	
+	cout<<endl;
+	cout << "\t=== IMPORT STUDENT ===" << endl;
+	cout<<endl;
+	userData* Data;
+	int size;
+	string classroom;
+	int sizetxt = 0;
+	string Sname = "fileUser/Student.txt";
+	ifstream student(Sname.c_str());
+	opentxtandtakeData(student, sizetxt, Data);
+
+	size = sizetxt;
+
+	string fName;
+	//ham 1
+	while (true)
+	{
+		cout << endl;
+		cout << "!! PLEASE MAKE SURE THAT ALL OF DATA ON DOB IN THE CSV FILE IS STATED AS YYYY/MM/DD !!" << endl;
+		cout << endl;
+		cout << "* Enter your Student CSV file address (for example: C:/Demo.csv): "; // 19APCS1-Student.csv
+		cin >> fName;
+
+		ifstream ip(fName.c_str());
+		if (!ip.is_open())
+		{
+			cout << "-> ERROR: File Open 1" << endl;
+			cout << "-> Please enter your file adress or check the address again!" << endl;
+		}
+		else
+		{
+			firstimportStudent(ip, Data, size, sizetxt, classroom);
+			ip.close();
+			break;
+		}
+	}
+
+	string cname;
+
+	cname = classroom; //Value of x is "string"
+	cname = "fileClass/" + cname + "-Student.txt"; //Now value of string is "string.txt"
+
+	ofstream student2(Sname.c_str());
+	ofstream classstudent(cname.c_str());
+
+	if (!student2.is_open())
+	{
+		cout << "-> ERROR: File Open 2" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else if (!classstudent.is_open())
+	{
+		cout << "-> ERROR: File Open 3" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else
+	{
+		insertStudenttxtDataUser(student2, Data, size);
+		addStudentbaseonclass(classstudent, Data, size, classroom);
+		//cout<<"List of student is inserted into Student list and it's following class";
+
+		student2.close();
+		classstudent.close();
+		
+		cout << endl;
+		cout << UNDERLINE << "IMPORT SUCCESSFULLY" << CLOSEUNDERLINE << endl;
+		cout << endl;
+	}
+	
+	cout << endl;
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");
+	editFeatureStu();
+}
+
+void addStudent()
+{
+	string keyStart;
+	cout << "Press 'Y' to continue :";
+	cin >> keyStart;
+	if  (("y" != keyStart) && ("Y" != keyStart))
+	{
+		system("CLS");
+		editFeatureStu();
+	}
+	cout<<endl;
+	cout << "\t=== ADD STUDENT ===" << endl;
+	cout<<endl;
+	userData* Data;
+	int size;
+	int sizetxt;
+	int sizeofclass;
+	string nameClass[100];
+	
+	string studentclass;
+	string classchoice;
+	int choice;
+	
+	viewListClass();
+
+	string Class = "fileClass/Class.txt";
+	ifstream file(Class.c_str());
+
+	if (!file.is_open())
+	{
+		cout << "-> ERROR: File Open 1" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else
+	{
+		takeDataClass(file, nameClass, sizeofclass);
+		file.close();
+	}
+	
+	while (true)
+	{
+		cout << "* Enter the number of class which you want to choose: ";
+		cin >> classchoice;
+
+		stringstream zz(classchoice);
+		if ((zz >> choice).fail() || choice > sizeofclass || choice <= 0)
+			cout << "-> Please try again" << endl;
+		else
+			break;
+	}
+	cout << endl;
+
+	for (int i = 0; i < sizeofclass; i++)
+	{
+		if (choice == i + 1)
+			studentclass = nameClass[i];
+	}
+	//import student
+	string Sname = "fileUser/Student.txt";
+	ifstream student(Sname.c_str());
+	opentxtandtakeData(student, sizetxt, Data);
+
+	size = sizetxt;
+	//
+
+	ofstream student3(Sname.c_str());
+
+	string Cname2 = studentclass; //Value of x is "string"
+	Cname2 = "fileClass/" + Cname2 + "-Student.txt"; //Now value of string is "string.txt"
+	ofstream classstudent2(Cname2.c_str());
+
+	if ((!student3.is_open()) || (!classstudent2.is_open()))		
+	{
+		cout << "-> ERROR: File Open 2" << endl;
+		cout << "-> Please check your program again!" << endl;
+	}
+	else
+	{
+		enterinfStudent(Data, studentclass, size);
+		insertStudenttxtDataUser(student3, Data, size);
+		addStudentbaseonclass(classstudent2, Data, size, studentclass);
+		student3.close();
+		classstudent2.close();
+		cout<<endl;
+		cout << UNDERLINE << "STUDENT IS ADDED SUCCESSFULLY" << CLOSEUNDERLINE << endl;
+	}
+	cout << endl;
+	string key;
+	cout << "Press any key to return :"; cin >> key;
+	system("CLS");
+	editFeatureStu();
 }
 
 

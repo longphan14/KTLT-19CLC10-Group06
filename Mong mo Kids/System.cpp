@@ -44,7 +44,7 @@ int checkChoice(string Choice, int Number)
 	int numberCheck = 0;
 	for (int i = 0 ; i < length; i++)
 		if ((Choice[i] >= '0') && (Choice[i] <= '9'))
-			numberCheck += int(Choice[i]) - 48;
+			numberCheck += numberCheck * 10 + int(Choice[i]) - 48;
 		else 
 			return -1;		
 	if (numberCheck <= Number)						
@@ -499,7 +499,7 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 	else if (3 == type)
 		fi.open("fileUser/Lecturer.txt");
 	if (!fi.is_open())
-		cout << "Khong mo duoc file" << endl;
+		cout << "Cannot open file" << endl;
 	else
 	{
 		userData * Data;
@@ -508,11 +508,32 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 		for (i = 0; i < size; i++)
 			if (Data[i].ID == Username)
 				break;
-		string currentPassword = "";
+				
+		string currentPassword;
 		while (currentPassword != Password)
 		{				
 			cout << "Enter your current Password : " ; 
-			cin >> currentPassword;
+			char p4;
+			int i4;
+			char match4[20];
+			for(i4 = 0; i4 >= 0;){
+				p4 = getch();
+				
+				if(p4 != 8 && p4 != 13){
+					cout << "*";
+					match4[i4] = p4;
+					i4++;
+				}
+				else if(p4 == 8){
+					cout << "\b \b";
+					i4--;
+				}
+				else{
+					break;
+				}
+			}
+				currentPassword = match4;
+			
 			if (currentPassword != Password)
 			{
 				system("CLS");
@@ -544,28 +565,83 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 				}
 			}
 		}
-		
+		cout << endl;
 		string newPassword1 = "a", newPassword2 = "b";
 		while (newPassword1 != newPassword2)
 		{
-			cout << "Enter new password       : " ; cin >> newPassword1;
-			cout << "Enter new password again : " ; cin >> newPassword2;
+			newPassword1 = "/0";
+			newPassword2 = "/0";
+			cout << "Enter new password       : " ;
+			
+			char p2;
+			int i2;
+			char match2[20];
+			
+			for(i2 = 0; i2 >= 0;){
+				p2 = getch();
+				
+				if(p2 != 8 && p2 != 13){
+					cout << "*";
+					match2[i2] = p2;
+					i2++;
+				}
+				else if(p2 == 8){
+					cout << "\b \b";
+					i2--;
+				}
+				else{
+					break;
+				}
+			}
+				newPassword1 = match2;
+			cout << endl;
+			
+			
+			cout << "Enter new password again : " ;
+			
+			char p3;
+			int i3;
+			char match3[20];
+			
+			for(i3 = 0; i3 >= 0;){
+				p3 = getch();
+				
+				if(p3 != 8 && p3 != 13){
+					cout << "*";
+					match3[i3] = p3;
+					i3++;
+				}
+				else if(p3 == 8){
+					cout << "\b \b";
+					i3--;
+				}
+				else{
+					break;
+				}
+			}
+				newPassword2 = match3;
+				
+				cout << endl;
 			if (newPassword1 != newPassword2)
 			{
 				system("CLS");
 				cout << "Two new password you've entered isn't the same !! Try again" << endl;		
 			}
 		}
-		Data[i].Password = newPassword1;
+		for(int k = 0; k < size; k++){
+			if(Data[k].ID == Username){
+				Data[k].Password = newPassword1;
+			}
+		}
 		ofstream fo;
-		if (1 == type)
+		if (type == 1)
 			fo.open("fileUser/Staff.txt");
-		else if (2 == type)
+		else if (type == 2)
 			fo.open("fileUser/Student.txt");
-		else if (3 == type)
+		else if (type == 3)
 			fo.open("fileUser/Lecturer.txt");
+			
 		insertDataUser(fo, Data, size);
-		
 		cout << "Your password is changed successfully !!!" << endl;
 		system("CLS");
 		switch(type)
