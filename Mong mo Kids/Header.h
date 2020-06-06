@@ -8,6 +8,8 @@
 #include <sstream>
 #include <ctime>
 #include<algorithm>
+#include<conio.h>
+#include<stdlib.h>
 
 #define UNDERLINE "\033[4m"
 

@@ -21,11 +21,31 @@ void Login() // Hao. Chuc nang: Dang nhap
 		}
 		case 1:
 		{
-			string Username, Password;
+			string Username, Password, P;
+			char p;
 			accountData Data;
 			cout << "ACCOUNT" << endl;
 			cout << "Username : "; cin >> Username;
-			cout << "Password : "; cin >> Password;
+			cout << "Password : ";
+			p=_getch();
+			while(p != 13){
+				if(p == 8){
+					Password.resize(P.length() - 1);
+					cout << P;
+					Password.resize(Password.length() - 1);
+				}
+				else{
+					P = P + "*";
+					cout << P;
+					Password.push_back(p); 
+				}
+				p = _getch();
+				system("CLS");
+				cout << "ACCOUNT" << endl;
+				cout << "Username : " << Username << endl;
+				cout << "Enter Password: ";
+			}
+			cout << endl << Password << endl;
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
 			dataAccess = Data;
