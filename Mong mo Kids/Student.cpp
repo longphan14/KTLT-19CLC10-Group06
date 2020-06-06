@@ -388,3 +388,5 @@ void check_in(string ID)//Hao : HAm diem danh cua hoc sinh
 	system("CLS");
 	studentShowMenu();
 }
+
+
