@@ -27,25 +27,25 @@ void Login() // Hao. Chuc nang: Dang nhap
 			cout << "ACCOUNT" << endl;
 			cout << "Username : "; cin >> Username;
 			cout << "Password : ";
-			p=_getch();
-			while(p != 13){
-				if(p == 8){
-					Password.resize(P.length() - 1);
-					cout << P;
-					Password.resize(Password.length() - 1);
+			int i, x;
+			char match[20];
+			for(i = 0; i>= 0;){
+				p = getch();
+				
+				if(p != 8 && p != 13){
+					cout << "*";
+					match[i] = p;
+					i++;
+				}
+				else if(p == 8){
+					cout << "\b \b";
+					i--;
 				}
 				else{
-					P = P + "*";
-					cout << P;
-					Password.push_back(p); 
+					break;
 				}
-				p = _getch();
-				system("CLS");
-				cout << "ACCOUNT" << endl;
-				cout << "Username : " << Username << endl;
-				cout << "Enter Password: ";
 			}
-			cout << endl << Password << endl;
+				Password = match;
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
 			dataAccess = Data;
@@ -590,6 +590,7 @@ void studentUI()
 		}
 		case 2:
 		{
+			changePassword(dataAccess.ID, dataAccess.Password, 2);
 			break;
 		}
 		case 3:
@@ -686,7 +687,7 @@ void lecturerUI()
 		}
 		case 2:
 		{
-			changePassword(dataAccess.ID, dataAccess.Password, 1);
+			changePassword(dataAccess.ID, dataAccess.Password, 3);
 			break;
 		}
 		case 3:
