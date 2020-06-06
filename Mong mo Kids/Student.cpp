@@ -389,4 +389,73 @@ void check_in(string ID)//Hao : HAm diem danh cua hoc sinh
 	studentShowMenu();
 }
 
+void viewScoreCourseStudent_support(courseData Course, string ID) // Danh dau check va ho tro cho ham check_in
+{
+	string currentSemester = "";
+	takeCurrentSemester(currentSemester);
+	
+	//Lay du lieu trong file
+	string fileName = "fileCourse/" + currentSemester + "-" + Course.className + "-" + Course.courseID + "-Student.txt";
+	int nStudent = 0;
+	userData * Student;
+	ifstream fi;
+	fi.open(fileName.c_str());
+	takeDataUser(fi, Student, nStudent, 4);
+	fi.close();
+	//Tim SV
+	int STT = -1;
+	for (int i = 0; i < nStudent; i++)
+	if (Student[i].ID == ID)
+	{
+		STT = i;
+		break;
+	}
+	// In bang diem
+	cout << "Score in subject ' " <<  Course.courseName << " ' is : " << endl;
+	cout << "Midterm: " << Student[STT].Score.Midterm << endl;
+	cout << "Bonus  : " << Student[STT].Score.Bonus << endl;
+	cout << "Final  : " << Student[STT].Score.Final << endl;
+	cout << "Total  : " << Student[STT].Score.Total << endl;
+	
+}
 
+void viewScoreCourseStudent(string ID)
+{
+	int nCourse = 0;
+	string Lecturer[20];
+	courseData Course[20];
+	viewSchedules_findCourse(ID, Course, Lecturer, nCourse);
+	//Hien ra danh sach mon hoc cho nguoi dung chon
+	int numberChoice = -1;
+	while (-1 == numberChoice)
+	{
+		cout << "List course is enrolled by you :" << endl; 
+		for (int i = 0; i < nCourse; i++)
+		{
+			cout << i + 1 << ". ";
+			cout << "Course ID : " << Course[i].courseID << endl;
+			cout << "Course Name : " << Course[i].courseName << endl;
+			cout << "Lecturer : " << Lecturer[i] << endl;
+			cout << "********************************" << endl;
+		}
+		cout << "0. Return" << endl;
+		cout << "If you don't want view please press 0" << endl;
+		cout << "Choose your choice to view" << endl;
+		numberChoice = choiceScreen(nCourse);
+		system("CLS");
+		if (-1 == numberChoice)
+			cout << "Your choice isn't wrong !! Please choose again " << endl;
+		else if (0 == numberChoice)
+		{
+		}
+	}
+	//Bat dau diem danh
+	cout << "Your course you choose is : " << endl;
+	cout << ">>" << Course[numberChoice - 1].courseName << endl;
+	viewScoreCourseStudent_support(Course[numberChoice - 1], ID);
+	string key;
+	cout << "Press any key to return" << endl;
+	cin >> key;
+	system("CLS");
+	studentShowMenu();
+}

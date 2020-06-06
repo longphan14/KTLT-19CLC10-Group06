@@ -647,6 +647,7 @@ void studentShowMenu()
 		}
 		case 4:
 		{
+			viewScoreCourseStudent(dataAccess.ID);
 			break;
 		}
 		case 5:
