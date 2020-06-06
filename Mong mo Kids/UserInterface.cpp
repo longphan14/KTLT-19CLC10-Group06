@@ -38,14 +38,19 @@ void Login() // Hao. Chuc nang: Dang nhap
 					i++;
 				}
 				else if(p == 8){
-					cout << "\b \b";
-					i--;
+					if (i != 0)
+					{		
+						cout << "\b \b";
+						i--;
+					}
 				}
 				else{
 					break;
 				}
 			}
-				Password = match;
+			Password = "";			
+			for (int k = 0; k < i; k++)
+				Password += match[k];
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
 			dataAccess = Data;
@@ -545,7 +550,7 @@ void staffUI()
 			break;
 		}
 		case 2:
-		{
+		{			
 			changePassword(dataAccess.ID, dataAccess.Password, 1);
 			break;
 		}
