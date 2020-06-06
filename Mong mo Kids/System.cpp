@@ -488,7 +488,7 @@ int checkPassword(string Username, string Password, accountData &Data) // Hao .C
 	return -1;
 }
 
-void changePassword(string Username, string Password, int type) // Hao : Ham thay doi password
+void changePassword(string Username, string &Password, int type) // Hao : Ham thay doi password
 {
 	
 	ifstream fi;
@@ -509,9 +509,10 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 			if (Data[i].ID == Username)
 				break;
 				
-		string currentPassword;
+		string currentPassword ;
 		while (currentPassword != Password)
 		{				
+			currentPassword = "";
 			cout << "Enter your current Password : " ; 
 			char p4;
 			int i4;
@@ -525,14 +526,18 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 					i4++;
 				}
 				else if(p4 == 8){
-					cout << "\b \b";
-					i4--;
+					if (i4 != 0)
+					{	
+						cout << "\b \b";
+						i4--;
+					}
 				}
 				else{
 					break;
 				}
 			}
-				currentPassword = match4;
+			for (int k = 0; k < i4; k++)
+				currentPassword += match4[k];
 			
 			if (currentPassword != Password)
 			{
@@ -569,8 +574,8 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 		string newPassword1 = "a", newPassword2 = "b";
 		while (newPassword1 != newPassword2)
 		{
-			newPassword1 = "/0";
-			newPassword2 = "/0";
+			newPassword1 = "";
+			newPassword2 = "";
 			cout << "Enter new password       : " ;
 			
 			char p2;
@@ -586,14 +591,18 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 					i2++;
 				}
 				else if(p2 == 8){
-					cout << "\b \b";
-					i2--;
+					if (i2 != 0)
+					{
+						cout << "\b \b";
+						i2--;
+					}
 				}
 				else{
 					break;
 				}
 			}
-				newPassword1 = match2;
+			for (int k = 0; k < i2; k++)
+				newPassword1 += match2[k];
 			cout << endl;
 			
 			
@@ -612,14 +621,18 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 					i3++;
 				}
 				else if(p3 == 8){
-					cout << "\b \b";
-					i3--;
+					if (i3 != 0)
+					{		
+						cout << "\b \b";
+						i3--;
+					}
 				}
 				else{
 					break;
 				}
 			}
-				newPassword2 = match3;
+			for (int k = 0; k < i3; k++)
+				newPassword2 += match3[k];
 				
 				cout << endl;
 			if (newPassword1 != newPassword2)
@@ -633,6 +646,7 @@ void changePassword(string Username, string Password, int type) // Hao : Ham tha
 				Data[k].Password = newPassword1;
 			}
 		}
+		Password = newPassword1;
 		ofstream fo;
 		if (type == 1)
 			fo.open("fileUser/Staff.txt");
