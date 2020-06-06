@@ -651,6 +651,7 @@ void studentShowMenu()
 		}
 		case 5:
 		{
+			viewInfor(dataAccess.ID, 2);
 			break;
 		}
 		default:
