@@ -7,6 +7,13 @@
 #include <cmath>
 #include <sstream>
 #include <ctime>
+#include<algorithm>
+#include<conio.h>
+#include<stdlib.h>
+
+#define UNDERLINE "\033[4m"
+
+#define CLOSEUNDERLINE "\033[0m"
 
 using namespace std;
 
@@ -63,7 +70,7 @@ void insertDataUser(ofstream &fo, userData * &Data, int size);
 void takeDataUser(ifstream &fi, userData * &Data, int &size, int type);
 void takeDataCourse(ifstream &fi, userData * &Lecturer, courseData * &Course, int &size);
 void insertDataCourse(ofstream &fo, userData * &Lecturer, courseData * &Course, int &size);
-void changePassword(string Username, string Password, int type);
+void changePassword(string Username, string &Password, int type);
 void takeDataClass(ifstream &fi, string nameClass[], int &size);
 void insertDataClass(ofstream &fo, string nameClass[], int size);
 void takeCurrentSemester(string &semesterCurrent);
@@ -85,6 +92,7 @@ void editFeatureCourse();
 void viewFeatureCourse();
 void staffUI();
 void returnScreen(void (*functionCurrent)(), void (*functionPrevious)());
+void exportFeatureStu();
 //**************//	
 
 //User Interface STUDENT//

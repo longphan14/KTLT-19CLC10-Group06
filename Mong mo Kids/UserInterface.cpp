@@ -21,11 +21,36 @@ void Login() // Hao. Chuc nang: Dang nhap
 		}
 		case 1:
 		{
-			string Username, Password;
+			string Username, Password, P;
+			char p;
 			accountData Data;
 			cout << "ACCOUNT" << endl;
 			cout << "Username : "; cin >> Username;
-			cout << "Password : "; cin >> Password;
+			cout << "Password : ";
+			int i, x;
+			char match[20];
+			for(i = 0; i>= 0;){
+				p = getch();
+				
+				if(p != 8 && p != 13){
+					cout << "*";
+					match[i] = p;
+					i++;
+				}
+				else if(p == 8){
+					if (i != 0)
+					{		
+						cout << "\b \b";
+						i--;
+					}
+				}
+				else{
+					break;
+				}
+			}
+			Password = "";			
+			for (int k = 0; k < i; k++)
+				Password += match[k];
 			clearScreen();
 			int kt = checkPassword(Username, Password, Data);
 			dataAccess = Data;
@@ -150,12 +175,12 @@ void editFeatureStu()
 		}
 		case 1:
 		{
-	
+			importStudent();
 			break;
 		}
 		case 2:
 		{
-			
+			addStudent();
 			break;
 		}
 		case 3:
@@ -219,6 +244,7 @@ void viewFeatureStu()
 		}
 		case 2:
 		{
+			viewListClassused(); // dung sua ten ham nay nha lop du chu ca mo
 			break;
 		}
 		case 3:
@@ -271,10 +297,12 @@ void exportFeatureStu()
 		}
 		case 1:
 		{
+			exportScoreboadrdList();
 			break;
 		}
 		case 2:
 		{
+			exportAttendanceList();
 			break;
 		}
 		default:
@@ -522,7 +550,7 @@ void staffUI()
 			break;
 		}
 		case 2:
-		{
+		{			
 			changePassword(dataAccess.ID, dataAccess.Password, 1);
 			break;
 		}
@@ -567,6 +595,7 @@ void studentUI()
 		}
 		case 2:
 		{
+			changePassword(dataAccess.ID, dataAccess.Password, 2);
 			break;
 		}
 		case 3:
@@ -608,6 +637,7 @@ void studentShowMenu()
 		}
 		case 2:
 		{
+			viewCheckIn(dataAccess.ID);
 			break;
 		}	
 		case 3:
@@ -617,10 +647,12 @@ void studentShowMenu()
 		}
 		case 4:
 		{
+			viewScoreCourseStudent(dataAccess.ID);
 			break;
 		}
 		case 5:
 		{
+			viewInfor(dataAccess.ID, 2);
 			break;
 		}
 		default:
@@ -662,7 +694,7 @@ void lecturerUI()
 		}
 		case 2:
 		{
-			changePassword(dataAccess.ID, dataAccess.Password, 1);
+			changePassword(dataAccess.ID, dataAccess.Password, 3);
 			break;
 		}
 		case 3:
@@ -747,7 +779,7 @@ void viewFeatureOfLecturer()
 		}
 		case 4:
 		{
-			
+			viewScoreboardListOfLecturer(dataAccess.ID);
 			break;
 		}
 		default:
@@ -765,7 +797,7 @@ void jobFeature()
 	cout << "0. Return" << endl;
 	cout << "1. Edit an attendance" << endl;
 	cout << "2. Import scoreboard" << endl;
-	cout << "3. Edit grade of a student" << endl;
+	cout << "3. Edit Score of a student" << endl;
 	int numberChoice = choiceScreen(3);
 	clearScreen();
 	switch (numberChoice)
@@ -782,12 +814,12 @@ void jobFeature()
 		}
 		case 2:
 		{
-	
+			ImportScoreBoard(dataAccess.ID);
 			break;
 		}
 		case 3:
 		{
-	
+			editScoreboard(dataAccess.ID);
 			break;
 		}
 		default:

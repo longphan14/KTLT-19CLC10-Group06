@@ -23,9 +23,16 @@ void viewAttendanceList();
 void spviewStudentAttendanceList(string filename);
 void searchViewScoreboardList();
 void ViewScoreboardList();
-void spViewScoreboardList();
+void spViewScoreboardList(string courseid, string classname);
 void viewListStudentinClass();
 void changeClass();
 void editAttendance(string ID);
 void editCourse();
+void exportScoreboadrdList();
+void exportAttendanceList();
+void viewListClass();
+void viewListClassused();
+string tostring(float number);
+void importStudent();
+void addStudent();
 #endif
