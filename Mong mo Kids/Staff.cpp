@@ -3295,24 +3295,14 @@ void importStudent()
 
 	string cname;
 
-	cname = classroom; //Value of x is "string"
+	cname = classroom; //Value of x is "string"																
 	cname = "fileClass/" + cname + "-Student.txt"; //Now value of string is "string.txt"
+	
+	ofstream student2;
+	ofstream classstudent;
+	student2.open(Sname.c_str());
+	classstudent.open(cname.c_str());
 
-	ofstream student2(Sname.c_str());
-	ofstream classstudent(cname.c_str());
-
-	if (!student2.is_open())
-	{
-		cout << "-> ERROR: File Open 2" << endl;
-		cout << "-> Please check your program again!" << endl;
-	}
-	else if (!classstudent.is_open())
-	{
-		cout << "-> ERROR: File Open 3" << endl;
-		cout << "-> Please check your program again!" << endl;
-	}
-	else
-	{
 		insertStudenttxtDataUser(student2, Data, size);
 		addStudentbaseonclass(classstudent, Data, size, classroom);
 		//cout<<"List of student is inserted into Student list and it's following class";
@@ -3323,7 +3313,6 @@ void importStudent()
 		cout << endl;
 		cout << UNDERLINE << "IMPORT SUCCESSFULLY" << CLOSEUNDERLINE << endl;
 		cout << endl;
-	}
 	
 	cout << endl;
 	string key;
