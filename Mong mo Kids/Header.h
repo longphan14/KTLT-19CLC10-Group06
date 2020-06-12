@@ -10,6 +10,7 @@
 #include<algorithm>
 #include<conio.h>
 #include<stdlib.h>
+#include <stdio.h>
 
 #define UNDERLINE "\033[4m"
 
@@ -78,6 +79,10 @@ void insertDataStudentInCourse(string fileName, userData *Data, int size);
 void readAttendanceToFile(string startDate, string startTime, string endTime);
 void ignoreLine(ifstream &fi, int number);
 void viewInfor(string ID, int type);
+void takeDataSemester(ifstream &fi, string year[], string semester[], int &size);
+int takeSemester(string &currentSemester);
+
+
 //***************//
 
 //User Interface STAFF//

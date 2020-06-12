@@ -1,21 +1,9 @@
-7
+6
 dbtien
-1234567
+123456
 Dinh Ba Tien
 0
-TD
-
-nmhuy
-abcdef
-Nguyen Minh Huy
-0
-ThS
-
-nhminh
-abcdef
-Nguyen Hai Minh
-1
-Ths
+TS
 
 dnvu
 dnvu
@@ -23,21 +11,27 @@ Duong Nguyen Vu
 0
 GS
 
-nvthuan
-nvthuan
-Nguyen Van Thuan
+htthanh
+htthanh
+Ho Tuan Thanh
 0
-ThS
+TS
 
-dtthanh
-dtthanh
-Do Thai Thanh
+nhnam
+nhnam
+Nguyen Hoang Nam
 0
-ThS
+GS
 
-BG
-BG
-Bill Gates
+nhminh
+nhminh
+Nguyen Hai Minh
+1
+TS
+
+vhnam
+vhnam
+Vo Hoai Nam
 0
-Professor
+TS
 

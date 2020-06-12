@@ -1,0 +1,43 @@
+7
+dbtien
+1234567
+Dinh Ba Tien
+0
+TD
+
+nmhuy
+abcdef
+Nguyen Minh Huy
+0
+ThS
+
+nhminh
+abcdef
+Nguyen Hai Minh
+1
+Ths
+
+dnvu
+dnvu
+Duong Nguyen Vu
+0
+GS
+
+nvthuan
+nvthuan
+Nguyen Van Thuan
+0
+ThS
+
+dtthanh
+dtthanh
+Do Thai Thanh
+0
+ThS
+
+BG
+BG
+Bill Gates
+0
+Professor
+
