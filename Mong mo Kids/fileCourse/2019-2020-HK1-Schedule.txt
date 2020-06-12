@@ -1,0 +1,85 @@
+6
+CS162
+Introduction to Programming
+19APCS1
+dbtien
+Dinh Ba Tien
+TS
+0
+2020 05 09
+2020 07 11
+2
+7 30
+11 30
+I42
+
+CM101
+Communications
+19APCS1
+dnvu
+Duong Nguyen Vu
+GS
+0
+2020 05 09
+2020 07 11
+7
+13 30
+17 30
+I23
+
+CS162
+Introduction to Programming
+19APCS2
+htthanh
+Ho Tuan Thanh
+TS
+0
+2020 05 09
+2020 07 11
+5
+7 30
+11 30
+I23
+
+CM101
+Communications
+19APCS2
+nhnam
+Nguyen Hoang Nam
+GS
+0
+2020 05 09
+2020 07 11
+4
+13 30
+17 30
+C22
+
+CS162
+Introduction to Programming
+19CLC10
+nhminh
+Nguyen Hai Minh
+TS
+1
+2020 05 09
+2020 07 11
+2
+13 30
+17 30
+I53
+
+CM101
+Communications
+19CLC10
+vhnam
+Vo Hoai Nam
+TS
+0
+2020 05 09
+2020 07 11
+7
+7 30
+11 30
+C22
+

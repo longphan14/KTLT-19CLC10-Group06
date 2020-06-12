@@ -835,5 +835,40 @@ void viewInfor(string ID, int type){
 	}
 }
 
+void takeDataSemester(ifstream &fi, string year[], string semester[], int &size)
+{
+	fi >> size;
+	for (int i = 0; i < size; i++)
+	{
+		fi >> semester[i];
+		fi >> year[i];
+		fi.ignore();
+	}
+}
+
+int takeSemester(string &currentSemester)
+{
+	ifstream fi;
+	fi.open("fileCourse/Semester.txt");
+	string year[100], semester[100];
+	int size = 0;
+	takeDataSemester(fi, year, semester, size);
+
+	fi.close();
+	for (int i = 0; i < size; i++)
+	{
+		cout << i + 1 << ". Year : " << year[i] << endl;
+		cout << ">>Semester : " << semester[i] << endl; 
+		cout << "***********************" << endl;
+	}
+	cout << "0 and any key to exit" << endl;
+	int numberChoice = choiceScreen(size);
+	system("CLS");
+	if ((numberChoice == -1) || (numberChoice == 0))
+		return -1;													
+	currentSemester = semester[numberChoice - 1] + '-' + year[numberChoice - 1];
+	return numberChoice;
+}
+
 //*******************************************************//	
 

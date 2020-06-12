@@ -213,7 +213,7 @@ void viewScoreboardListOfLecturer(string ID){
 	}
 	else
 	{
-		spViewScoreboardList(courseLecturer[numberChoice].courseID, courseLecturer[numberChoice].className);	
+		spViewScoreboardList(currentSemester, courseLecturer[numberChoice].courseID, courseLecturer[numberChoice].className);	
 	}
 	cout << "Press any keys to return!!" << endl;
 	string key;
@@ -344,7 +344,7 @@ void spinputLecturerScoreboard(string LecturerID , string &filename, string &fil
 	fi2.close();
 	string NO1;
 	if(check == true){
-		spViewScoreboardList(CourseID, Classname);
+		spViewScoreboardList(semesterCurrent, CourseID, Classname);
 		cout << "Enter Student Number of Order(0 to exit): ";
 		cin >> NO1;
 		int checking = checkChoice(NO1, size2);
@@ -672,5 +672,6 @@ void ImportScoreBoard(string ID)
 	string key;
 	cout << "Press any key to return" << endl;
 	cin >> key;
+	system("CLS");
 	jobFeature();
 }

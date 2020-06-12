@@ -456,7 +456,7 @@ void addDataCourse(string fileName, userData Lecturer, courseData Course)
 	
 	bool check = true;				
 	for (int i = 0; i < size; i++)
-		if ((courseList[i].courseID == Course.courseID))
+		if ((courseList[i].courseID == Course.courseID) && (courseList[i].className == Course.className))
 		{
 			check = false;
 			break;
@@ -751,28 +751,6 @@ void importCourse() {
 		}
 										
 	}
-	numberChoice = -1;				
-	while (numberChoice == -1)
-	{
-		cout << "Are you sure to import course ? "  << endl;
-		cout << "0.No                1.Yes" << endl;
-		numberChoice = choiceScreen(1);
-		switch(numberChoice)
-		{
-			case 0:
-			{
-				system("CLS");
-				editFeatureCourse();
-				break;	
-			}	
-			case -1:
-			{
-				system("CLS");
-				cout << "Your choice is wrong !! Choice again" << endl;
-				break;
-			}
-		}
-	}
 	//Lay du lieu
 	userData Lecturer;
 	courseData Course;
@@ -790,33 +768,48 @@ void importCourse() {
 				break;
 		}
 		getline(fi, Course.courseID, ',');
+		cout << "Course ID : " << Course.courseID << endl;
 		
 		getline(fi,Course.courseName, ',');
+		cout << "Course name : " << Course.courseName << endl;
 		
 		getline(fi, Course.className, ',');
+		cout << "Class name of course : " << Course.className << endl;
 		
 		getline(fi,Course.lecturerAccount, ',');
+		cout << "Lecturer account : " << Course.lecturerAccount << endl;
 		Lecturer.ID = Course.lecturerAccount;
 		Lecturer.Password = Lecturer.ID;
 		
 		getline(fi, Lecturer.Name, ',');
+		cout << "Lecturer name : " << Lecturer.Name << endl;
 		
 		getline(fi,Lecturer.Degree, ',');
-		
+		cout << "Lecturer degree : " << Lecturer.Degree << endl;
+	
 		string Gender;
 		getline(fi, Gender, ',');
 		if ((Gender[0] == 'f') || (Gender[0] == 'F'))
+		{
+			cout << "Gender : Female" << endl;
 			Lecturer.Gender = 1;
+		}
 		else
+		{		
+			cout << "Gender : Male" << endl;					
 			Lecturer.Gender = 0;
+		}
 				
 		getline(fi,Course.startDate, ',');
 		formatDate(Course.startDate);
+		cout << "Start Date of course : " << Course.startDate << endl;
 		
 		getline(fi, Course.endDate, ',');
 		formatDate(Course.endDate);	
+		cout << "End date of course : " << Course.endDate << endl;
 		
 		getline(fi,Course.DoW, ',');
+		cout << "Date of week : " << Course.DoW << endl;
 		
 		string sHour;					
 		getline(fi, sHour, ',');
@@ -832,11 +825,22 @@ void importCourse() {
 		
 		Course.startTime = sHour + ' ' + sMinute;
 		Course.endTime = eHour + ' ' + eMinute;
+		cout << "Start time : " << Course.startTime << endl;
+		cout << "End time : " << Course.endTime << endl;
+		cout << endl;
+		cout << "**********************" << endl;
 		
 		getline(fi, Course.Room, '\n');
 		Lecturer.Type = 3;
-		addDataForImportCourse(Lecturer, Course);	
-	}				
+		cout << "Are you sure to import this course to system ?" << endl;
+		cout << "Press 'y' to import  : ";
+		string answer;
+		cin >> answer;
+		if (("y" == answer) || ("Y" == answer))
+			addDataForImportCourse(Lecturer, Course);	
+		system("CLS");
+	}	
+	
 	fi.close();		
 	cout << "Import Successfully" << endl;	
 	
@@ -1038,6 +1042,39 @@ void updateSemester()
 	fo.open("fileCourse/SemesterTmp.txt");
 	int n;
 	fi >> n;
+	if (0 == n)
+	{
+		cout << "Enter your current Year scholatics (Example : 2019-2020) : ";
+		string yearSemester;
+		cin >> yearSemester;
+		cout << "Enter your current semester (HK1, HK2, HK3) :";
+		string Semester;
+		cin >> Semester;
+		ofstream foN;
+		foN.open("fileCourse/Semester.txt");
+		cout << "Your current year scholatics : " << yearSemester << endl;
+		cout << "Your current semester : " << Semester << endl;
+		cout << "Do you want to add this current" << endl;
+		cout << "Press 'Y' to continue" << endl;
+		string choice;
+		cin >> choice;	
+		if ((choice == "y") || (choice == "Y"))
+		{
+			foN << 1 << endl;
+			foN << yearSemester << endl << Semester << endl;
+			cout << "Your semester is added successfully " << endl;
+			string key;
+			cout << "Enter any key to return " << endl;
+			cin >> key;
+		}
+		string fileSchedule = "fileCourse/" + yearSemester + '-' + Semester + '-' + "Schedule.txt";
+		foN.close();
+		ofstream foS;
+		foS.open(fileSchedule.c_str());
+		foS.close();
+		system("CLS");
+		return editFeatureCourse();
+	}
 	fi.ignore();
 	fo << n + 1 << endl;
 	copyData(fi, fo);
@@ -1069,9 +1106,17 @@ void updateSemester()
 	fi.close();					
 	fo.close();		
 	int result = remove("fileCourse/SemesterTmp.txt");		
+	takeCurrentSemester(semesterCurrent);
+	string fileSchedule = "fileCourse/" + semesterCurrent + '-' + "Schedule.txt";
+	ofstream foS;
+	foS.open(fileSchedule.c_str());
+	foS.close();
 	cout << "Update Successfully" << endl;
-	returnScreen(updateSemester, editFeatureCourse);	
-	
+	string key;
+	cout << "Press any key to return " << endl;
+	cin >> key;	
+	system("CLS");
+	return editFeatureCourse();
 }
 
 void editStudent() // Hao : Chinh sua thong tin sinh vien
@@ -1383,7 +1428,9 @@ void viewListCourse(int type)
 	int size = 0;
 	ifstream fi;
 	string semesterCurrent ;
-	takeCurrentSemester(semesterCurrent);
+	int numberSemester = takeSemester(semesterCurrent);
+	if (numberSemester == -1)
+		return viewFeatureStu();
 	string filename;
 	filename = "fileCourse/" + semesterCurrent +"-Schedule.txt";
 	fi.open(filename.c_str());
@@ -1443,9 +1490,11 @@ void removeCourse()//Hao : Xoa mot mon hoc
 		}
 	}
 	//Nguoi dung nhap
-	string IDRemove;
+	string IDRemove, classRemove;
 	cout << "Enter your course ID :";
 	cin >> IDRemove;
+	cout << "Enter your class name : ";
+	cin >> classRemove;
 	//Kiem tra xem course ID co ton tai khong?
 	userData * Lecturer;
 	courseData * Course;
@@ -1461,7 +1510,7 @@ void removeCourse()//Hao : Xoa mot mon hoc
 	fi.close();						
 	for (int i = 0; i < size; i++)
 	{
-		if (Course[i].courseID == IDRemove)
+		if ((Course[i].courseID == IDRemove) && (Course[i].className == classRemove))
 		{
 			NOofCourse = i;
 			break;
@@ -1479,6 +1528,7 @@ void removeCourse()//Hao : Xoa mot mon hoc
 	{
 		cout << ">> Course name :" << Course[NOofCourse].courseName << endl;
 		cout << ">> Class :" << Course[NOofCourse].className << endl;
+		cout << ">> Lecturer : " << Lecturer[NOofCourse].Name << endl;
 		cout << "Are you sure to remove above course" << endl;
 		cout << "0.NO              1. Yes" << endl;
 		numberChoice = choiceScreen(1);
@@ -1504,7 +1554,9 @@ void removeCourse()//Hao : Xoa mot mon hoc
 	removeFileCourse(fileName, IDRemove);
 	
 	// Xoa du lieu trong file Schedule-Lop hoc					
-	removeFileCourse(fileNameCourse, IDRemove);				
+	removeFileCourse(fileNameCourse, IDRemove);	
+	string fileNameStudent = "fileCourse/" + currentSemester + '-' + Course[NOofCourse].className + '-' + Course[NOofCourse].courseID + '-' + "Student.txt";
+	remove(fileNameStudent.c_str());			
 	
 	cout << "Your course is remove successfully!!" << endl;
 	string key;
@@ -1802,7 +1854,9 @@ void viewListStudentinCourse(int type){
 		userData* Lecturer;
 		ifstream fi1;
 		string semesterCurrent;
-		takeCurrentSemester(semesterCurrent);
+		int numberSemester = takeSemester(semesterCurrent);
+		if (numberSemester == -1)
+			return viewFeatureStu();
 		string filename;
 		filename = "fileCourse/" + semesterCurrent +"-Schedule.txt";
 		fi1.open(filename.c_str());
@@ -1873,12 +1927,16 @@ void viewListStudentinCourse(int type){
 	for(int i = 0; i < size3; i++){
 		if(studentCourse[i].Status == 1){
 			
-		cout << endl;
-			cout << studentCourse[i].ID << endl;
-			cout << studentCourse[i].Name << endl;
-			cout << studentCourse[i].Gender << endl;
-			cout << studentCourse[i].DoB << endl;
-			cout << studentCourse[i].className << endl;	
+			cout << endl;
+			cout << "Student ID : " << studentCourse[i].ID << endl;
+			cout << "Student name : " << studentCourse[i].Name << endl;
+			cout << "Gender : " ;
+			if (studentCourse[i].Gender == 0)
+				cout << "Male" << endl;
+			else
+				cout << "Female" << endl;
+			cout << "DoB (year month day) : " << studentCourse[i].DoB << endl;
+			cout << "Class of student : " << studentCourse[i].className << endl;	
 		}
 	}
 	
@@ -2051,7 +2109,10 @@ void spviewStudentAttendanceList(string filename){
 void searchViewAttendanceList(){
 	string Courseid, Classname;
 	string semesterCurrent;
-	takeCurrentSemester(semesterCurrent);
+	int numberSemester = takeSemester(semesterCurrent);
+	if (-1 == numberSemester)
+		return viewFeatureStu();
+		
 	cout << "Enter Class name(Enter 0 to exit): ";
 	cin >> Classname;
 	if(Classname == "0"){
@@ -2111,7 +2172,9 @@ void viewAttendanceList(){
 	string classname, coursename, courseid;
 	
 	
-	takeCurrentSemester(semesterCurrent);
+	int choiceSemester = takeSemester(semesterCurrent);
+	if (-1 == choiceSemester)
+		return viewFeatureStu();
 	filename = "fileCourse/" + semesterCurrent + "-Schedule.txt";
 	fi.open(filename.c_str());
 	takeDataCourse(fi, Lecturer, Course, size);
@@ -2125,6 +2188,7 @@ void viewAttendanceList(){
 			NO[i + 1] = i + 1;
 			cout << i + 1 << ". " << "Course ID: " << Course[i].courseID << endl;
 			cout << "Course Name: " << Course[i].courseName << endl;
+			cout << "Class : " << Course[i].className << endl;
 			cout << "Lecturer Name: " << Lecturer[i].Name << endl;
 			cout << endl;
 		}	
@@ -2191,13 +2255,11 @@ void spviewAttendanceList(string filename, string courseID){
 	fi.close();
 }
 
-void spViewScoreboardList(string courseid, string classname){
+void spViewScoreboardList(string semesterCurrent, string courseid, string classname){
 	string filename;
 	userData* studentinfo;
 	int size = 0;
 	
-	string semesterCurrent;
-	takeCurrentSemester(semesterCurrent);
 	filename = "fileCourse/" + semesterCurrent + "-" + classname + "-" + courseid + "-Student.txt";
 	ifstream fi;
 	fi.open(filename.c_str());
@@ -2232,17 +2294,20 @@ void searchViewScoreboardList(){
 	courseData* CourseData;
 	int size = 0;
 	bool check = false;
-	
+	string semesterCurrent;	
+	int numberChoice = takeSemester(semesterCurrent);
+	cout << semesterCurrent << endl;
+	if (-1 == numberChoice)
+		return viewFeatureStu();
 	cout << "Enter Course ID: ";
 	cin >> courseid;
-	cout << "Enter Class(name): ";
+	cout << "Enter Class name: ";
 	cin >> classname;
 	
 	string filename;
-	string semesterCurrent;
-	takeCurrentSemester(semesterCurrent);
-	filename = "fileCourse/" + semesterCurrent + "-Schedule.txt";
+	
 	ifstream fi;
+	filename = "fileCourse/" + semesterCurrent + "-Schedule-" + classname + ".txt";
 	fi.open(filename.c_str());
 	takeDataCourse(fi, Lecturer, CourseData, size);
 	fi.close();
@@ -2251,15 +2316,17 @@ void searchViewScoreboardList(){
 		if(courseid == CourseData[i].courseID && classname == CourseData[i].className)
 			check = true;
 	}
+	cout << filename << endl;
 	
 	if(check == false)
 	{
 		system("CLS");
 		cout << "Invalid Course ID or Class(name)!" << endl;
+
 		return searchViewScoreboardList();
 		}
 	else
-		spViewScoreboardList(courseid, classname);
+		spViewScoreboardList(semesterCurrent, courseid, classname);
 	
 	
 	cout << endl;
@@ -2276,12 +2343,10 @@ void ViewScoreboardList(){
 	int size, size1;
 	string nameClass[1000];
 	string semesterCurrent;
-	takeCurrentSemester(semesterCurrent);
-	filename = "fileCourse/" + semesterCurrent + "-Schedule.txt";
+	int numberSemester = takeSemester(semesterCurrent);
+	if (numberSemester == -1)
+		return viewFeatureStu();
 	ifstream fi;
-	fi.open(filename.c_str());
-	takeDataCourse(fi, Lecturer, CourseData, size);
-	fi.close();
 	filename1 = "fileClass/Class.txt";
 	ifstream fi2;
 	fi2.open(filename1.c_str());
@@ -2306,14 +2371,16 @@ void ViewScoreboardList(){
 		if(nameclass == nameClass[i])
 			check = true;
 }
+	string fileName = "fileCourse/" + semesterCurrent + "-Schedule-" + nameclass + ".txt";
+	fi.open(fileName.c_str());
+	takeDataCourse(fi, Lecturer, CourseData, size);
+	fi.close();	
+	
 	if(check == false){
 		system("CLS");									
 		cout << "Invalid enter!" << endl;
 		return ViewScoreboardList();
 	}
-	
-	
-	
 	else{
 	for(int i = 0; i < size; i++){
 		cout << i+1 << "." << CourseData[i].courseID << "-" << CourseData[i].courseName << endl;
@@ -2341,7 +2408,7 @@ void ViewScoreboardList(){
 	}
 	else{
 		
-		spViewScoreboardList(Courseid, nameclass);
+		spViewScoreboardList(semesterCurrent, Courseid, nameclass);
 		break;
 	}
 }
@@ -3314,6 +3381,17 @@ void importStudent()
 		cout << UNDERLINE << "IMPORT SUCCESSFULLY" << CLOSEUNDERLINE << endl;
 		cout << endl;
 	
+	ifstream fi;
+	fi.open("fileClass/Class.txt");
+	string nameClass[100];
+	size = 0;
+	takeDataClass(fi, nameClass, size);
+	fi.close();
+	nameClass[size++] = classroom;
+	ofstream fo;
+	fo.open("fileClass/Class.txt");
+	insertDataClass(fo, nameClass, size);
+	fo.close();
 	cout << endl;
 	string key;
 	cout << "Press any key to return :"; cin >> key;
