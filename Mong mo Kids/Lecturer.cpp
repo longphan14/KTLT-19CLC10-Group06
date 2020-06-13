@@ -71,7 +71,7 @@ void editAttendance(string LecturerID){
 		takeDataUser(fi, student, size, 4);
 		fi.close();
 	
-		
+		cout << filename1 << endl;
 		spviewAttendanceList(filename1, CourseID);
 		stringstream week1;
 		int week;
@@ -387,22 +387,27 @@ void spinputLecturerScoreboard(string LecturerID , string &filename, string &fil
 void spinputLecturer(string LecturerID , string &filename, string &filename1, string &studentID, string &CourseID, string &Classname){
 	ifstream fi1, fi;
 	string semesterCurrent;
-	userData* Lecturer;
-	courseData* Course;
+	userData* Lecturer, * LecturerTmp;
+	courseData* Course, *CourseTmp;
 	int size = 0;
 	int S = 0;
 	bool check = false;
 	takeCurrentSemester(semesterCurrent);
-	filename1 = "fileCourse/" + semesterCurrent + "-Schedule.txt";
+	filename1 = "fileCourse/" + semesterCurrent  +  "-Schedule.txt";
+	cout << filename1 << endl;
 	fi1.open(filename1.c_str());
-	takeDataCourse(fi1, Lecturer, Course, size);
+	takeDataCourse(fi1, LecturerTmp, CourseTmp, size);
 	fi1.close();
 	int S1 = 0;
 	int stt = 0;
+	Course = new courseData[size + 1];
+	Lecturer = new userData[size + 1];
 	for (int i = 0; i < size; i++)
-	if (Lecturer[i].ID == LecturerID)
+	if (LecturerTmp[i].ID == LecturerID)
 	{
-		cout << ++stt << ". " << Course[i].courseID << "-" << Course[i].courseName << endl;
+		Course[stt] = CourseTmp[i];
+		Lecturer[stt] = LecturerTmp[i];
+		cout << ++stt << ". " << CourseTmp[i].courseID << "-" << CourseTmp[i].courseName << "-" << CourseTmp[i].className << endl;
 		check = true;
 	}
 
@@ -424,6 +429,7 @@ void spinputLecturer(string LecturerID , string &filename, string &filename1, st
 	CourseID = Course[NO - 1].courseID;
 	Classname = Course[NO - 1].className;
 	filename = "fileCourse/" + semesterCurrent + "-" + Course[NO - 1].className + "-" + Course[NO - 1].courseID + "-Student.txt";
+	cout << filename << endl;
 	ifstream fi2;
 	userData* UserData; 
 	courseData Course2;
@@ -433,6 +439,7 @@ void spinputLecturer(string LecturerID , string &filename, string &filename1, st
 	fi2.close();
 	string NO1;
 	if(check == true){
+		cout << "Attendance of subject " << Course[NO - 1].courseName << " class " << Course[NO - 1].className << endl;
 		spviewStudentAttendanceList(filename);
 		cout << "Enter Student Number of Order(0 to exit): ";
 		cin >> NO1;
