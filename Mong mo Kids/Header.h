@@ -81,7 +81,7 @@ void ignoreLine(ifstream &fi, int number);
 void viewInfor(string ID, int type);
 void takeDataSemester(ifstream &fi, string year[], string semester[], int &size);
 int takeSemester(string &currentSemester);
-
+void check_in_format(string &s);
 
 //***************//
 

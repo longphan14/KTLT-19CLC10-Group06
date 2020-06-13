@@ -8,7 +8,7 @@ Trinh Van Minh
 1
 
 19127002
-20010502
+123456
 Nguyen Van 2
 0
 2001 05 02
@@ -160,7 +160,7 @@ Tran Tuan 9
 1
 
 19127450
-20010601
+123456
 Le Vu Anh Duy
 0
 2001 06 01
@@ -168,7 +168,7 @@ Le Vu Anh Duy
 1
 
 19127451
-20010602
+123456
 Nguyen Huy Anh Thu
 0
 2001 06 02

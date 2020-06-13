@@ -101,12 +101,14 @@ void viewCheckIn(string StudentID){
 	takeCurrentSemester(semesterCurrent);
 	string filename;
 	filename = "fileCourse/" + semesterCurrent + "-" + studentCourse[NO - 1].className + "-" + studentCourse[NO - 1].courseID + "-Student.txt";
+	system("CLS");
+	cout << "Attendance of subject " << studentCourse[NO - 1].courseName << " class " << studentCourse[NO - 1].className << endl;
 	ifstream fi;
 	fi.open(filename.c_str());
 	userData* studentdata;
 	int size1 = 0;
 	takeDataUser(fi, studentdata, size1, 4);
-	cout << "  Student Name                ";
+	cout << "Student Name                ";
 	for(int i = 0; i < 10; i++){
 		cout << "Week " << i + 1 << " ";
 	} 
@@ -197,6 +199,39 @@ void check_in_takeDateCourse(string fileName, string Date[])
 	fi.close();			
 }
 
+bool cmpCheck_in(string s1, string s2) // s1 >= s2 : 1 , s1 < s2 ra 0
+{
+	if (s1.length() > s2.length())
+		return true;
+	else if (s1.length() < s2.length())
+		return false;
+	
+	if (s1 >= s2)
+		return true;
+	else
+		return false;
+}
+
+void check_in_format(string &s)
+{
+	//14 5   7 3  14 30  9 30
+	if (s.length() == 3)
+	{
+		s = s + '0';
+		char tmp = s[3];
+		s[3] = s[2];
+		s[2] = tmp;
+		return;
+	}	
+	if ((s[2] == ' ') && (s.length() == 4))
+	{
+		s = s + '0';
+		char tmp = s[4];
+		s[4] = s[3];
+		s[3] = tmp;
+	}
+}
+
 void check_in_support(courseData Course, string ID) // Danh dau check va ho tro cho ham check_in
 {
 	string currentSemester = "";
@@ -213,6 +248,8 @@ void check_in_support(courseData Course, string ID) // Danh dau check va ho tro 
 	//Take Date and time Now
 	string dateNow, timeNow;
 	check_in_takeTime(dateNow, timeNow);
+	timeNow = "14 45";
+	check_in_format(timeNow);
 	//Find ID
 	int STT = -1;
 	for (int i = 0; i < nStudent; i++)
@@ -224,19 +261,24 @@ void check_in_support(courseData Course, string ID) // Danh dau check va ho tro 
 	//Take time and date
 	string Date[20];
 	check_in_takeDateCourse(fileName, Date);
-
 	//Check in
+	bool kt = false;									
 	for (int i = 0; i < 10; i++)
 	if (dateNow == Date[i])
 	{
-		if ((timeNow >= Course.startTime) && (timeNow <= Course.endTime))
+		cout << "Time Now : " << timeNow << endl;
+		cout << "start time : " << Course.startTime << endl;
+		cout << "end time : " << Course.endTime << endl;
+		if (cmpCheck_in(timeNow, Course.startTime) && cmpCheck_in(Course.endTime, timeNow))
 		{
 			Student[STT].Attendance[i] = 1;
 			cout << "Check in successfully" << endl;
+			kt = true;
 			break;
 		}
 	}
-	cout << "Check in is failed" << endl;
+	if (!kt)
+		cout << "Check in is failed" << endl;
 	//Dua lai du lieu vao trong
 	insertDataStudentInCourse(fileName, Student, nStudent);
 }
@@ -363,6 +405,7 @@ void check_in(string ID)//Hao : HAm diem danh cua hoc sinh
 			cout << i + 1 << ". ";
 			cout << "Course Name : " << Course[i].courseName << endl;
 			cout << "Lecturer : " << Lecturer[i] << endl;
+			cout << "Day of week : " << Course[i].DoW << endl;
 			cout << "Start time : " << Course[i].startTime << endl;
 			cout << "End time : " << Course[i].endTime << endl;
 			cout << "********************************" << endl;
